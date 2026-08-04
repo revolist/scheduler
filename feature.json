@@ -8,7 +8,7 @@
   "productUrl": "https://rv-grid.com/scheduler/",
   "trialUrl": "https://pro.rv-grid.com/guides/installation-npm-trial/",
   "pricingUrl": "https://rv-grid.com/pricing/",
-  "liveDemoUrl": "https://example.rv-grid.com/scheduler/demo/",
+  "liveDemoUrl": "https://scheduler.rv-grid.com/demo/",
   "frameworks": ["ts", "react", "vue", "angular"],
   "recipes": [
     { "id": "calendar-resource-views", "title": "Calendar and resource views", "summary": "Use one event model across calendar, month, and resource-timeline planning.", "path": "recipes/calendar-resource-views.ts" },
@@ -23,4 +23,3 @@
   },
   "demoOutput": "dist"
 }
-

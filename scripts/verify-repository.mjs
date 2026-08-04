@@ -60,13 +60,15 @@ const gif = await probeMedia(media.walkthroughGif);
 if (gif.width !== 800 || gif.height !== 500) failures.push(`${media.walkthroughGif}: expected optimized 800x500 output`);
 
 const readme = await readFile(join(root, 'README.md'), 'utf8');
-for (const relative of assets) if (!readme.includes(relative)) failures.push(`README.md: missing media reference ${relative}`);
+for (const relative of [media.walkthroughGif, media.walkthroughMp4]) {
+  if (!readme.includes(relative)) failures.push(`README.md: missing media reference ${relative}`);
+}
 
 const forbidden = [
   '../../composables/',
   '../../demo-host.css',
   '../../../../packages/',
-  'npm.pkg.github.com',
+  'trial.rv-grid.com',
   '"latest"',
 ];
 

@@ -4,15 +4,13 @@
 
 **Calendar and resource planning for teams, shifts, equipment, and operations.**
 
-[![CI](https://github.com/revolist/scheduler/actions/workflows/ci.yml/badge.svg)](https://github.com/revolist/scheduler/actions/workflows/ci.yml)
+[![Pages](https://github.com/revolist/scheduler/actions/workflows/pages.yml/badge.svg)](https://scheduler.rv-grid.com/)
 [![Frameworks](https://img.shields.io/badge/TypeScript%20%7C%20React%20%7C%20Vue%20%7C%20Angular-4f46e5)](#framework-examples)
 [![License: MIT](https://img.shields.io/badge/Example%20license-MIT-16a34a.svg)](./LICENSE)
 
-[View live demo](https://example.rv-grid.com/scheduler/demo/) · [Request trial](https://pro.rv-grid.com/guides/installation-npm-trial/) · [Get Pro Advanced](https://rv-grid.com/pricing/)
+[View live demo](https://scheduler.rv-grid.com/demo/) · [Request trial](https://pro.rv-grid.com/guides/installation-npm-trial/) · [Get Pro Advanced](https://rv-grid.com/pricing/)
 
 [![RevoGrid Scheduler walkthrough](./assets/scheduler-walkthrough.gif)](./assets/scheduler-walkthrough.mp4)
-
-_Open the animation for the full-quality MP4 walkthrough._
 
 </div>
 
@@ -28,9 +26,9 @@ Vanilla TypeScript, React, Vue, and Angular.
 - Team avatars, workspace navigation, and responsive scheduling UI
 - Advanced filtering and polished supporting table behavior
 
-## Enterprise feature inventory
+## Pro features
 
-`EventSchedulerPlugin` comes from `@revolist/revogrid-enterprise` and owns the calendar and resource-timeline workspace.
+`EventSchedulerPlugin` owns the calendar and resource-timeline workspace.
 
 | Scheduler capability | Benefit demonstrated here |
 | --- | --- |
@@ -46,8 +44,6 @@ Vanilla TypeScript, React, Vue, and Angular.
 | Cell, header, time-label, resource, and event customization hooks | Lets the demo add avatars, statuses, colors, search highlights, availability states, and compact resource cards without replacing scheduler behavior. |
 
 The package's date, calendar, and time utilities are also used to keep navigation, ISO dates, week boundaries, and labels consistent with the scheduler model.
-
-## Pro feature inventory
 
 `EventSchedulerPlugin` automatically installs the shared Pro plugins it needs when the host grid has not already registered them:
 
@@ -68,8 +64,6 @@ The synchronized table directly registers three additional plugins from `@revoli
 | `AdvanceFilterPlugin` | Adds selection, string, and date filters so users can narrow events by title, date, assignee, type, or status. |
 | `ColumnStretchPlugin` | Stretches all table columns to fill the available panel width, avoiding an awkward empty area. |
 | `RowOddPlugin` | Adds alternating-row styling hooks that make the compact event list easier to scan. |
-
-Scheduler requires an Enterprise entitlement, while the synchronized-table enhancements and auto-installed shared plugins require Pro functionality.
 
 ## Recipes
 
@@ -103,22 +97,13 @@ Build variants use the matching `build:ts`, `build:react`, `build:vue`, and `bui
 Trial users must authenticate with the registry described in the [official
 trial installation guide](https://pro.rv-grid.com/guides/installation-npm-trial/).
 No registry token belongs in this repository. Licensed users can replace the two
-trial aliases in `package.json` with the matching full Pro/Enterprise packages;
+trial aliases in `package.json` with the matching licensed RevoGrid packages;
 source imports remain unchanged.
-
-## Workflow screenshots
-
-| Overview | Primary workflow |
-| --- | --- |
-| ![Scheduler overview](./assets/screenshots/overview.webp) | ![Scheduler workflow](./assets/screenshots/workflow.webp) |
-| ![Scheduler details](./assets/screenshots/details.webp) | ![Scheduler result](./assets/screenshots/result.webp) |
-
-[Download the walkthrough poster](./assets/scheduler-walkthrough-poster.webp).
 
 ## License
 
 The examples, recipes, tests, documentation, and media tooling are MIT licensed.
-RevoGrid Pro and Enterprise packages remain separate commercial dependencies.
+Commercial RevoGrid packages are not covered by this repository's MIT license.
 
 ## Main files
 

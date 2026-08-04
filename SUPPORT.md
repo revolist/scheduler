@@ -6,5 +6,4 @@
 - Licensed support and Pro Advanced access: https://rv-grid.com/pricing/
 
 The MIT license in this repository covers example and documentation code only.
-RevoGrid Pro and Enterprise packages remain commercially licensed.
-
+Commercial RevoGrid packages retain their product license.

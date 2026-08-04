@@ -1,12 +1,13 @@
 node_modules/
 dist/
+pages-dist/
 .artifacts/
 coverage/
 playwright-report/
 test-results/
 *.log
+*_feature.md
 .env
 .env.*
 !.env.example
 .DS_Store
-

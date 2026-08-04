@@ -8,7 +8,7 @@
   "packageManager": "pnpm@10.13.1",
   "engines": { "node": ">=20", "pnpm": ">=10" },
   "repository": { "type": "git", "url": "https://github.com/revolist/scheduler.git" },
-  "homepage": "https://example.rv-grid.com/scheduler/",
+  "homepage": "https://scheduler.rv-grid.com/",
   "bugs": { "url": "https://github.com/revolist/scheduler/issues" },
   "scripts": {
     "dev": "pnpm dev:ts",
@@ -22,6 +22,7 @@
     "build:vue": "vite build --mode vue",
     "build:angular": "vite build --mode angular",
     "build:frameworks": "node scripts/build-frameworks.mjs",
+    "build:pages": "pnpm build && node scripts/build-pages.mjs",
     "preview": "vite preview",
     "test": "pnpm test:unit && pnpm test:repository",
     "test:unit": "vitest run",
