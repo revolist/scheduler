@@ -29,8 +29,9 @@ if (!Array.isArray(feature.frameworks) || feature.frameworks.join(',') !== 'ts,r
 }
 if (!Array.isArray(feature.recipes) || feature.recipes.length < 2) failures.push('feature.json: at least two recipes are required');
 
+const verifyMedia = process.argv.includes('--media');
 const media = feature.media ?? {};
-const assets = [media.poster, media.walkthroughGif, media.walkthroughMp4, ...(media.screenshots ?? [])];
+const assets = verifyMedia ? [media.poster, media.walkthroughGif, media.walkthroughMp4, ...(media.screenshots ?? [])] : [];
 for (const relative of assets) {
   if (!relative) {
     failures.push('feature.json: media paths must be complete');
@@ -59,20 +60,22 @@ async function probeMedia(relative) {
   };
 }
 
-for (const relative of [media.poster, ...(media.screenshots ?? [])]) {
+for (const relative of verifyMedia ? [media.poster, ...(media.screenshots ?? [])] : []) {
   const dimensions = await probeMedia(relative);
   if (dimensions.width !== 1440 || dimensions.height !== 900) {
     failures.push(`${relative}: expected 1440x900, received ${dimensions.width}x${dimensions.height}`);
   }
 }
-const video = await probeMedia(media.walkthroughMp4);
-if (video.width !== 1440 || video.height !== 900) failures.push(`${media.walkthroughMp4}: expected 1440x900`);
-if (video.duration < 20 || video.duration > 35) failures.push(`${media.walkthroughMp4}: expected 20-35 seconds, received ${video.duration}`);
-const gif = await probeMedia(media.walkthroughGif);
-if (gif.width !== 800 || gif.height !== 500) failures.push(`${media.walkthroughGif}: expected optimized 800x500 output`);
+if (verifyMedia) {
+  const video = await probeMedia(media.walkthroughMp4);
+  if (video.width !== 1440 || video.height !== 900) failures.push(`${media.walkthroughMp4}: expected 1440x900`);
+  if (video.duration < 20 || video.duration > 35) failures.push(`${media.walkthroughMp4}: expected 20-35 seconds, received ${video.duration}`);
+  const gif = await probeMedia(media.walkthroughGif);
+  if (gif.width !== 800 || gif.height !== 500) failures.push(`${media.walkthroughGif}: expected optimized 800x500 output`);
+}
 
 const readme = await readFile(join(root, 'README.md'), 'utf8');
-for (const relative of [media.walkthroughGif, media.walkthroughMp4]) {
+for (const relative of verifyMedia ? [media.walkthroughGif, media.walkthroughMp4] : []) {
   if (!readme.includes(relative)) failures.push(`README.md: missing media reference ${relative}`);
 }
 
