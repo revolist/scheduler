@@ -116,8 +116,8 @@ async function encodeVideo(rawVideo) {
   const mp4 = join(root, 'assets', `${feature.slug}-walkthrough.mp4`);
   const gif = join(root, 'assets', `${feature.slug}-walkthrough.gif`);
   const poster = join(root, 'assets', `${feature.slug}-walkthrough-poster.webp`);
-  await execFileAsync('ffmpeg', ['-loglevel', 'error', '-y', '-i', rawVideo, '-vf', 'fps=30,scale=1440:900:flags=lanczos,format=yuv420p', '-an', '-c:v', 'libx264', '-preset', 'slow', '-crf', '20', '-movflags', '+faststart', mp4]);
-  await execFileAsync('ffmpeg', ['-loglevel', 'error', '-y', '-i', mp4, '-filter_complex', 'fps=8,scale=800:-2:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=128:stats_mode=diff[p];[s1][p]paletteuse=dither=bayer:bayer_scale=3:diff_mode=rectangle', '-loop', '0', gif]);
+  await execFileAsync('ffmpeg', ['-loglevel', 'error', '-y', '-i', rawVideo, '-vf', 'tpad=stop_mode=clone:stop_duration=20,fps=30,scale=1440:900:flags=lanczos,format=yuv420p', '-t', '22', '-an', '-c:v', 'libx264', '-preset', 'slow', '-crf', '20', '-movflags', '+faststart', mp4]);
+  await execFileAsync('ffmpeg', ['-loglevel', 'error', '-y', '-i', mp4, '-filter_complex', 'fps=7,scale=800:-2:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=96:stats_mode=diff[p];[s1][p]paletteuse=dither=bayer:bayer_scale=3:diff_mode=rectangle', '-loop', '0', gif]);
   await execFileAsync('ffmpeg', ['-loglevel', 'error', '-y', '-ss', '1.2', '-i', mp4, '-frames:v', '1', '-c:v', 'libwebp', '-quality', '78', poster]);
 }
 

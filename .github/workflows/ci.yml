@@ -16,6 +16,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Install media inspection tools
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
       - run: node scripts/verify-repository.mjs
 
   build-and-test:
@@ -32,9 +34,10 @@ jobs:
           cache: pnpm
           registry-url: https://trial.rv-grid.com
           scope: '@revolist'
+      - name: Install media inspection tools
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
       - run: pnpm build:frameworks
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm test:e2e
-
