@@ -9,6 +9,18 @@ const feature = JSON.parse(await readFile(join(root, 'feature.json'), 'utf8'));
 const requiredStrings = ['slug', 'title', 'summary', 'edition', 'repositoryUrl', 'productUrl', 'trialUrl', 'demoOutput'];
 const failures = [];
 
+for (const requiredFile of ['package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml']) {
+  try {
+    await stat(join(root, requiredFile));
+  } catch {
+    failures.push(`${requiredFile}: required standalone repository file is missing`);
+  }
+}
+const workspace = await readFile(join(root, 'pnpm-workspace.yaml'), 'utf8');
+if (!/^packages:\s*\n\s*- ["']?\.["']?\s*$/m.test(workspace)) {
+  failures.push('pnpm-workspace.yaml: repository root must be its own workspace');
+}
+
 for (const key of requiredStrings) {
   if (typeof feature[key] !== 'string' || !feature[key]) failures.push(`feature.json: ${key} must be a non-empty string`);
 }
