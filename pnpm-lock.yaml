@@ -33,11 +33,11 @@ importers:
         specifier: 4.25.1
         version: 4.25.1
       '@revolist/revogrid-enterprise':
-        specifier: npm:@revolist/rv-enterprise-trial@2.5.0
-        version: '@revolist/rv-enterprise-trial@2.5.0'
+        specifier: npm:@revolist/rv-enterprise-trial@2.5.1
+        version: '@revolist/rv-enterprise-trial@2.5.1'
       '@revolist/revogrid-pro':
-        specifier: npm:@revolist/rv-pro-trial@2.5.0
-        version: '@revolist/rv-pro-trial@2.5.0'
+        specifier: npm:@revolist/rv-pro-trial@2.5.1
+        version: '@revolist/rv-pro-trial@2.5.1'
       '@revolist/vue3-datagrid':
         specifier: 4.25.1
         version: 4.25.1
@@ -1444,11 +1444,11 @@ packages:
   '@revolist/revogrid@4.25.1':
     resolution: {integrity: sha512-5s5lhJExMRnKu1Z8cANFvfN/S+gvg5aIIQ54ihwuHEZkecbFSfpE1Dod6t6heNBFzSsO9N+LWgLTUpJf/sErYA==, tarball: https://npm.pkg.github.com/download/@revolist/revogrid/4.25.1/3b9991befed715358f6ade4878b43fd1ae4ebaf8}
 
-  '@revolist/rv-enterprise-trial@2.5.0':
-    resolution: {integrity: sha512-MWQxEz1B6L2KwxR/F/0JASMbHExaHCajUHF8h3TYvOe+J1Zt3HxHYzZokEojCXFpNlZsRuytVPWNLSKwzsvVcw==, tarball: https://npm.pkg.github.com/download/@revolist/rv-enterprise-trial/2.5.0/3f0e8516a15dad82da8e52c92a09b235a420bdd6}
+  '@revolist/rv-enterprise-trial@2.5.1':
+    resolution: {integrity: sha512-17+TQk3nVpPy9YKT4/yI1+Wi5uSvH1j/XhD+/oex2Koi3O8aNfJecB+J8BKW5Pv+2euDvMbO4Qm6FRxNHAI4CA==, tarball: https://npm.pkg.github.com/download/@revolist/rv-enterprise-trial/2.5.1/ff5fbe50034320cbae97b7bad45f4250e3e1df80}
 
-  '@revolist/rv-pro-trial@2.5.0':
-    resolution: {integrity: sha512-X9UTH+zPI4ohmWrgJtSdvInXg0huIH86y4qPuybjWbSLdt1mUTKZJIAUhxP3pMO262JC413WspkBm495SLLABA==, tarball: https://npm.pkg.github.com/download/@revolist/rv-pro-trial/2.5.0/9183973af141c1c8a263535651a81b563f95c5c9}
+  '@revolist/rv-pro-trial@2.5.1':
+    resolution: {integrity: sha512-vCpsPd3HjURDv6ll6OgYBC9RBTRKE37UF5XvPI9xAaOGVYGz5rqchhf90Obtsr/AyEcAul24LT1LD8+vXwX57g==, tarball: https://npm.pkg.github.com/download/@revolist/rv-pro-trial/2.5.1/c5c1048ef172331f26f9271e1fe5705492fd6be5}
 
   '@revolist/vue3-datagrid@4.25.1':
     resolution: {integrity: sha512-TOBrKmRhLOdL4MD4o7HNVWqU6Ea0NzPtDsBMBoFSLlnmYU+ARGWBuAqZmgx9NK7uK5wYE8Xa3885QTXX/W+T+Q==, tarball: https://npm.pkg.github.com/download/@revolist/vue3-datagrid/4.25.1/f2809344bad0cdbb4001e28494055a2751a47a41}
@@ -4747,17 +4747,17 @@ snapshots:
 
   '@revolist/revogrid@4.25.1': {}
 
-  '@revolist/rv-enterprise-trial@2.5.0':
+  '@revolist/rv-enterprise-trial@2.5.1':
     dependencies:
       '@fortawesome/fontawesome-free': 6.7.2
       '@revolist/revogrid-column-date': 2.0.25
       '@revolist/revogrid-column-select': 3.2.0
-      '@revolist/rv-pro-trial': 2.5.0
+      '@revolist/rv-pro-trial': 2.5.1
       preact: 10.29.8
     transitivePeerDependencies:
       - preact-render-to-string
 
-  '@revolist/rv-pro-trial@2.5.0':
+  '@revolist/rv-pro-trial@2.5.1':
     dependencies:
       '@formulajs/formulajs': 4.6.1
       '@revolist/revogrid': 4.25.1
