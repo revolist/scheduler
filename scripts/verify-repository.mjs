@@ -21,6 +21,25 @@ if (!/^packages:\s*\n\s*- ["']?\.["']?\s*$/m.test(workspace)) {
   failures.push('pnpm-workspace.yaml: repository root must be its own workspace');
 }
 
+const npmrc = await readFile(join(root, '.npmrc'), 'utf8');
+for (const requiredRegistryLine of [
+  '@revolist:registry=https://npm.pkg.github.com',
+  '//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}',
+]) {
+  if (!npmrc.split(/\r?\n/).includes(requiredRegistryLine)) {
+    failures.push(`.npmrc: missing required GitHub Packages configuration ${requiredRegistryLine}`);
+  }
+}
+
+const lockfile = await readFile(join(root, 'pnpm-lock.yaml'), 'utf8');
+const revolistResolutions = [...lockfile.matchAll(/^  '(@revolist\/[^']+)':\n    resolution: \{([^}]*)\}/gm)];
+if (!revolistResolutions.length) failures.push('pnpm-lock.yaml: no @revolist package resolutions found');
+for (const [, packageName, resolution] of revolistResolutions) {
+  if (!resolution.includes('tarball: https://npm.pkg.github.com/download/')) {
+    failures.push(`pnpm-lock.yaml: ${packageName} is missing its GitHub download URL`);
+  }
+}
+
 for (const key of requiredStrings) {
   if (typeof feature[key] !== 'string' || !feature[key]) failures.push(`feature.json: ${key} must be a non-empty string`);
 }
