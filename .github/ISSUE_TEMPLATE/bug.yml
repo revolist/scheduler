@@ -1,0 +1,23 @@
+name: Example bug
+description: Report a reproducible problem in this showcase repository.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Never include registry tokens, license material, or customer data.
+  - type: dropdown
+    id: framework
+    attributes:
+      label: Framework
+      options: [Vanilla TypeScript, React, Vue, Angular]
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Include the command, expected result, and actual result.
+    validations:
+      required: true
+

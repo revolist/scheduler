@@ -1,12 +1,23 @@
-# Advanced Scheduler
+<div align="center">
 
-An Enterprise event and shift-scheduling workspace implemented in Vanilla TypeScript, React, Vue, and Angular.
+# RevoGrid Scheduler
 
-## Demo preview
+**Calendar and resource planning for teams, shifts, equipment, and operations.**
 
-[![Advanced Scheduler walkthrough](./assets/pro-advanced-scheduler-walkthrough.gif)](./assets/pro-advanced-scheduler-walkthrough.mp4)
+[![CI](https://github.com/revolist/scheduler/actions/workflows/ci.yml/badge.svg)](https://github.com/revolist/scheduler/actions/workflows/ci.yml)
+[![Frameworks](https://img.shields.io/badge/TypeScript%20%7C%20React%20%7C%20Vue%20%7C%20Angular-4f46e5)](#framework-examples)
+[![License: MIT](https://img.shields.io/badge/Example%20license-MIT-16a34a.svg)](./LICENSE)
 
-_Click the animated preview to open the full-quality MP4._
+[View live demo](https://example.rv-grid.com/scheduler/demo/) · [Request trial](https://pro.rv-grid.com/guides/installation-npm-trial/) · [Get Pro Advanced](https://rv-grid.com/pricing/)
+
+[![RevoGrid Scheduler walkthrough](./assets/scheduler-walkthrough.gif)](./assets/scheduler-walkthrough.mp4)
+
+_Open the animation for the full-quality MP4 walkthrough._
+
+</div>
+
+This production-style event and shift-scheduling workspace is implemented in
+Vanilla TypeScript, React, Vue, and Angular.
 
 ## What it features
 
@@ -60,9 +71,27 @@ The synchronized table directly registers three additional plugins from `@revoli
 
 Scheduler requires an Enterprise entitlement, while the synchronized-table enhancements and auto-installed shared plugins require Pro functionality.
 
+## Recipes
+
+| Recipe | What it demonstrates |
+| --- | --- |
+| [`calendar-resource-views.ts`](./recipes/calendar-resource-views.ts) | Calendar, month, and resource timeline projections. |
+| [`availability-conflicts.ts`](./recipes/availability-conflicts.ts) | Working calendars, closed slots, training, and conflicts. |
+| [`event-lifecycle.ts`](./recipes/event-lifecycle.ts) | Local creation, reassignment, and application persistence. |
+
+## Framework examples
+
+| Framework | Entry point | Command |
+| --- | --- | --- |
+| Vanilla TypeScript | [`src/scheduler.ts`](./src/scheduler.ts) | `pnpm dev` |
+| React | [`src/scheduler.react.tsx`](./src/scheduler.react.tsx) | `pnpm dev:react` |
+| Vue 3 | [`src/scheduler.vue`](./src/scheduler.vue) | `pnpm dev:vue` |
+| Angular | [`src/scheduler.angular.ts`](./src/scheduler.angular.ts) | `pnpm dev:angular` |
+
 ## Run it
 
 ```bash
+pnpm install
 pnpm dev          # Vanilla TypeScript
 pnpm dev:react
 pnpm dev:vue
@@ -70,6 +99,17 @@ pnpm dev:angular
 ```
 
 Build variants use the matching `build:ts`, `build:react`, `build:vue`, and `build:angular` scripts. Run `pnpm test` for the scheduler data/configuration tests.
+
+Trial users must authenticate with the registry described in the [official
+trial installation guide](https://pro.rv-grid.com/guides/installation-npm-trial/).
+No registry token belongs in this repository. Licensed users can replace the two
+trial aliases in `package.json` with the matching full Pro/Enterprise packages;
+source imports remain unchanged.
+
+## License
+
+The examples, recipes, tests, documentation, and media tooling are MIT licensed.
+RevoGrid Pro and Enterprise packages remain separate commercial dependencies.
 
 ## Main files
 

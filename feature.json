@@ -1,0 +1,26 @@
+{
+  "$schema": "./feature.schema.json",
+  "slug": "scheduler",
+  "title": "RevoGrid Scheduler",
+  "summary": "Calendar and resource scheduling with editable events, availability, conflicts, selection, reassignment, and synchronized grid workflows.",
+  "edition": "Pro Advanced",
+  "repositoryUrl": "https://github.com/revolist/scheduler",
+  "productUrl": "https://rv-grid.com/scheduler/",
+  "trialUrl": "https://pro.rv-grid.com/guides/installation-npm-trial/",
+  "pricingUrl": "https://rv-grid.com/pricing/",
+  "liveDemoUrl": "https://example.rv-grid.com/scheduler/demo/",
+  "frameworks": ["ts", "react", "vue", "angular"],
+  "recipes": [
+    { "id": "calendar-resource-views", "title": "Calendar and resource views", "summary": "Use one event model across calendar, month, and resource-timeline planning.", "path": "recipes/calendar-resource-views.ts" },
+    { "id": "availability-conflicts", "title": "Availability and conflicts", "summary": "Express working time, training calendars, closed slots, and overlap detection.", "path": "recipes/availability-conflicts.ts" },
+    { "id": "event-lifecycle", "title": "Event lifecycle and reassignment", "summary": "Create a local event, assign an open shift, and persist application-controlled changes.", "path": "recipes/event-lifecycle.ts" }
+  ],
+  "media": {
+    "poster": "assets/scheduler-walkthrough-poster.webp",
+    "walkthroughGif": "assets/scheduler-walkthrough.gif",
+    "walkthroughMp4": "assets/scheduler-walkthrough.mp4",
+    "screenshots": ["assets/screenshots/overview.webp", "assets/screenshots/workflow.webp", "assets/screenshots/details.webp", "assets/screenshots/result.webp"]
+  },
+  "demoOutput": "dist"
+}
+

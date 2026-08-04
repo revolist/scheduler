@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RevoGrid feature showcase metadata",
+  "type": "object",
+  "required": ["slug", "title", "summary", "edition", "repositoryUrl", "productUrl", "trialUrl", "liveDemoUrl", "frameworks", "recipes", "media", "demoOutput"],
+  "properties": {
+    "slug": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "title": { "type": "string", "minLength": 1 },
+    "summary": { "type": "string", "minLength": 20 },
+    "edition": { "const": "Pro Advanced" },
+    "repositoryUrl": { "type": "string", "format": "uri" },
+    "productUrl": { "type": "string", "format": "uri" },
+    "trialUrl": { "type": "string", "format": "uri" },
+    "pricingUrl": { "type": "string", "format": "uri" },
+    "liveDemoUrl": { "type": "string", "format": "uri" },
+    "frameworks": {
+      "type": "array",
+      "prefixItems": [
+        { "const": "ts" }, { "const": "react" }, { "const": "vue" }, { "const": "angular" }
+      ],
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "recipes": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "summary", "path"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "summary": { "type": "string" },
+          "path": { "type": "string" }
+        }
+      }
+    },
+    "media": {
+      "type": "object",
+      "required": ["poster", "walkthroughGif", "walkthroughMp4", "screenshots"],
+      "properties": {
+        "poster": { "type": "string" },
+        "walkthroughGif": { "type": "string" },
+        "walkthroughMp4": { "type": "string" },
+        "screenshots": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "string" } }
+      }
+    },
+    "demoOutput": { "const": "dist" }
+  }
+}
+
