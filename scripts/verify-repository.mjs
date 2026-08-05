@@ -6,6 +6,7 @@ import { promisify } from 'node:util';
 const execFileAsync = promisify(execFile);
 const root = resolve(import.meta.dirname, '..');
 const feature = JSON.parse(await readFile(join(root, 'feature.json'), 'utf8'));
+const packageManifest = JSON.parse(await readFile(join(root, 'package.json'), 'utf8'));
 const requiredStrings = ['slug', 'title', 'summary', 'edition', 'repositoryUrl', 'productUrl', 'trialUrl', 'demoOutput'];
 const failures = [];
 
@@ -31,13 +32,26 @@ for (const requiredRegistryLine of [
   }
 }
 
-const lockfile = await readFile(join(root, 'pnpm-lock.yaml'), 'utf8');
-const revolistResolutions = [...lockfile.matchAll(/^  '(@revolist\/[^']+)':\n    resolution: \{([^}]*)\}/gm)];
-if (!revolistResolutions.length) failures.push('pnpm-lock.yaml: no @revolist package resolutions found');
-for (const [, packageName, resolution] of revolistResolutions) {
-  if (!resolution.includes('tarball: https://npm.pkg.github.com/download/')) {
-    failures.push(`pnpm-lock.yaml: ${packageName} is missing its GitHub download URL`);
+const exactVersionPattern = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/;
+const commercialDependencies = [
+  ['@revolist/revogrid-pro', '@revolist/rv-pro-trial'],
+  ['@revolist/revogrid-enterprise', '@revolist/rv-enterprise-trial'],
+];
+const commercialVersions = new Map();
+for (const [packageName, trialPackageName] of commercialDependencies) {
+  const specifier = packageManifest.dependencies?.[packageName];
+  const trialAliasPrefix = `npm:${trialPackageName}@`;
+  const version = typeof specifier === 'string' && specifier.startsWith(trialAliasPrefix)
+    ? specifier.slice(trialAliasPrefix.length)
+    : specifier;
+  if (typeof version !== 'string' || !exactVersionPattern.test(version)) {
+    failures.push(`package.json: ${packageName} must use an exact version or exact ${trialPackageName} alias`);
+    continue;
   }
+  commercialVersions.set(packageName, version);
+}
+if (new Set(commercialVersions.values()).size > 1) {
+  failures.push('package.json: RevoGrid Pro and Enterprise versions must match');
 }
 
 for (const key of requiredStrings) {
