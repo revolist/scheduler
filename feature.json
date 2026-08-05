@@ -5,7 +5,7 @@
   "summary": "Calendar and resource scheduling with editable events, availability, conflicts, selection, reassignment, and synchronized grid workflows.",
   "edition": "Pro Advanced",
   "repositoryUrl": "https://github.com/revolist/scheduler",
-  "productUrl": "https://rv-grid.com/scheduler/",
+  "productUrl": "https://rv-grid.com/jsscheduler/",
   "trialUrl": "https://pro.rv-grid.com/guides/installation-npm-trial/",
   "pricingUrl": "https://rv-grid.com/pricing/",
   "liveDemoUrl": "https://scheduler.rv-grid.com/demo/",
