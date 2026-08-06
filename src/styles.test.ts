@@ -11,15 +11,17 @@ const schedulerSources = [
   './scheduler.angular.ts',
 ].map(readSource);
 const schedulerHeaderSource = readSource('./components/scheduler-header/scheduler-header.ts');
+const sharedButtonStyles = readSource('../../styles/_scheduler-button.scss');
 
 describe('scheduler segmented view styles', () => {
   it('uses consistent shadcn-style sizing and focus treatment for toolbar actions', () => {
     const actionRule = schedulerStyles.match(/&__icon,\s*&__today\s*\{([\s\S]*?)(?=\n\n\s*&__icon\s*\{)/);
 
-    expect(actionRule?.[1]).toContain('appearance: none;');
-    expect(actionRule?.[1]).toContain('height: 36px;');
-    expect(actionRule?.[1]).toContain('border-radius: 8px;');
-    expect(actionRule?.[1]).toContain('&:focus-visible');
+    expect(actionRule?.[1]).toContain('@include demo-controls.scheduler-button;');
+    expect(sharedButtonStyles).toContain('appearance: none;');
+    expect(sharedButtonStyles).toContain('height: 36px;');
+    expect(sharedButtonStyles).toContain('border-radius: 8px;');
+    expect(sharedButtonStyles).toContain('&:focus-visible');
   });
 
   it('keeps the removed top app bar out of every scheduler demo variant', () => {

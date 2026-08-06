@@ -1,3 +1,5 @@
+@use '../../styles/scheduler-button' as demo-controls;
+
 .event-scheduler-shift-week-demo {
   --event-scheduler-demo-bg: oklch(0.965 0.004 270);
   --event-scheduler-demo-text: oklch(0.26 0.014 270);
@@ -10,6 +12,21 @@
   --event-scheduler-demo-hover: oklch(0.96 0.006 270);
   --event-scheduler-demo-control-bg: oklch(1 0 0);
   --event-scheduler-demo-control-hover-bg: oklch(0.96 0.006 270);
+  --demo-toolbar-control-border: var(--event-scheduler-demo-border-strong);
+  --demo-toolbar-control-bg: var(--event-scheduler-demo-control-bg);
+  --demo-toolbar-control-text: var(--event-scheduler-demo-text);
+  --demo-toolbar-control-hover-bg: var(--event-scheduler-demo-control-hover-bg);
+  --demo-toolbar-control-hover-border: color-mix(
+    in srgb,
+    var(--event-scheduler-demo-border-strong) 70%,
+    var(--event-scheduler-demo-text)
+  );
+  --demo-toolbar-control-focus-surface: var(--event-scheduler-demo-surface);
+  --demo-toolbar-control-focus-ring: color-mix(
+    in srgb,
+    var(--event-scheduler-accent, #2563eb) 28%,
+    transparent
+  );
   --rv-segmented-bg: var(--event-scheduler-demo-surface-2);
   --rv-segmented-border: var(--event-scheduler-demo-border-strong);
   --rv-segmented-item-color: var(--event-scheduler-demo-muted-text);
@@ -99,34 +116,7 @@
 
   &__icon,
   &__today {
-    display: inline-flex;
-    appearance: none;
-    height: 36px;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--event-scheduler-demo-border-strong);
-    border-radius: 8px;
-    background: var(--event-scheduler-demo-control-bg);
-    color: var(--event-scheduler-demo-text);
-    box-shadow: 0 1px 2px rgb(15 23 42 / 8%);
-    cursor: pointer;
-    font: inherit;
-    transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
-
-    &:hover {
-      background: var(--event-scheduler-demo-control-hover-bg);
-      border-color: color-mix(in srgb, var(--event-scheduler-demo-border-strong) 70%, var(--event-scheduler-demo-text));
-    }
-
-    &:active {
-      box-shadow: 0 1px 1px rgb(15 23 42 / 6%);
-      transform: translateY(1px);
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--event-scheduler-demo-surface);
-      box-shadow: 0 0 0 4px color-mix(in srgb, var(--event-scheduler-accent, #2563eb) 28%, transparent);
-    }
+    @include demo-controls.scheduler-button;
   }
 
   &__icon {
@@ -139,9 +129,6 @@
 
   &__today {
     min-width: 68px;
-    padding: 0 14px;
-    font-size: 13px;
-    font-weight: 500;
   }
 
   &__heading {
