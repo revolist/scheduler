@@ -102,6 +102,7 @@ for (const relative of verifyMedia ? [media.walkthroughGif, media.walkthroughMp4
 const forbidden = [
   '../../composables/',
   '../../demo-host.css',
+  '../../styles/',
   '../../../../packages/',
   '"latest"',
 ];

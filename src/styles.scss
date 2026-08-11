@@ -1,4 +1,4 @@
-@use '../../styles/scheduler-button' as demo-controls;
+@use '../styles/scheduler-button' as demo-controls;
 
 .event-scheduler-shift-week-demo {
   --event-scheduler-demo-bg: oklch(0.965 0.004 270);

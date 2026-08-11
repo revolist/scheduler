@@ -33,11 +33,11 @@ importers:
         specifier: 4.25.1
         version: 4.25.1
       '@revolist/revogrid-pro':
-        specifier: npm:@revolist/rv-pro-trial@2.6.1
-        version: '@revolist/rv-pro-trial@2.6.1'
+        specifier: npm:@revolist/rv-pro-trial@2.6.2
+        version: '@revolist/rv-pro-trial@2.6.2'
       '@revolist/scheduler':
-        specifier: npm:@revolist/scheduler-trial@2.6.1
-        version: '@revolist/scheduler-trial@2.6.1'
+        specifier: npm:@revolist/scheduler-trial@2.6.2
+        version: '@revolist/scheduler-trial@2.6.2'
       '@revolist/vue3-datagrid':
         specifier: 4.25.1
         version: 4.25.1
@@ -1276,11 +1276,11 @@ packages:
   '@revolist/revogrid@4.25.1':
     resolution: {integrity: sha512-5s5lhJExMRnKu1Z8cANFvfN/S+gvg5aIIQ54ihwuHEZkecbFSfpE1Dod6t6heNBFzSsO9N+LWgLTUpJf/sErYA==}
 
-  '@revolist/rv-pro-trial@2.6.1':
-    resolution: {integrity: sha512-FmAPhSsNyR6bsjG6yJyqC+kFcirxpa5YJ8I98omJMG8X5cQd18PsRVCkxngaURLpZdhS221QRPbBUo0mVF26Zg==, tarball: http://trial.rv-grid.com/@revolist/rv-pro-trial/-/e0e92fc302ce43afcf6b2ec7b447d692c94a369d}
+  '@revolist/rv-pro-trial@2.6.2':
+    resolution: {integrity: sha512-MvrmgL33lDze9mnTO5FKGdW85VC2CEs70StZXVn3EUmtzHoiybI2U03z1MsaREmCfUO/dj0jyjjumuLfcV07cQ==, tarball: http://trial.rv-grid.com/@revolist/rv-pro-trial/-/5a0b13e0d5287b2677bcd64096ccb3e30a7e73bd}
 
-  '@revolist/scheduler-trial@2.6.1':
-    resolution: {integrity: sha512-k41daZEIlLZEiB6yUgLLUIZol4fxIBcDdQRGjlmAPeAhpVGNwGGDbJb1xEr6E0shzqm7hM/jqzuU6PrvyFf52g==, tarball: http://trial.rv-grid.com/@revolist/scheduler-trial/-/7ddab6c93135acca05b45679b7451a44adbb11de}
+  '@revolist/scheduler-trial@2.6.2':
+    resolution: {integrity: sha512-OC1W2HACMn7bRJK9jbD8rK3X0kuBhCB3pYAiA7ZvxGDExawxFNe4skmcsoTwpYtGuBJri1S+i1WwBXXwY3MbKA==, tarball: http://trial.rv-grid.com/@revolist/scheduler-trial/-/c9489df3381131b401753878ee03e8c09a23d318}
 
   '@revolist/vue3-datagrid@4.25.1':
     resolution: {integrity: sha512-TOBrKmRhLOdL4MD4o7HNVWqU6Ea0NzPtDsBMBoFSLlnmYU+ARGWBuAqZmgx9NK7uK5wYE8Xa3885QTXX/W+T+Q==}
@@ -4513,17 +4513,17 @@ snapshots:
 
   '@revolist/revogrid@4.25.1': {}
 
-  '@revolist/rv-pro-trial@2.6.1':
+  '@revolist/rv-pro-trial@2.6.2':
     dependencies:
       '@formulajs/formulajs': 4.6.1
       '@revolist/revogrid': 4.25.1
       write-excel-file: 4.1.1
 
-  '@revolist/scheduler-trial@2.6.1':
+  '@revolist/scheduler-trial@2.6.2':
     dependencies:
       '@fortawesome/fontawesome-free': 7.3.1
       '@revolist/revogrid': 4.25.1
-      '@revolist/rv-pro-trial': 2.6.1
+      '@revolist/rv-pro-trial': 2.6.2
 
   '@revolist/vue3-datagrid@4.25.1':
     dependencies:

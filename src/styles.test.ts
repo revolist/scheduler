@@ -11,7 +11,7 @@ const schedulerSources = [
   './scheduler.angular.ts',
 ].map(readSource);
 const schedulerHeaderSource = readSource('./components/scheduler-header/scheduler-header.ts');
-const sharedButtonStyles = readSource('../../styles/_scheduler-button.scss');
+const sharedButtonStyles = readSource('../styles/_scheduler-button.scss');
 
 describe('scheduler segmented view styles', () => {
   it('uses consistent shadcn-style sizing and focus treatment for toolbar actions', () => {
