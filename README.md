@@ -44,9 +44,9 @@ Vanilla TypeScript, React, Vue, and Angular.
 
 The package's date, calendar, and time utilities are also used to keep navigation, ISO dates, week boundaries, and labels consistent with the scheduler model.
 
-`EventSchedulerPlugin` automatically installs the shared Pro plugins it needs when the host grid has not already registered them:
+`EventSchedulerPlugin` automatically installs the shared plugins it needs when the host grid has not already registered them:
 
-| Auto-installed Pro plugin | Benefit inside the scheduler |
+| Auto-installed plugin | Benefit inside the scheduler |
 | --- | --- |
 | `EventManagerPlugin` | Provides one edit-event lifecycle for scheduler mutations and other plugins. |
 | `HistoryPlugin` | Captures scheduler edits so changes can participate in undo and redo. |
@@ -56,13 +56,7 @@ The package's date, calendar, and time utilities are also used to keep navigatio
 
 These plugins belong to the scheduler's internal dependency stack and should not be duplicated in the demo's `plugins` array.
 
-The synchronized table directly registers three additional plugins from `@revolist/revogrid-pro`:
-
-| Directly registered Pro plugin | How this demo uses it and why it helps |
-| --- | --- |
-| `AdvanceFilterPlugin` | Adds selection, string, and date filters so users can narrow events by title, date, assignee, type, or status. |
-| `ColumnStretchPlugin` | Stretches all table columns to fill the available panel width, avoiding an awkward empty area. |
-| `RowOddPlugin` | Adds alternating-row styling hooks that make the compact event list easier to scan. |
+The synchronized table uses the core grid directly, while the Scheduler package owns all scheduler-specific behavior and controls.
 
 ## Recipes
 

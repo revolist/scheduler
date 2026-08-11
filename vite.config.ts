@@ -3,13 +3,11 @@ import { fileURLToPath } from 'node:url';
 import angular from '@analogjs/vite-plugin-angular';
 import react from '@vitejs/plugin-react';
 import vue from '@vitejs/plugin-vue';
-import { resolveCommercialCssAliases } from './vite.commercial-aliases';
 
 export default defineConfig(({ mode }) => ({
   base: './',
   resolve: {
     alias: {
-      ...resolveCommercialCssAliases(),
       ...(mode === 'test'
         ? {
             '@revolist/revogrid-column-date': fileURLToPath(

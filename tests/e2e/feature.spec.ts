@@ -14,6 +14,13 @@ test(`${feature.title} mounts without browser errors`, async ({ page }) => {
 
   await page.goto('/');
   await expect(page.locator('revo-grid').first()).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole('tablist', { name: 'Scheduler workspace' })).toBeVisible();
+  await expect(page.getByRole('group', { name: 'Scheduler view' })).toBeVisible();
+  await expect(page.getByRole('combobox', { name: 'Calendar preset' })).toBeVisible();
+  const tableControl = page.getByRole('tab', { name: 'Table', exact: true });
+  await tableControl.click();
+  await expect(tableControl).toHaveAttribute('aria-selected', 'true');
+  await expect(page.locator('revo-grid.event-scheduler-shift-week-table')).toBeVisible();
   const screenshot = await page.locator('body').screenshot({ animations: 'disabled' });
   expect(screenshot.byteLength).toBeGreaterThan(10_000);
   expect(errors).toEqual([]);

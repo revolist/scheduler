@@ -1,7 +1,7 @@
 import type {
   EventSchedulerTemplateH,
   EventSchedulerTimeCellContext,
-} from '@revolist/revogrid-enterprise';
+} from '@revolist/scheduler';
 
 export function formatShiftWeekTimeLabel(minutes: number) {
   const normalized = ((minutes % 1440) + 1440) % 1440;

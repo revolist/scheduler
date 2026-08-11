@@ -23,35 +23,22 @@ if (!/^packages:\s*\n\s*- ["']?\.["']?\s*$/m.test(workspace)) {
 }
 
 const npmrc = await readFile(join(root, '.npmrc'), 'utf8');
-for (const requiredRegistryLine of [
-  '@revolist:registry=https://npm.pkg.github.com',
-  '//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}',
-]) {
+for (const requiredRegistryLine of ['@revolist:registry=http://trial.rv-grid.com']) {
   if (!npmrc.split(/\r?\n/).includes(requiredRegistryLine)) {
     failures.push(`.npmrc: missing required GitHub Packages configuration ${requiredRegistryLine}`);
   }
 }
 
 const exactVersionPattern = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/;
-const commercialDependencies = [
-  ['@revolist/revogrid-pro', '@revolist/rv-pro-trial'],
-  ['@revolist/revogrid-enterprise', '@revolist/rv-enterprise-trial'],
-];
-const commercialVersions = new Map();
-for (const [packageName, trialPackageName] of commercialDependencies) {
-  const specifier = packageManifest.dependencies?.[packageName];
-  const trialAliasPrefix = `npm:${trialPackageName}@`;
-  const version = typeof specifier === 'string' && specifier.startsWith(trialAliasPrefix)
-    ? specifier.slice(trialAliasPrefix.length)
-    : specifier;
-  if (typeof version !== 'string' || !exactVersionPattern.test(version)) {
-    failures.push(`package.json: ${packageName} must use an exact version or exact ${trialPackageName} alias`);
-    continue;
-  }
-  commercialVersions.set(packageName, version);
-}
-if (new Set(commercialVersions.values()).size > 1) {
-  failures.push('package.json: RevoGrid Pro and Enterprise versions must match');
+const productPackageName = `@revolist/${feature.slug}`;
+const trialPackageName = `@revolist/${feature.slug}-trial`;
+const productSpecifier = packageManifest.dependencies?.[productPackageName];
+const trialAliasPrefix = `npm:${trialPackageName}@`;
+const productVersion = typeof productSpecifier === 'string' && productSpecifier.startsWith(trialAliasPrefix)
+  ? productSpecifier.slice(trialAliasPrefix.length)
+  : undefined;
+if (typeof productVersion !== 'string' || !exactVersionPattern.test(productVersion)) {
+  failures.push(`package.json: ${productPackageName} must use an exact ${trialPackageName} alias`);
 }
 
 for (const key of requiredStrings) {
@@ -116,7 +103,6 @@ const forbidden = [
   '../../composables/',
   '../../demo-host.css',
   '../../../../packages/',
-  'trial.rv-grid.com',
   '"latest"',
 ];
 
