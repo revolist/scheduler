@@ -2,107 +2,119 @@
 
 # RevoGrid Scheduler
 
-**Calendar and resource planning for teams, shifts, equipment, and operations.**
-
-[![Frameworks](https://img.shields.io/badge/TypeScript%20%7C%20React%20%7C%20Vue%20%7C%20Angular-4f46e5)](#framework-examples)
-[![License: MIT](https://img.shields.io/badge/Example%20license-MIT-16a34a.svg)](./LICENSE)
-
-[View live demo](https://scheduler.rv-grid.com/demo/) · [Request trial](https://pro.rv-grid.com/guides/installation-npm-trial/) · [Get Pro Advanced](https://rv-grid.com/pricing/)
+[View live demo](https://scheduler.rv-grid.com/demo/) · [Get Pro Advanced](https://rv-grid.com/pricing/)
 
 [![RevoGrid Scheduler walkthrough](./assets/scheduler-walkthrough.gif)](./assets/scheduler-walkthrough.mp4)
 
 </div>
 
-This production-style event and shift-scheduling workspace is implemented in
-Vanilla TypeScript, React, Vue, and Angular.
+RevoGrid Scheduler is a JavaScript event and resource-scheduling component built
+on RevoGrid. It combines calendar and timeline views with availability,
+assignment, conflict, and editing APIs for operational planning applications.
 
-## What it features
+## Key capabilities
 
-- Calendar and resource timeline views plus a synchronized table view
-- Day, week, and month navigation with a Today action
-- Resource lanes, event selection, search highlighting, and calendar presets
-- Event creation, manual events, open shifts, and reassignment
-- Team avatars, workspace navigation, and responsive scheduling UI
-- Advanced filtering and polished supporting table behavior
+- Switch between day, week, month, year, and resource-timeline views
+- Schedule events against people, teams, rooms, equipment, or other resources
+- Define working hours, closed periods, availability, and non-working time
+- Detect conflicts and enforce application-specific scheduling policies
+- Create, move, resize, reassign, duplicate, and delete events
+- Control editing through global, event-level, resource-level, and slot-level permissions
+- Configure time zones, locales, visible days, ranges, snapping, and zoom levels
+- Customize headers, cells, event bars, resource presentation, and time labels
+- Track assignments and utilization while keeping event data application-owned
 
-## Pro features
+## Installation
 
-`EventSchedulerPlugin` owns the calendar and resource-timeline workspace.
+### Free trial
 
-| Scheduler capability | Benefit demonstrated here |
-| --- | --- |
-| Day, week, month, and resource-timeline views | Lets dispatchers switch between time-based planning and resource capacity without changing data models. |
-| Create, move, resize, and delete | Turns the schedule into an editable planning surface instead of a read-only calendar. |
-| Resource reassignment and open-shift assignment events | Supports staffing workflows while keeping application state in control of the final update. |
-| Multiple selection and clipboard copy | Makes it practical to duplicate or move several shifts; this demo copies selected events with a seven-day offset. |
-| Working calendars and closed slots | Expresses weekday, open, and training availability so users can see when work can be scheduled. |
-| Conflict detection | Marks overlapping events for the same resource, surfacing staffing problems before they are saved. |
-| Stacked events and continuation labels | Keeps overlapping and cross-boundary events understandable in busy time ranges. |
-| Context menu and keyboard shortcuts | Gives mouse and keyboard users efficient access to common scheduling actions. |
-| Current-time, today, weekend, holiday, and event-count cues | Adds operational context so users can orient themselves quickly. |
-| Cell, header, time-label, resource, and event customization hooks | Lets the demo add avatars, statuses, colors, search highlights, availability states, and compact resource cards without replacing scheduler behavior. |
+The public trial registry requires no token or login. Configure it for this
+project and install the trial packages under the production import names:
 
-The package's date, calendar, and time utilities are also used to keep navigation, ISO dates, week boundaries, and labels consistent with the scheduler model.
+```bash
+pnpm config set @revolist:registry https://trial.rv-grid.com --location=project
+pnpm i @revolist/revogrid-pro@npm:@revolist/rv-pro-trial@2.7.10 @revolist/scheduler@npm:@revolist/scheduler-trial@2.7.10
+```
 
-`EventSchedulerPlugin` automatically installs the shared plugins it needs when the host grid has not already registered them:
+### Pro
 
-| Auto-installed plugin | Benefit inside the scheduler |
-| --- | --- |
-| `EventManagerPlugin` | Provides one edit-event lifecycle for scheduler mutations and other plugins. |
-| `HistoryPlugin` | Captures scheduler edits so changes can participate in undo and redo. |
-| `TooltipPlugin` | Displays event and scheduling details without crowding the timeline. |
-| `ContextMenuPlugin` | Powers the configured event and empty-slot action menus. |
-| `RowZIndexPlugin` | Maintains predictable visual stacking for rows and overlapping scheduler content. |
+Paid users can remove the trial registry override and install the licensed
+packages. Source imports stay unchanged.
 
-These plugins belong to the scheduler's internal dependency stack and should not be duplicated in the demo's `plugins` array.
+```bash
+pnpm config delete @revolist:registry --location=project
+pnpm i @revolist/revogrid-pro@2.7.10 @revolist/scheduler@2.7.10
+```
 
-The synchronized table uses the core grid directly, while the Scheduler package owns all scheduler-specific behavior and controls.
+## Quick start
 
-## Recipes
+```ts
+import { defineCustomElements } from '@revolist/revogrid/loader';
+import { EventSchedulerPlugin } from '@revolist/scheduler';
+import '@revolist/scheduler/styles.css';
 
-| Recipe | What it demonstrates |
-| --- | --- |
-| [`calendar-resource-views.ts`](./recipes/calendar-resource-views.ts) | Calendar, month, and resource timeline projections. |
-| [`availability-conflicts.ts`](./recipes/availability-conflicts.ts) | Working calendars, closed slots, training, and conflicts. |
-| [`event-lifecycle.ts`](./recipes/event-lifecycle.ts) | Local creation, reassignment, and application persistence. |
+defineCustomElements();
 
-## Framework examples
+const grid = document.createElement('revo-grid');
+grid.plugins = [EventSchedulerPlugin];
+grid.eventScheduler = {
+  view: 'week',
+  weekStartDate: '2026-08-17',
+  slotMinutes: 30,
+  timeRange: { start: '08:00', end: '18:00' },
+  editable: true,
+};
+document.querySelector('#app')?.appendChild(grid);
+grid.eventSchedulerEvents = [
+  {
+    id: 'event-1',
+    title: 'Planning session',
+    startDateTime: '2026-08-18T09:00:00.000Z',
+    endDateTime: '2026-08-18T10:00:00.000Z',
+  },
+];
+```
 
-| Framework | Entry point | Command |
+## Framework integrations
+
+The component uses the same scheduler model across supported frameworks.
+
+| Framework | Integration source | Start command |
 | --- | --- | --- |
 | Vanilla TypeScript | [`src/scheduler.ts`](./src/scheduler.ts) | `pnpm dev` |
 | React | [`src/scheduler.react.tsx`](./src/scheduler.react.tsx) | `pnpm dev:react` |
 | Vue 3 | [`src/scheduler.vue`](./src/scheduler.vue) | `pnpm dev:vue` |
 | Angular | [`src/scheduler.angular.ts`](./src/scheduler.angular.ts) | `pnpm dev:angular` |
 
-## Run it
+Build all integrations with `pnpm build:frameworks`.
+
+## Run the examples
+
+Clone the component repository, follow either the **Free trial** or **Pro**
+installation above, and start the framework you want to inspect:
 
 ```bash
-pnpm install
-pnpm dev          # Vanilla TypeScript
-pnpm dev:react
-pnpm dev:vue
-pnpm dev:angular
+git clone https://github.com/revolist/scheduler.git
+cd scheduler
+pnpm dev
 ```
 
-Build variants use the matching `build:ts`, `build:react`, `build:vue`, and `build:angular` scripts. Run `pnpm test` for the scheduler data/configuration tests.
+Open [http://localhost:5173/](http://localhost:5173/) for the Vanilla TypeScript
+version. Use `pnpm dev:react`, `pnpm dev:vue`, or `pnpm dev:angular` for the
+matching framework integration. The complete shift and resource-planning
+implementation starts in [`src/scheduler.ts`](./src/scheduler.ts), with the
+other framework entry points linked in the table above. You can also open the
+[hosted Scheduler example](https://scheduler.rv-grid.com/demo/) without running
+the repository.
 
-Trial users must authenticate with the registry described in the [official
-trial installation guide](https://pro.rv-grid.com/guides/installation-npm-trial/).
-No registry token belongs in this repository. Licensed users can replace the two
-trial aliases in `package.json` with the matching licensed RevoGrid packages;
-source imports remain unchanged.
+## Resources
+
+- [Scheduler documentation](https://pro.rv-grid.com/guides/event-scheduler/)
+- [Scheduler API](https://pro.rv-grid.com/api/event-scheduler/)
+- [Trial installation guide](https://pro.rv-grid.com/guides/installation-npm-trial/)
 
 ## License
 
-The examples, recipes, tests, documentation, and media tooling are MIT licensed.
-Commercial RevoGrid packages are not covered by this repository's MIT license.
-
-## Main files
-
-- `src/scheduler.ts` — Vanilla TypeScript
-- `src/scheduler.react.tsx` — React
-- `src/scheduler.vue` — Vue
-- `src/scheduler.angular.ts` — Angular
-- `src/data.ts` — events, resources, views, navigation, and scheduler configuration
-- `src/resource-range.ts` and `src/time-label.ts` — scheduler presentation helpers
+The integration source and supporting assets in this repository are MIT
+licensed. RevoGrid Pro and RevoGrid Scheduler are commercial packages
+distributed under the license supplied with your subscription.
