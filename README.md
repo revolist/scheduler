@@ -33,7 +33,7 @@ project and install the trial packages under the production import names:
 
 ```bash
 pnpm config set @revolist:registry https://trial.rv-grid.com --location=project
-pnpm i @revolist/revogrid-pro@npm:@revolist/rv-pro-trial@2.7.12 @revolist/scheduler@npm:@revolist/scheduler-trial@2.7.12
+pnpm i @revolist/revogrid-pro@npm:@revolist/rv-pro-trial@2.7.13 @revolist/scheduler@npm:@revolist/scheduler-trial@2.7.13
 ```
 
 ### Pro
@@ -43,7 +43,7 @@ packages. Source imports stay unchanged.
 
 ```bash
 pnpm config delete @revolist:registry --location=project
-pnpm i @revolist/revogrid-pro@2.7.12 @revolist/scheduler@2.7.12
+pnpm i @revolist/revogrid-pro@2.7.13 @revolist/scheduler@2.7.13
 ```
 
 ## Quick start
