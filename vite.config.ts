@@ -25,7 +25,7 @@ export default defineConfig(({ mode }) => ({
   ],
   test: {
     environment: 'jsdom',
-    include: ['src/**/*.test.ts', 'recipes/**/*.test.ts'],
+    include: ['tests/unit/**/*.test.ts'],
     exclude: ['tests/e2e/**'],
     server: { deps: { inline: true } },
   },

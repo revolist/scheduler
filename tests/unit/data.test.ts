@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createShiftWeekConfig, createShiftWeekEvents } from './data';
+import { createShiftWeekConfig, createShiftWeekEvents } from '../../src/data';
 
 describe('scheduler demo seed events', () => {
   it('uses hourly rows at twice the previous row height', () => {

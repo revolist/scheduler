@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 
-const readSource = (path: string) => readFileSync(fileURLToPath(new URL(path, import.meta.url)), 'utf8');
+const sourceRoot = resolve(import.meta.dirname, '../../src');
+const readSource = (path: string) => readFileSync(resolve(sourceRoot, path), 'utf8');
 const schedulerStyles = readSource('./styles.scss');
 const schedulerSources = [
   './scheduler.ts',

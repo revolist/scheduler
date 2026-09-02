@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { calendarAndResourceViewsRecipe } from './calendar-resource-views';
-import { availabilityAndConflictsRecipe } from './availability-conflicts';
-import { createEventLifecycleRecipe } from './event-lifecycle';
+import { calendarAndResourceViewsRecipe } from '../../../recipes/calendar-resource-views';
+import { availabilityAndConflictsRecipe } from '../../../recipes/availability-conflicts';
+import { createEventLifecycleRecipe } from '../../../recipes/event-lifecycle';
 
 describe('Scheduler recipes', () => {
   it('projects the same model into calendar and resource views', () => {

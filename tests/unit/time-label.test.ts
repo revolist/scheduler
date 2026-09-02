@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { renderShiftWeekTimeLabel } from './time-label';
+import { renderShiftWeekTimeLabel } from '../../src/time-label';
 
 describe('shift-week time labels', () => {
   it.each([
