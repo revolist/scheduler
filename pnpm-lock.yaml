@@ -30,8 +30,8 @@ importers:
         specifier: 4.27.0
         version: 4.27.0
       '@revolist/revogrid':
-        specifier: 4.27.0
-        version: 4.27.0
+        specifier: 4.27.6
+        version: 4.27.6
       '@revolist/revogrid-pro':
         specifier: npm:@revolist/rv-pro-trial@2.8.2
         version: '@revolist/rv-pro-trial@2.8.2'
