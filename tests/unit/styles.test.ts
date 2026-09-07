@@ -50,4 +50,12 @@ describe('scheduler segmented view styles', () => {
     const rangeRule = schedulerStyles.match(/&__range\s*\{([\s\S]*?)\n\s*\}/);
     expect(rangeRule?.[1]).toContain('justify-self: start;');
   });
+
+  it('aligns the action panel with the scheduler content edges', () => {
+    const toolbarRule = schedulerStyles.match(/\.event-scheduler-shift-week-toolbar\s*\{([\s\S]*?)(?=\n\s*&__nav\s*\{)/);
+    const compactToolbarRule = schedulerStyles.match(/@media \(max-width: 900px\)\s*\{[\s\S]*?\.event-scheduler-shift-week-toolbar\s*\{([\s\S]*?)(?=\n\s*&__workspace\s*\{)/);
+
+    expect(toolbarRule?.[1]).toContain('padding: 10px 0;');
+    expect(compactToolbarRule?.[1]).toContain('padding: 12px 0 16px;');
+  });
 });

@@ -76,7 +76,7 @@
   align-items: center;
   gap: 16px;
   min-height: 64px;
-  padding: 10px 18px;
+  padding: 10px 0;
   border-bottom: 1px solid var(--event-scheduler-demo-border);
   background: color-mix(in srgb, var(--event-scheduler-demo-surface) 96%, var(--event-scheduler-demo-surface-2));
 
@@ -1045,7 +1045,7 @@ revo-grid.event-scheduler-shift-week-grid {
     grid-template-columns: minmax(0, 1fr);
     flex-shrink: 0;
     gap: 12px;
-    padding: 12px 14px 16px;
+    padding: 12px 0 16px;
 
     &__workspace {
       grid-column: 1;
