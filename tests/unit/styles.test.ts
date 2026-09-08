@@ -25,6 +25,14 @@ describe('scheduler segmented view styles', () => {
     expect(sharedButtonStyles).toContain('&:focus-visible');
   });
 
+  it('keeps compact Scheduler controls within the workspace-switch height', () => {
+    expect(schedulerStyles).toContain('--event-scheduler-demo-control-height: 38px;');
+    expect(schedulerStyles).toContain('height: var(--event-scheduler-demo-control-height);');
+    expect(schedulerStyles).toContain('min-height: var(--event-scheduler-demo-control-height);');
+    expect(schedulerStyles).toContain('height: 30px;');
+    expect(schedulerStyles).toContain('min-height: 30px;');
+  });
+
   it('keeps the removed top app bar out of every scheduler demo variant', () => {
     for (const source of [...schedulerSources, schedulerStyles]) {
       expect(source).not.toContain('event-scheduler-shift-week-appbar');

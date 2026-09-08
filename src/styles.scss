@@ -71,6 +71,7 @@
 }
 
 .event-scheduler-shift-week-toolbar {
+  --event-scheduler-demo-control-height: 38px;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
@@ -112,6 +113,17 @@
 
   &__views {
     flex: 0 0 auto;
+  }
+
+  &__workspace,
+  &__views {
+    height: var(--event-scheduler-demo-control-height);
+    min-height: var(--event-scheduler-demo-control-height);
+
+    .rv-segmented-switch-item {
+      height: 30px;
+      min-height: 30px;
+    }
   }
 
   &__icon,
@@ -1071,12 +1083,14 @@ revo-grid.event-scheduler-shift-week-grid {
 
     &__icon,
     &__today {
-      height: 40px;
+      height: 36px;
+      min-height: 36px;
     }
 
     &__views {
       width: 100%;
-      min-height: 44px;
+      height: var(--event-scheduler-demo-control-height);
+      min-height: var(--event-scheduler-demo-control-height);
       justify-self: stretch;
     }
 
@@ -1087,7 +1101,8 @@ revo-grid.event-scheduler-shift-week-grid {
 
     &__view {
       min-width: 0;
-      height: 38px;
+      height: 30px;
+      min-height: 30px;
       flex: 1 1 0;
     }
 
