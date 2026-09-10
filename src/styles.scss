@@ -1040,7 +1040,10 @@ revo-grid.event-scheduler-shift-week-grid {
   }
 }
 
-@media (max-width: 1200px) {
+// In the docs host the demo has less inline space than the browser viewport
+// because the navigation remains visible at 1280px. Start the compact toolbar
+// before the range title can collide with the view switch.
+@media (max-width: 1360px) {
   .demo-preview-fill-root:has(.event-scheduler-shift-week-demo),
   .preview-surface-live:has(.event-scheduler-shift-week-demo) {
     padding: 0 !important;

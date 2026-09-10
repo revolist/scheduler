@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { createShiftWeekConfig, createShiftWeekEvents } from '../../src/data';
+import {
+  createShiftWeekConfig,
+  createShiftWeekEvents,
+  getShiftWeekRangeTitle,
+  getShiftWeekSubtitle,
+} from '../../src/data';
 
 describe('scheduler demo seed events', () => {
   it('uses hourly rows at twice the previous row height', () => {
@@ -20,5 +25,10 @@ describe('scheduler demo seed events', () => {
       'shift-sam-locked',
       'shift-jamie-training',
     ]);
+  });
+
+  it('labels the Year selection as the month calendar that is actually rendered', () => {
+    expect(getShiftWeekRangeTitle('year', '2026-09-09')).toBe('January 2026');
+    expect(getShiftWeekSubtitle('2026-01-01', 'year')).toBe('Calendar month · year navigation');
   });
 });
