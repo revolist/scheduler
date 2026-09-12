@@ -65,7 +65,7 @@ grid.eventScheduler = {
   editable: true,
 };
 document.querySelector('#app')?.appendChild(grid);
-grid.eventSchedulerEvents = [
+grid.source = [
   {
     id: 'event-1',
     title: 'Planning session',

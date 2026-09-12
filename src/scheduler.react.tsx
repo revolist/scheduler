@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { RevoGrid } from '@revolist/react-datagrid';
-import { EventSchedulerPlugin, type EventSchedulerEntityId, type EventSchedulerEventChangedDetail, type EventSchedulerEventEntity, type EventSchedulerEventSelectedDetail, type EventSchedulerOpenShiftAssignRequestDetail, type EventSchedulerResourceReassignRequestDetail } from '@revolist/scheduler';
-import { AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin } from '@revolist/revogrid-pro';
+import { EventSchedulerPlugin, type EventSchedulerEntityId, type EventSchedulerEventEntity, type EventSchedulerEventSelectedDetail, type EventSchedulerOpenShiftAssignRequestDetail, type EventSchedulerResourceReassignRequestDetail } from '@revolist/scheduler';
+import { AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin, applySourceChanges } from '@revolist/revogrid-pro';
 import { currentTheme, observeCurrentTheme } from './shared/theme';
 import {
   createShiftWeekAssignedOpenShift,
@@ -196,7 +196,7 @@ export default function EventSchedulerShiftWeek() {
     const grid = gridRef.current;
     if (!grid) return undefined;
     const syncEvents = (event: Event) => {
-      setEvents([...(event as CustomEvent<EventSchedulerEventChangedDetail>).detail.events]);
+      setEvents(current => applySourceChanges(current, (event as CustomEvent).detail.sourceChanges));
     };
     const handleBeforeEventSelect = (event: Event) => {
       event.preventDefault();
@@ -232,18 +232,14 @@ export default function EventSchedulerShiftWeek() {
         ),
       ]);
     };
-    grid.addEventListener('event-scheduler-event-created', syncEvents);
-    grid.addEventListener('event-scheduler-event-changed', syncEvents);
-    grid.addEventListener('event-scheduler-event-deleted', syncEvents);
+    grid.addEventListener('gridedit', syncEvents);
     grid.addEventListener('event-scheduler-before-event-select', handleBeforeEventSelect);
     grid.addEventListener('event-scheduler-navigate-request', handleNavigateRequest);
     grid.addEventListener('event-scheduler-open-shift-assign-request', handleOpenShiftAssignRequest);
     grid.addEventListener('event-scheduler-resource-reassign-request', handleResourceReassignRequest);
     grid.addEventListener('event-scheduler-view-request', handleViewRequest);
     return () => {
-      grid.removeEventListener('event-scheduler-event-created', syncEvents);
-      grid.removeEventListener('event-scheduler-event-changed', syncEvents);
-      grid.removeEventListener('event-scheduler-event-deleted', syncEvents);
+      grid.removeEventListener('gridedit', syncEvents);
       grid.removeEventListener('event-scheduler-before-event-select', handleBeforeEventSelect);
       grid.removeEventListener('event-scheduler-navigate-request', handleNavigateRequest);
       grid.removeEventListener('event-scheduler-open-shift-assign-request', handleOpenShiftAssignRequest);
@@ -274,12 +270,11 @@ export default function EventSchedulerShiftWeek() {
               theme={isDark ? 'darkMaterial' : 'material'}
               hideAttribution
               plugins={plugins}
-              source={[]}
+              source={events}
               columns={[]}
               columnTypes={columnTypes}
               additionalData={additionalData}
               eventScheduler={schedulerConfig}
-              eventSchedulerEvents={events}
               eventSchedulerResources={resources}
           />
         )}

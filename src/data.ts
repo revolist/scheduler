@@ -452,6 +452,7 @@ export function createShiftWeekConfig(
         : view;
   return {
     ...shiftWeekBaseConfig,
+    eventMapping: true,
     view: schedulerView,
     weekStartDate: normalizedAnchor,
     ...(resourceDateRange ? { dateRange: resourceDateRange } : {}),

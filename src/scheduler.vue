@@ -25,14 +25,11 @@
           hide-attribution
           :theme="isDark ? 'darkMaterial' : 'material'"
           :plugins="plugins"
-          :source="rows"
+          :source="schedulerEvents"
           :columns="columns"
           :event-scheduler.prop="schedulerConfig"
-          :event-scheduler-events.prop="schedulerEvents"
           :event-scheduler-resources.prop="resources"
-          @event-scheduler-event-created="handleSchedulerEvents"
-          @event-scheduler-event-changed="handleSchedulerEvents"
-          @event-scheduler-event-deleted="handleSchedulerEvents"
+          @gridedit="handleSchedulerEvents"
           @event-scheduler-before-event-select="handleBeforeEventSelect"
           @event-scheduler-navigate-request="handleNavigateRequest"
           @event-scheduler-open-shift-assign-request="handleOpenShiftAssignRequest"
@@ -52,8 +49,8 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import RevoGrid from '@revolist/vue3-datagrid';
-import { EventSchedulerPlugin, type EventSchedulerEntityId, type EventSchedulerEventChangedDetail, type EventSchedulerEventSelectedDetail, type EventSchedulerOpenShiftAssignRequestDetail, type EventSchedulerResourceReassignRequestDetail } from '@revolist/scheduler';
-import { AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin } from '@revolist/revogrid-pro';
+import { EventSchedulerPlugin, type EventSchedulerEntityId, type EventSchedulerEventSelectedDetail, type EventSchedulerOpenShiftAssignRequestDetail, type EventSchedulerResourceReassignRequestDetail } from '@revolist/scheduler';
+import { AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin, applySourceChanges } from '@revolist/revogrid-pro';
 import { currentTheme, observeCurrentTheme } from './shared/theme';
 import {
   createShiftWeekAssignedOpenShift,
@@ -109,7 +106,6 @@ onBeforeUnmount(() => disconnectTheme?.());
 const plugins = [EventSchedulerPlugin];
 const tablePlugins = [AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin];
 const tableColumns = getShiftWeekTableColumns();
-const rows = ref([]);
 const columns = ref([]);
 const activeView = ref<ShiftWeekDemoView>(initialShiftWeekDemoView);
 const workspaceView = ref<ShiftWeekWorkspaceView>(initialShiftWeekWorkspaceView);
@@ -235,8 +231,8 @@ function handleBeforeEventSelect(event: CustomEvent<EventSchedulerEventSelectedD
   selectedEventIds.value = [...event.detail.eventIds];
 }
 
-function handleSchedulerEvents(event: CustomEvent<EventSchedulerEventChangedDetail>) {
-  schedulerEvents.value = event.detail.events.map((item) => ({ ...item }));
+function handleSchedulerEvents(event: CustomEvent) {
+  schedulerEvents.value = applySourceChanges(schedulerEvents.value, event.detail.sourceChanges);
 }
 
 function handleOpenShiftAssignRequest(event: CustomEvent<EventSchedulerOpenShiftAssignRequestDetail>) {
