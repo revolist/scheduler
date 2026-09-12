@@ -50,7 +50,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import RevoGrid from '@revolist/vue3-datagrid';
 import { EventSchedulerPlugin, type EventSchedulerEntityId, type EventSchedulerEventSelectedDetail, type EventSchedulerOpenShiftAssignRequestDetail, type EventSchedulerResourceReassignRequestDetail } from '@revolist/scheduler';
-import { AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin, applySourceChanges } from '@revolist/revogrid-pro';
+import { AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin } from '@revolist/revogrid-pro';
 import { currentTheme, observeCurrentTheme } from './shared/theme';
 import {
   createShiftWeekAssignedOpenShift,
@@ -232,7 +232,7 @@ function handleBeforeEventSelect(event: CustomEvent<EventSchedulerEventSelectedD
 }
 
 function handleSchedulerEvents(event: CustomEvent) {
-  schedulerEvents.value = applySourceChanges(schedulerEvents.value, event.detail.sourceChanges);
+  schedulerEvents.value = [...(event.target as HTMLRevoGridElement).source];
 }
 
 function handleOpenShiftAssignRequest(event: CustomEvent<EventSchedulerOpenShiftAssignRequestDetail>) {

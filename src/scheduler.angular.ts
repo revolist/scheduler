@@ -1,8 +1,8 @@
-import { Component, NO_ERRORS_SCHEMA, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, NO_ERRORS_SCHEMA, ViewEncapsulation, type OnDestroy } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { RevoGrid } from '@revolist/angular-datagrid';
 import { EventSchedulerPlugin, type EventSchedulerEntityId, type EventSchedulerEventEntity, type EventSchedulerEventSelectedDetail, type EventSchedulerOpenShiftAssignRequestDetail, type EventSchedulerResourceReassignRequestDetail } from '@revolist/scheduler';
-import { AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin, applySourceChanges } from '@revolist/revogrid-pro';
+import { AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin } from '@revolist/revogrid-pro';
 import { currentTheme, observeCurrentTheme } from './shared/theme';
 import {
   createShiftWeekAssignedOpenShift,
@@ -227,7 +227,7 @@ export class EventSchedulerShiftWeekGridComponent implements OnDestroy {
   }
 
   handleSchedulerEvents(event: CustomEvent) {
-    this.events = applySourceChanges(this.events, event.detail.sourceChanges);
+    this.events = [...(event.target as HTMLRevoGridElement).source];
     this.refreshSchedulerConfig();
   }
 

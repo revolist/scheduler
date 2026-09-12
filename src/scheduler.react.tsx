@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { RevoGrid } from '@revolist/react-datagrid';
 import { EventSchedulerPlugin, type EventSchedulerEntityId, type EventSchedulerEventEntity, type EventSchedulerEventSelectedDetail, type EventSchedulerOpenShiftAssignRequestDetail, type EventSchedulerResourceReassignRequestDetail } from '@revolist/scheduler';
-import { AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin, applySourceChanges } from '@revolist/revogrid-pro';
+import { AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin } from '@revolist/revogrid-pro';
 import { currentTheme, observeCurrentTheme } from './shared/theme';
 import {
   createShiftWeekAssignedOpenShift,
@@ -195,8 +195,8 @@ export default function EventSchedulerShiftWeek() {
   useEffect(() => {
     const grid = gridRef.current;
     if (!grid) return undefined;
-    const syncEvents = (event: Event) => {
-      setEvents(current => applySourceChanges(current, (event as CustomEvent).detail.sourceChanges));
+    const syncEvents = () => {
+      setEvents([...grid.source] as EventSchedulerEventEntity[]);
     };
     const handleBeforeEventSelect = (event: Event) => {
       event.preventDefault();

@@ -2,7 +2,7 @@ import { defineCustomElements } from '@revolist/revogrid/loader';
 defineCustomElements();
 
 import { EventSchedulerPlugin, type EventSchedulerEntityId, type EventSchedulerEventSelectedDetail } from '@revolist/scheduler';
-import { AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin, applySourceChanges } from '@revolist/revogrid-pro';
+import { AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin } from '@revolist/revogrid-pro';
 import { currentTheme, observeCurrentTheme } from './shared/theme';
 import {
   createShiftWeekAssignedOpenShift,
@@ -202,9 +202,8 @@ export function load(parentSelector: string) {
     closeNewEvent();
     renderTable();
   });
-  const syncEvents = (event: Event) => {
-    schedulerEvents = applySourceChanges(schedulerEvents, (event as CustomEvent).detail.sourceChanges);
-    grid.source = schedulerEvents;
+  const syncEvents = () => {
+    schedulerEvents = [...grid.source];
     applySchedulerConfig();
     renderTable();
   };
