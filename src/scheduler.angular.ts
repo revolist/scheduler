@@ -82,6 +82,9 @@ defineSchedulerShellElements();
             [eventScheduler]="schedulerConfig"
             [eventSchedulerResources]="resources"
             (gridedit)="handleSchedulerEvents($event)"
+            (event-scheduler-event-created)="handleSchedulerEvents($event)"
+            (event-scheduler-event-changed)="handleSchedulerEvents($event)"
+            (event-scheduler-event-deleted)="handleSchedulerEvents($event)"
             (event-scheduler-before-event-select)="handleBeforeEventSelect($event)"
             (event-scheduler-navigate-request)="handleNavigateRequest($event)"
             (event-scheduler-open-shift-assign-request)="handleOpenShiftAssignRequest($event)"
@@ -226,8 +229,8 @@ export class EventSchedulerShiftWeekGridComponent implements OnDestroy {
     this.closeNewEvent();
   }
 
-  handleSchedulerEvents(event: CustomEvent) {
-    this.events = [...(event.target as HTMLRevoGridElement).source];
+  handleSchedulerEvents(event: CustomEvent<{ events?: readonly EventSchedulerEventEntity[] }>) {
+    this.events = [...(event.detail?.events ?? (event.target as HTMLRevoGridElement).source)];
     this.refreshSchedulerConfig();
   }
 

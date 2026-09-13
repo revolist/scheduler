@@ -39,6 +39,15 @@ describe('scheduler segmented view styles', () => {
     }
   });
 
+  it('syncs Scheduler-specific create, move, and delete commits in every framework variant', () => {
+    for (const source of schedulerSources) {
+      expect(source).toContain('event-scheduler-event-created');
+      expect(source).toContain('event-scheduler-event-changed');
+      expect(source).toContain('event-scheduler-event-deleted');
+      expect(source).toContain('detail?.events');
+    }
+  });
+
   it('keeps the workspace switch in the shared header and the sidebar out of every framework variant', () => {
     expect(schedulerHeaderSource).toContain("setAttribute('aria-label', 'Scheduler workspace')");
     expect(schedulerHeaderSource).toContain("setAttribute('aria-selected', String(active))");

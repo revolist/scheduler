@@ -1,7 +1,7 @@
 import { defineCustomElements } from '@revolist/revogrid/loader';
 defineCustomElements();
 
-import { EventSchedulerPlugin, type EventSchedulerEntityId, type EventSchedulerEventSelectedDetail } from '@revolist/scheduler';
+import { EventSchedulerPlugin, type EventSchedulerEntityId, type EventSchedulerEventEntity, type EventSchedulerEventSelectedDetail } from '@revolist/scheduler';
 import { AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin } from '@revolist/revogrid-pro';
 import { currentTheme, observeCurrentTheme } from './shared/theme';
 import {
@@ -202,8 +202,9 @@ export function load(parentSelector: string) {
     closeNewEvent();
     renderTable();
   });
-  const syncEvents = () => {
-    schedulerEvents = [...grid.source];
+  const syncEvents = (event?: Event) => {
+    const events = (event as CustomEvent<{ events?: readonly EventSchedulerEventEntity[] }> | undefined)?.detail?.events;
+    schedulerEvents = [...(events ?? grid.source)];
     applySchedulerConfig();
     renderTable();
   };
@@ -251,6 +252,9 @@ export function load(parentSelector: string) {
     renderTable();
   };
   grid.addEventListener('gridedit', syncEvents);
+  grid.addEventListener('event-scheduler-event-created', syncEvents);
+  grid.addEventListener('event-scheduler-event-changed', syncEvents);
+  grid.addEventListener('event-scheduler-event-deleted', syncEvents);
   grid.addEventListener('event-scheduler-before-event-select', handleBeforeEventSelect);
   grid.addEventListener('event-scheduler-navigate-request', handleNavigateRequest);
   grid.addEventListener('event-scheduler-open-shift-assign-request', handleOpenShiftAssignRequest);
@@ -267,6 +271,9 @@ export function load(parentSelector: string) {
   return () => {
     disconnectTheme();
     grid.removeEventListener('gridedit', syncEvents);
+    grid.removeEventListener('event-scheduler-event-created', syncEvents);
+    grid.removeEventListener('event-scheduler-event-changed', syncEvents);
+    grid.removeEventListener('event-scheduler-event-deleted', syncEvents);
     grid.removeEventListener('event-scheduler-before-event-select', handleBeforeEventSelect);
     grid.removeEventListener('event-scheduler-navigate-request', handleNavigateRequest);
     grid.removeEventListener('event-scheduler-open-shift-assign-request', handleOpenShiftAssignRequest);

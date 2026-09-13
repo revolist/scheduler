@@ -195,8 +195,9 @@ export default function EventSchedulerShiftWeek() {
   useEffect(() => {
     const grid = gridRef.current;
     if (!grid) return undefined;
-    const syncEvents = () => {
-      setEvents([...grid.source] as EventSchedulerEventEntity[]);
+    const syncEvents = (event: Event) => {
+      const events = (event as CustomEvent<{ events?: readonly EventSchedulerEventEntity[] }>).detail?.events;
+      setEvents([...(events ?? grid.source)] as EventSchedulerEventEntity[]);
     };
     const handleBeforeEventSelect = (event: Event) => {
       event.preventDefault();
@@ -233,6 +234,9 @@ export default function EventSchedulerShiftWeek() {
       ]);
     };
     grid.addEventListener('gridedit', syncEvents);
+    grid.addEventListener('event-scheduler-event-created', syncEvents);
+    grid.addEventListener('event-scheduler-event-changed', syncEvents);
+    grid.addEventListener('event-scheduler-event-deleted', syncEvents);
     grid.addEventListener('event-scheduler-before-event-select', handleBeforeEventSelect);
     grid.addEventListener('event-scheduler-navigate-request', handleNavigateRequest);
     grid.addEventListener('event-scheduler-open-shift-assign-request', handleOpenShiftAssignRequest);
@@ -240,6 +244,9 @@ export default function EventSchedulerShiftWeek() {
     grid.addEventListener('event-scheduler-view-request', handleViewRequest);
     return () => {
       grid.removeEventListener('gridedit', syncEvents);
+      grid.removeEventListener('event-scheduler-event-created', syncEvents);
+      grid.removeEventListener('event-scheduler-event-changed', syncEvents);
+      grid.removeEventListener('event-scheduler-event-deleted', syncEvents);
       grid.removeEventListener('event-scheduler-before-event-select', handleBeforeEventSelect);
       grid.removeEventListener('event-scheduler-navigate-request', handleNavigateRequest);
       grid.removeEventListener('event-scheduler-open-shift-assign-request', handleOpenShiftAssignRequest);
