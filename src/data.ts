@@ -93,7 +93,7 @@ export const shiftWeekViewLabels: Record<ShiftWeekDemoView, string> = {
 
 export const shiftWeekDemoViews: readonly ShiftWeekDemoView[] = ['day', 'week', 'month', 'year'];
 export const initialShiftWeekDemoView: ShiftWeekDemoView = 'week';
-export const initialShiftWeekWorkspaceView: ShiftWeekWorkspaceView = 'calendar';
+export const initialShiftWeekWorkspaceView: ShiftWeekWorkspaceView = 'resource';
 export const initialShiftWeekAnchorDate = getTodayAnchorDate(initialShiftWeekDemoView);
 export const initialShiftWeekCalendar: ShiftWeekDemoCalendar = 'weekday';
 

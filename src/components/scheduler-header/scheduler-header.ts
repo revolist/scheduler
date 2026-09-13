@@ -30,8 +30,8 @@ export interface SchedulerHeaderCalendarChangeDetail {
 }
 
 const workspaceViews: readonly { readonly view: ShiftWeekWorkspaceView; readonly label: string }[] = [
-  { view: 'calendar', label: 'Calendar' },
   { view: 'resource', label: 'Resource' },
+  { view: 'calendar', label: 'Calendar' },
   { view: 'table', label: 'Table' },
 ];
 
