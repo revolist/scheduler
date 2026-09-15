@@ -90,7 +90,7 @@ export function load(parentSelector: string) {
   table.filter = {};
   table.stretch = 'all';
   grid.eventScheduler = createShiftWeekConfig(activeView, anchorDate, activeCalendar, selectedEventIds, [], workspaceView);
-  grid.eventSchedulerEvents = createShiftWeekEvents(activeView, anchorDate);
+  grid.source = createShiftWeekEvents(activeView, anchorDate);
   grid.eventSchedulerResources = shiftResources.map((resource) => ({ ...resource }));
   table.className = 'event-scheduler-shift-week-table';
   table.setAttribute('role', 'region');
@@ -101,7 +101,7 @@ export function load(parentSelector: string) {
     grid.eventScheduler = createShiftWeekConfig(activeView, anchorDate, activeCalendar, selectedEventIds, [], workspaceView);
   };
   const renderTable = () => {
-    table.source = getShiftWeekTableRows(grid.eventSchedulerEvents ?? []);
+    table.source = getShiftWeekTableRows(grid.source ?? []);
   };
   const renderNewEventDialog = () => {
     dialog.model = newEventForm ? {
@@ -124,7 +124,7 @@ export function load(parentSelector: string) {
   };
   const refreshRange = () => {
     selectedEventIds = [];
-    grid.eventSchedulerEvents = createShiftWeekEvents(activeView, anchorDate);
+    grid.source = createShiftWeekEvents(activeView, anchorDate);
     applySchedulerConfig();
     renderToolbar();
     renderWorkspace();
@@ -191,8 +191,8 @@ export function load(parentSelector: string) {
   dialog.addEventListener('scheduler-dialog-close', closeNewEvent);
   dialog.addEventListener('scheduler-dialog-submit', (event) => {
     newEventForm = (event as CustomEvent<SchedulerDialogSubmitDetail>).detail.form;
-    grid.eventSchedulerEvents = [
-      ...(grid.eventSchedulerEvents ?? []),
+    grid.source = [
+      ...(grid.source ?? []),
       createShiftWeekManualEvent(newEventForm),
     ];
     applySchedulerConfig();
@@ -200,7 +200,7 @@ export function load(parentSelector: string) {
     renderTable();
   });
   const syncEvents = (event: Event) => {
-    grid.eventSchedulerEvents = [...(event as CustomEvent<{ events: typeof grid.eventSchedulerEvents }>).detail.events];
+    grid.source = [...(event as CustomEvent<{ events: typeof grid.source }>).detail.events];
     applySchedulerConfig();
     renderTable();
   };
@@ -228,17 +228,17 @@ export function load(parentSelector: string) {
     }
   };
   const handleOpenShiftAssignRequest = (event: Event) => {
-    grid.eventSchedulerEvents = [
-      ...(grid.eventSchedulerEvents ?? []),
+    grid.source = [
+      ...(grid.source ?? []),
       createShiftWeekAssignedOpenShift((event as CustomEvent<Parameters<typeof createShiftWeekAssignedOpenShift>[0]>).detail),
     ];
     applySchedulerConfig();
     renderTable();
   };
   const handleResourceReassignRequest = (event: Event) => {
-    grid.eventSchedulerEvents = [
+    grid.source = [
       ...reassignShiftWeekEvent(
-        grid.eventSchedulerEvents ?? [],
+        grid.source ?? [],
         (event as CustomEvent<Parameters<typeof reassignShiftWeekEvent>[1]>).detail,
       ),
     ];

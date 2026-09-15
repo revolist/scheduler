@@ -274,12 +274,11 @@ export default function EventSchedulerShiftWeek() {
               theme={isDark ? 'darkMaterial' : 'material'}
               hideAttribution
               plugins={plugins}
-              source={[]}
               columns={[]}
               columnTypes={columnTypes}
               additionalData={additionalData}
               eventScheduler={schedulerConfig}
-              eventSchedulerEvents={events}
+              source={events}
               eventSchedulerResources={resources}
           />
         )}

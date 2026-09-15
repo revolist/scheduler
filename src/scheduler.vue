@@ -25,10 +25,9 @@
           hide-attribution
           :theme="isDark ? 'darkMaterial' : 'material'"
           :plugins="plugins"
-          :source="rows"
+          :source="schedulerEvents"
           :columns="columns"
           :event-scheduler.prop="schedulerConfig"
-          :event-scheduler-events.prop="schedulerEvents"
           :event-scheduler-resources.prop="resources"
           @event-scheduler-event-created="handleSchedulerEvents"
           @event-scheduler-event-changed="handleSchedulerEvents"
@@ -109,7 +108,6 @@ onBeforeUnmount(() => disconnectTheme?.());
 const plugins = [EventSchedulerPlugin];
 const tablePlugins = [AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin];
 const tableColumns = getShiftWeekTableColumns();
-const rows = ref([]);
 const columns = ref([]);
 const activeView = ref<ShiftWeekDemoView>(initialShiftWeekDemoView);
 const workspaceView = ref<ShiftWeekWorkspaceView>(initialShiftWeekWorkspaceView);
