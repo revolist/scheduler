@@ -1,7 +1,7 @@
-import { Component, NO_ERRORS_SCHEMA, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, NO_ERRORS_SCHEMA, ViewEncapsulation, type OnDestroy } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { RevoGrid } from '@revolist/angular-datagrid';
-import { EventSchedulerPlugin, type EventSchedulerEntityId, type EventSchedulerEventChangedDetail, type EventSchedulerEventEntity, type EventSchedulerEventSelectedDetail, type EventSchedulerOpenShiftAssignRequestDetail, type EventSchedulerResourceReassignRequestDetail } from '@revolist/scheduler';
+import { EventSchedulerPlugin, type EventSchedulerEntityId, type EventSchedulerEventEntity, type EventSchedulerEventSelectedDetail, type EventSchedulerOpenShiftAssignRequestDetail, type EventSchedulerResourceReassignRequestDetail } from '@revolist/scheduler';
 import { AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin } from '@revolist/revogrid-pro';
 import { currentTheme, observeCurrentTheme } from './shared/theme';
 import {
@@ -77,10 +77,11 @@ defineSchedulerShellElements();
             [theme]="theme"
             [hideAttribution]="true"
             [plugins]="plugins"
+            [source]="events"
             [columns]="columns"
             [eventScheduler]="schedulerConfig"
-            [source]="events"
             [eventSchedulerResources]="resources"
+            (gridedit)="handleSchedulerEvents($event)"
             (event-scheduler-event-created)="handleSchedulerEvents($event)"
             (event-scheduler-event-changed)="handleSchedulerEvents($event)"
             (event-scheduler-event-deleted)="handleSchedulerEvents($event)"
@@ -108,7 +109,6 @@ export class EventSchedulerShiftWeekGridComponent implements OnDestroy {
     this.theme = isDark ? 'darkMaterial' : 'material';
   });
   plugins = [EventSchedulerPlugin];
-  rows = [];
   columns = [];
   activeView: ShiftWeekDemoView = initialShiftWeekDemoView;
   workspaceView: ShiftWeekWorkspaceView = initialShiftWeekWorkspaceView;
@@ -229,8 +229,8 @@ export class EventSchedulerShiftWeekGridComponent implements OnDestroy {
     this.closeNewEvent();
   }
 
-  handleSchedulerEvents(event: CustomEvent<EventSchedulerEventChangedDetail>) {
-    this.events = event.detail.events.map((item) => ({ ...item }));
+  handleSchedulerEvents(event: CustomEvent<{ events?: readonly EventSchedulerEventEntity[] }>) {
+    this.events = [...(event.detail?.events ?? (event.target as HTMLRevoGridElement).source)];
     this.refreshSchedulerConfig();
   }
 

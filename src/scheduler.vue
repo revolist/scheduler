@@ -29,6 +29,7 @@
           :columns="columns"
           :event-scheduler.prop="schedulerConfig"
           :event-scheduler-resources.prop="resources"
+          @gridedit="handleSchedulerEvents"
           @event-scheduler-event-created="handleSchedulerEvents"
           @event-scheduler-event-changed="handleSchedulerEvents"
           @event-scheduler-event-deleted="handleSchedulerEvents"
@@ -51,7 +52,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import RevoGrid from '@revolist/vue3-datagrid';
-import { EventSchedulerPlugin, type EventSchedulerEntityId, type EventSchedulerEventChangedDetail, type EventSchedulerEventSelectedDetail, type EventSchedulerOpenShiftAssignRequestDetail, type EventSchedulerResourceReassignRequestDetail } from '@revolist/scheduler';
+import { EventSchedulerPlugin, type EventSchedulerEntityId, type EventSchedulerEventEntity, type EventSchedulerEventSelectedDetail, type EventSchedulerOpenShiftAssignRequestDetail, type EventSchedulerResourceReassignRequestDetail } from '@revolist/scheduler';
 import { AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin } from '@revolist/revogrid-pro';
 import { currentTheme, observeCurrentTheme } from './shared/theme';
 import {
@@ -233,8 +234,8 @@ function handleBeforeEventSelect(event: CustomEvent<EventSchedulerEventSelectedD
   selectedEventIds.value = [...event.detail.eventIds];
 }
 
-function handleSchedulerEvents(event: CustomEvent<EventSchedulerEventChangedDetail>) {
-  schedulerEvents.value = event.detail.events.map((item) => ({ ...item }));
+function handleSchedulerEvents(event: CustomEvent<{ events?: readonly EventSchedulerEventEntity[] }>) {
+  schedulerEvents.value = [...(event.detail?.events ?? (event.target as HTMLRevoGridElement).source)];
 }
 
 function handleOpenShiftAssignRequest(event: CustomEvent<EventSchedulerOpenShiftAssignRequestDetail>) {

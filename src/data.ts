@@ -93,7 +93,7 @@ export const shiftWeekViewLabels: Record<ShiftWeekDemoView, string> = {
 
 export const shiftWeekDemoViews: readonly ShiftWeekDemoView[] = ['day', 'week', 'month', 'year'];
 export const initialShiftWeekDemoView: ShiftWeekDemoView = 'week';
-export const initialShiftWeekWorkspaceView: ShiftWeekWorkspaceView = 'calendar';
+export const initialShiftWeekWorkspaceView: ShiftWeekWorkspaceView = 'resource';
 export const initialShiftWeekAnchorDate = getTodayAnchorDate(initialShiftWeekDemoView);
 export const initialShiftWeekCalendar: ShiftWeekDemoCalendar = 'weekday';
 
@@ -452,6 +452,7 @@ export function createShiftWeekConfig(
         : view;
   return {
     ...shiftWeekBaseConfig,
+    eventMapping: true,
     view: schedulerView,
     weekStartDate: normalizedAnchor,
     ...(resourceDateRange ? { dateRange: resourceDateRange } : {}),
@@ -622,7 +623,10 @@ export function getShiftWeekRangeTitle(view: ShiftWeekDemoView, anchorDate: stri
     return formatMonthTitle(normalized);
   }
   if (view === 'year') {
-    return normalized.slice(0, 4);
+    // The scheduler plugin currently renders the year mode with its month
+    // calendar layout, anchored to January. Keep the heading faithful to the
+    // visible calendar while the Year control keeps year-at-a-time navigation.
+    return formatMonthTitle(normalized);
   }
   if (view === 'day') {
     return formatDateTitle(normalized);
@@ -632,7 +636,7 @@ export function getShiftWeekRangeTitle(view: ShiftWeekDemoView, anchorDate: stri
 
 export function getShiftWeekSubtitle(anchorDate: string, view: ShiftWeekDemoView = 'week'): string {
   if (view === 'month') return 'Calendar month';
-  if (view === 'year') return '12-month overview';
+  if (view === 'year') return 'Calendar month · year navigation';
   return `Week ${getIsoWeekNumber(parseIsoDate(anchorDate))}`;
 }
 

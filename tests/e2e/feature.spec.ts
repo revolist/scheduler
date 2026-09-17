@@ -17,6 +17,19 @@ test(`${feature.title} mounts without browser errors`, async ({ page }) => {
   await expect(page.getByRole('tablist', { name: 'Scheduler workspace' })).toBeVisible();
   await expect(page.getByRole('group', { name: 'Scheduler view' })).toBeVisible();
   await expect(page.getByRole('combobox', { name: 'Calendar preset' })).toBeVisible();
+  const workspaceHeight = await page.getByRole('tablist', { name: 'Scheduler workspace' }).evaluate(
+    element => element.getBoundingClientRect().height,
+  );
+  const viewHeight = await page.getByRole('group', { name: 'Scheduler view' }).evaluate(
+    element => element.getBoundingClientRect().height,
+  );
+  expect(viewHeight).toBeLessThanOrEqual(workspaceHeight);
+  for (const action of ['Previous range', 'Next range', 'Today']) {
+    const actionHeight = await page.getByRole('button', { name: action }).evaluate(
+      element => element.getBoundingClientRect().height,
+    );
+    expect(actionHeight).toBeLessThanOrEqual(workspaceHeight);
+  }
   const tableControl = page.getByRole('tab', { name: 'Table', exact: true });
   await tableControl.click();
   await expect(tableControl).toHaveAttribute('aria-selected', 'true');

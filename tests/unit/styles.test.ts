@@ -25,9 +25,26 @@ describe('scheduler segmented view styles', () => {
     expect(sharedButtonStyles).toContain('&:focus-visible');
   });
 
+  it('keeps compact Scheduler controls within the workspace-switch height', () => {
+    expect(schedulerStyles).toContain('--event-scheduler-demo-control-height: 38px;');
+    expect(schedulerStyles).toContain('height: var(--event-scheduler-demo-control-height);');
+    expect(schedulerStyles).toContain('min-height: var(--event-scheduler-demo-control-height);');
+    expect(schedulerStyles).toContain('height: 30px;');
+    expect(schedulerStyles).toContain('min-height: 30px;');
+  });
+
   it('keeps the removed top app bar out of every scheduler demo variant', () => {
     for (const source of [...schedulerSources, schedulerStyles]) {
       expect(source).not.toContain('event-scheduler-shift-week-appbar');
+    }
+  });
+
+  it('syncs Scheduler-specific create, move, and delete commits in every framework variant', () => {
+    for (const source of schedulerSources) {
+      expect(source).toContain('event-scheduler-event-created');
+      expect(source).toContain('event-scheduler-event-changed');
+      expect(source).toContain('event-scheduler-event-deleted');
+      expect(source).toContain('detail?.events');
     }
   });
 
@@ -49,5 +66,13 @@ describe('scheduler segmented view styles', () => {
     expect(schedulerHeaderSource).toContain('this.append(this.workspace, range, end)');
     const rangeRule = schedulerStyles.match(/&__range\s*\{([\s\S]*?)\n\s*\}/);
     expect(rangeRule?.[1]).toContain('justify-self: start;');
+  });
+
+  it('aligns the action panel with the scheduler content edges', () => {
+    const toolbarRule = schedulerStyles.match(/\.event-scheduler-shift-week-toolbar\s*\{([\s\S]*?)(?=\n\s*&__nav\s*\{)/);
+    const compactToolbarRule = schedulerStyles.match(/@media \(max-width: 1360px\)\s*\{[\s\S]*?\.event-scheduler-shift-week-toolbar\s*\{([\s\S]*?)(?=\n\s*&__workspace\s*\{)/);
+
+    expect(toolbarRule?.[1]).toContain('padding: 10px 0;');
+    expect(compactToolbarRule?.[1]).toContain('padding: 12px 0 16px;');
   });
 });

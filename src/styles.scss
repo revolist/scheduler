@@ -71,12 +71,13 @@
 }
 
 .event-scheduler-shift-week-toolbar {
+  --event-scheduler-demo-control-height: 38px;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 16px;
   min-height: 64px;
-  padding: 10px 18px;
+  padding: 10px 0;
   border-bottom: 1px solid var(--event-scheduler-demo-border);
   background: color-mix(in srgb, var(--event-scheduler-demo-surface) 96%, var(--event-scheduler-demo-surface-2));
 
@@ -112,6 +113,17 @@
 
   &__views {
     flex: 0 0 auto;
+  }
+
+  &__workspace,
+  &__views {
+    height: var(--event-scheduler-demo-control-height);
+    min-height: var(--event-scheduler-demo-control-height);
+
+    .rv-segmented-switch-item {
+      height: 30px;
+      min-height: 30px;
+    }
   }
 
   &__icon,
@@ -1028,7 +1040,10 @@ revo-grid.event-scheduler-shift-week-grid {
   }
 }
 
-@media (max-width: 900px) {
+// In the docs host the demo has less inline space than the browser viewport
+// because the navigation remains visible at 1280px. Start the compact toolbar
+// before the range title can collide with the view switch.
+@media (max-width: 1360px) {
   .demo-preview-fill-root:has(.event-scheduler-shift-week-demo),
   .preview-surface-live:has(.event-scheduler-shift-week-demo) {
     padding: 0 !important;
@@ -1045,7 +1060,7 @@ revo-grid.event-scheduler-shift-week-grid {
     grid-template-columns: minmax(0, 1fr);
     flex-shrink: 0;
     gap: 12px;
-    padding: 12px 14px 16px;
+    padding: 12px 0 16px;
 
     &__workspace {
       grid-column: 1;
@@ -1071,12 +1086,14 @@ revo-grid.event-scheduler-shift-week-grid {
 
     &__icon,
     &__today {
-      height: 40px;
+      height: 36px;
+      min-height: 36px;
     }
 
     &__views {
       width: 100%;
-      min-height: 44px;
+      height: var(--event-scheduler-demo-control-height);
+      min-height: var(--event-scheduler-demo-control-height);
       justify-self: stretch;
     }
 
@@ -1087,7 +1104,8 @@ revo-grid.event-scheduler-shift-week-grid {
 
     &__view {
       min-width: 0;
-      height: 38px;
+      height: 30px;
+      min-height: 30px;
       flex: 1 1 0;
     }
 
