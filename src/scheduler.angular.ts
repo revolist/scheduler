@@ -230,7 +230,10 @@ export class EventSchedulerShiftWeekGridComponent implements OnDestroy {
   }
 
   handleSchedulerEvents(event: CustomEvent<{ events?: readonly EventSchedulerEventEntity[] }>) {
-    this.events = [...(event.detail?.events ?? (event.target as HTMLRevoGridElement).source)];
+    this.events = [
+      ...(event.detail?.events ??
+        ((event.target as HTMLRevoGridElement).source as unknown as readonly EventSchedulerEventEntity[])),
+    ];
     this.refreshSchedulerConfig();
   }
 
