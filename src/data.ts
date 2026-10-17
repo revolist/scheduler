@@ -26,7 +26,7 @@ import {
   parseTimeOfDay,
   shiftDateTime,
   toIsoDate,
-} from '@revolist/dates';
+} from '@revolist/revogrid-pro';
 import {
   getShiftWeekResourceDateRange,
   isShiftWeekResourceWorkspace,
