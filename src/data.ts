@@ -1,7 +1,5 @@
 import { type CellTemplate, type CellTemplateProp, type ColumnRegular } from '@revolist/revogrid';
 import {
-  type CalendarEntity,
-  type CalendarId,
   type EventSchedulerConfig,
   type EventSchedulerEntityId,
   type EventSchedulerEventEntity,
@@ -12,6 +10,8 @@ import {
   type EventSchedulerTemplateH,
 } from '@revolist/scheduler';
 import {
+  type CalendarEntity,
+  type CalendarId,
   DEFAULT_CALENDAR,
   addDays,
   addMonths,
@@ -26,7 +26,7 @@ import {
   parseTimeOfDay,
   shiftDateTime,
   toIsoDate,
-} from '@revolist/revogrid-pro';
+} from '@revolist/dates';
 import {
   getShiftWeekResourceDateRange,
   isShiftWeekResourceWorkspace,
