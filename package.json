@@ -41,8 +41,8 @@
     "media:record": "pnpm build && node scripts/record-media.mjs"
   },
   "dependencies": {
-    "@angular/common": "20.3.26",
-    "@angular/compiler": "20.3.26",
+    "@angular/common": "20.3.27",
+    "@angular/compiler": "20.3.27",
     "@angular/core": "20.3.26",
     "@angular/platform-browser": "20.3.26",
     "@angular/platform-browser-dynamic": "20.3.26",
