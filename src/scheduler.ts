@@ -141,11 +141,6 @@ export function load(parentSelector: string) {
   };
   const setWorkspace = (view: ShiftWeekWorkspaceView) => {
     workspaceView = view;
-    if (view === 'resource') {
-      anchorDate = normalizeShiftWeekAnchorDate(activeView, anchorDate);
-      refreshRange();
-      return;
-    }
     if (view === 'calendar' && activeView === 'resource') {
       activeView = 'week';
       refreshRange();

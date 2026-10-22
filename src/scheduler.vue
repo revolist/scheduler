@@ -165,11 +165,7 @@ function setView(view: ShiftWeekDemoView, date = anchorDate.value) {
 
 function setWorkspace(view: ShiftWeekWorkspaceView) {
   workspaceView.value = view;
-  if (view === 'resource') {
-    anchorDate.value = normalizeShiftWeekAnchorDate(activeView.value, anchorDate.value);
-    selectedEventIds.value = [];
-    schedulerEvents.value = createShiftWeekEvents(activeView.value, anchorDate.value);
-  } else if (view === 'calendar' && activeView.value === 'resource') {
+  if (view === 'calendar' && activeView.value === 'resource') {
     activeView.value = 'week';
   }
 }
