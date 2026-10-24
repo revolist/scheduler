@@ -132,8 +132,15 @@ export function createPropertyBookingDemo() {
     toggleProperty,
     setType(value: string) { type = value; update(true); },
     setCapacity(value: number) { minSleeps = value; update(true); },
-    setRangeInput(edge: 'start' | 'end', value: string) { if (edge === 'start') rangeStart = value; else rangeEnd = value; update(); },
-    applyRange() { this.setRange(rangeStart, rangeEnd); },
+    setRangeInput(edge: 'start' | 'end', value: string) {
+      if (edge === 'start') rangeStart = value; else rangeEnd = value;
+      if (isValidIsoDate(rangeStart) && isValidIsoDate(rangeEnd) && rangeStart > rangeEnd) {
+        const days = diffInCalendarDays(start, end);
+        if (edge === 'start') rangeEnd = addDays(rangeStart, days);
+        else rangeStart = addDays(rangeEnd, -days);
+      }
+      this.setRange(rangeStart, rangeEnd);
+    },
     setSummary(key: 'properties' | 'guests' | 'selectedOnly', value: boolean) {
       if (key === 'properties') properties = value; else if (key === 'guests') guests = value; else selectedOnly = value;
       update(true);

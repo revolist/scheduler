@@ -15,7 +15,6 @@ export function load(parentSelector: string, _rows: any[] = []) {
     <div class="property-booking-demo__toolbar"><div class="property-booking-demo__range">
       <button class="rv-btn" aria-label="Previous week" data-action="previous"><span class="property-booking-control-icon" aria-hidden="true">${bookingIcons.previous}</span></button><button class="rv-btn" data-action="today"><span class="property-booking-control-icon" aria-hidden="true">${bookingIcons.today}</span>Today</button><button class="rv-btn" aria-label="Next week" data-action="next"><span class="property-booking-control-icon" aria-hidden="true">${bookingIcons.next}</span></button>
       <label>From <input type="date" aria-label="View from" data-field="start" /></label><label>To <input type="date" aria-label="View to" data-field="end" /></label>
-      <button class="rv-btn" aria-label="Apply date range" data-action="apply"><span class="property-booking-control-icon" aria-hidden="true">${bookingIcons.apply}</span>Apply</button>
     </div><div class="property-booking-demo__filters"><label>Show <select aria-label="Property type" data-field="type"></select></label><label>Sleeps <select aria-label="Minimum sleeps" data-field="capacity"></select></label></div><div class="property-booking-demo__actions"><button class="rv-btn" aria-label="Reset demo" title="Reset demo" data-action="reset"><span class="property-booking-control-icon" aria-hidden="true">${bookingIcons.reset}</span></button><button class="rv-btn-primary" aria-label="New booking" title="New booking" data-action="new"><span class="property-booking-control-icon" aria-hidden="true">${bookingIcons.add}</span></button></div></div>
     <div class="property-booking-demo__summaries"><strong>Daily totals</strong>
       <label><input type="checkbox" data-field="properties" /> Properties</label><label><input type="checkbox" data-field="guests" /> Guests</label>
@@ -32,7 +31,7 @@ export function load(parentSelector: string, _rows: any[] = []) {
   for (const name of ['properties', 'guests', 'selectedOnly'] as const) field<HTMLInputElement>(name).onchange = event => model.setSummary(name, (event.target as HTMLInputElement).checked);
   field<HTMLInputElement>('all').onchange = event => model.selectAll((event.target as HTMLInputElement).checked);
   const action = (name: string, callback: () => void) => { root.querySelector<HTMLButtonElement>(`[data-action="${name}"]`)!.onclick = callback; };
-  action('apply', () => model.applyRange()); action('reset', () => model.reset()); action('new', () => model.newBooking()); action('previous', () => model.navigate(-7)); action('next', () => model.navigate(7)); action('today', () => model.today());
+  action('reset', () => model.reset()); action('new', () => model.newBooking()); action('previous', () => model.navigate(-7)); action('next', () => model.navigate(7)); action('today', () => model.today());
   const grid = document.createElement('revo-grid'); grid.className = 'property-booking-demo__grid demo-preview-content-sized-grid';
   grid.hideAttribution = true; grid.theme = currentTheme().isDark() ? 'darkMaterial' : 'material';
   grid.plugins = [...propertyBookingPlugins]; grid.columns = model.columns;
