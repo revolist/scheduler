@@ -13,6 +13,7 @@ import {
   getShiftWeekSubtitle,
   getShiftWeekTableRows,
   getShiftWeekTableColumns,
+  getShiftWeekResourceColumns,
   getTodayAnchorDate,
   initialShiftWeekCalendar,
   initialShiftWeekAnchorDate,
@@ -109,7 +110,7 @@ export class EventSchedulerShiftWeekGridComponent implements OnDestroy {
     this.theme = isDark ? 'darkMaterial' : 'material';
   });
   plugins = [EventSchedulerPlugin];
-  columns = [];
+  columns = getShiftWeekResourceColumns();
   activeView: ShiftWeekDemoView = initialShiftWeekDemoView;
   workspaceView: ShiftWeekWorkspaceView = initialShiftWeekWorkspaceView;
   activeCalendar: ShiftWeekDemoCalendar = initialShiftWeekCalendar;

@@ -64,6 +64,7 @@ import {
   getShiftWeekSubtitle,
   getShiftWeekTableRows,
   getShiftWeekTableColumns,
+  getShiftWeekResourceColumns,
   getTodayAnchorDate,
   initialShiftWeekCalendar,
   initialShiftWeekAnchorDate,
@@ -109,7 +110,7 @@ onBeforeUnmount(() => disconnectTheme?.());
 const plugins = [EventSchedulerPlugin];
 const tablePlugins = [AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin];
 const tableColumns = getShiftWeekTableColumns();
-const columns = ref([]);
+const columns = getShiftWeekResourceColumns();
 const activeView = ref<ShiftWeekDemoView>(initialShiftWeekDemoView);
 const workspaceView = ref<ShiftWeekWorkspaceView>(initialShiftWeekWorkspaceView);
 const anchorDate = ref(initialShiftWeekAnchorDate);
