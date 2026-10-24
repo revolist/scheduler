@@ -11,6 +11,7 @@ import {
   getShiftWeekRangeTitle,
   getShiftWeekSubtitle,
   getShiftWeekTableColumns,
+  getShiftWeekResourceColumns,
   getShiftWeekTableRows,
   getTodayAnchorDate,
   initialShiftWeekCalendar,
@@ -63,6 +64,7 @@ export default function EventSchedulerShiftWeek() {
   const [newEventForm, setNewEventForm] = useState<ShiftWeekNewEventForm | null>(null);
   const plugins = useMemo(() => [EventSchedulerPlugin], []);
   const tablePlugins = useMemo(() => [AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin], []);
+  const columns = useMemo(() => getShiftWeekResourceColumns(), []);
   const tableColumns = useMemo(() => getShiftWeekTableColumns(), []);
   const columnTypes = useMemo(() => ({}), []);
   const additionalData = useMemo(() => ({}), []);
@@ -273,7 +275,7 @@ export default function EventSchedulerShiftWeek() {
               hideAttribution
               plugins={plugins}
               source={events}
-              columns={[]}
+              columns={columns}
               columnTypes={columnTypes}
               additionalData={additionalData}
               eventScheduler={schedulerConfig}

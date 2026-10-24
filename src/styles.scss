@@ -878,14 +878,14 @@ revo-grid.event-scheduler-shift-week-grid {
     }
 
     .shift-week-event-content__title {
-      display: block;
+      display: -webkit-box;
       width: auto;
       min-width: 0;
       overflow: hidden;
       line-height: 1;
       text-overflow: ellipsis;
-      white-space: nowrap;
-      -webkit-line-clamp: 1;
+      white-space: normal;
+      -webkit-line-clamp: 2;
     }
 
     .shift-week-event-content__time-subtitle {
@@ -1117,4 +1117,39 @@ revo-grid.event-scheduler-shift-week-grid {
       }
     }
   }
+}
+
+// Event types share the same interactions while using distinct visual treatments.
+.shift-week-event--training {
+  --event-scheduler-event-bg: color-mix(in srgb, #10b981 15%, var(--event-scheduler-demo-surface)) !important;
+  --event-scheduler-event-text: var(--event-scheduler-demo-text) !important;
+  --event-scheduler-text: var(--event-scheduler-demo-text) !important;
+}
+
+.shift-week-event--pending .event-scheduler-event__button {
+  outline: 1px dashed currentColor;
+  outline-offset: -3px;
+  background-image: repeating-linear-gradient(135deg, transparent 0 8px, #ffffff12 8px 16px);
+}
+
+.shift-week-event--break {
+  --event-scheduler-event-bg: var(--event-scheduler-demo-surface-2) !important;
+  --event-scheduler-event-text-shadow: none;
+  --event-scheduler-event-text: var(--event-scheduler-demo-text) !important;
+  --event-scheduler-text: var(--event-scheduler-demo-text) !important;
+}
+
+.shift-week-event-content__kind {
+  overflow: hidden;
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.85;
+}
+
+@container shift-week-timeline-event (max-height: 48px) {
+  .shift-week-event-content__kind { display: none; }
 }
