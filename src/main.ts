@@ -1,4 +1,5 @@
 import '../demo-host.css';
+import '@revolist/revogrid-pro/styles.css';
 import '@revolist/scheduler/styles.css';
 
 const framework = import.meta.env.MODE === 'development' ? 'ts' : import.meta.env.MODE;
