@@ -1,3 +1,5 @@
+import { renderControl } from '@revolist/ui';
+import '@revolist/ui/styles.css';
 import { EventSchedulerPlugin, getLoadedScheduleConflicts, type EventSchedulerConfig, type EventSchedulerEventEntity, type EventSchedulerEventChangedDetail,
   type EventSchedulerEventSelectedDetail, type EventSchedulerResourceColumn, type EventSchedulerTimelineSummaryRow } from '@revolist/scheduler';
 import { DialogPlugin, addDays, createDateTime, formatIsoDateInTimeZone, isValidIsoDate, parseIsoDate, diffInCalendarDays } from '@revolist/revogrid-pro';
@@ -93,7 +95,7 @@ export function createPropertyBookingDemo() {
       customization: {
         cells: {
           resourceTemplate: (h, { resource }) => resource ? h('span', { class: 'property-booking-resource' }, [
-            h('input', { type: 'checkbox', checked: selectedIds.includes(String(resource.id)), 'aria-label': `Include ${resource.name} in totals`,
+            renderControl(h, 'input', { type: 'checkbox', checked: selectedIds.includes(String(resource.id)), 'aria-label': `Include ${resource.name} in totals`,
               onPointerDown: (event: Event) => event.stopPropagation(), onClick: (event: Event) => event.stopPropagation(),
               onChange: (event: Event) => toggleProperty(String(resource.id), (event.target as HTMLInputElement).checked) }),
             h('img', { class: 'property-booking-resource__photo', src: propertyPhotos[String(resource.id)], alt: '', width: 44, height: 44, decoding: 'async', draggable: false }),

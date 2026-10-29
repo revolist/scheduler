@@ -1,3 +1,5 @@
+import { controlAttributes, createControl } from '@revolist/ui';
+import '@revolist/ui/styles.css';
 import type { ShiftWeekNewEventForm, ShiftWeekTeamMember } from '../../data';
 
 export const SCHEDULER_DIALOG_TAG = 'revogr-scheduler-dialog';
@@ -68,9 +70,9 @@ export class SchedulerDialogElement extends HTMLElement {
     const summary = document.createElement('span');
     summary.textContent = `${model.form.date} · ${model.form.startTime}-${model.form.endTime}`;
     heading.append(title, summary);
-    const close = document.createElement('button');
+    const close = createControl(document, 'button', { type: 'button' });
     close.type = 'button';
-    close.className = 'event-scheduler-shift-week-dialog__close';
+    close.className = controlAttributes('button', { class: 'event-scheduler-shift-week-dialog__close' }).class;
     close.dataset.schedulerDialogClose = '';
     close.setAttribute('aria-label', 'Close new event');
     close.textContent = '×';
@@ -90,14 +92,14 @@ export class SchedulerDialogElement extends HTMLElement {
 
     const actions = document.createElement('div');
     actions.className = 'event-scheduler-shift-week-dialog__actions';
-    const cancel = document.createElement('button');
+    const cancel = createControl(document, 'button', { type: 'button' });
     cancel.type = 'button';
-    cancel.className = 'event-scheduler-shift-week-dialog__cancel';
+    cancel.className = controlAttributes('button', { class: 'event-scheduler-shift-week-dialog__cancel' }).class;
     cancel.dataset.schedulerDialogClose = '';
     cancel.textContent = 'Cancel';
-    const submit = document.createElement('button');
+    const submit = createControl(document, 'button', { type: 'submit' });
     submit.type = 'submit';
-    submit.className = 'event-scheduler-shift-week-dialog__submit';
+    submit.className = controlAttributes('button', { class: 'event-scheduler-shift-week-dialog__submit' }).class;
     submit.textContent = 'Create event';
     actions.append(cancel, submit);
     form.append(header, body, actions);
@@ -106,7 +108,7 @@ export class SchedulerDialogElement extends HTMLElement {
 
   private createInput(label: string, name: string, value: string, type: string, wide = false): HTMLLabelElement {
     const field = this.createField(label, wide);
-    const input = document.createElement('input');
+    const input = createControl(document, 'input', { type: type });
     input.name = name;
     input.type = type;
     input.value = value;
@@ -117,7 +119,7 @@ export class SchedulerDialogElement extends HTMLElement {
 
   private createSelect(label: string, name: string, value: string, options: readonly SchedulerDialogOption[]): HTMLLabelElement {
     const field = this.createField(label);
-    const select = document.createElement('select');
+    const select = createControl(document, 'select');
     select.name = name;
     select.append(...options.map((option) => {
       const item = document.createElement('option');

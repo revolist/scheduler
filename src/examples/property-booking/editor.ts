@@ -1,3 +1,5 @@
+import { createControl } from '@revolist/ui';
+import '@revolist/ui/styles.css';
 import { createDialogButton, createDateTime, formatIsoDateInTimeZone, parseIsoDate, diffInCalendarDays, isValidIsoDate, type DialogPlugin } from '@revolist/revogrid-pro';
 import type { EventSchedulerEventEntity, EventSchedulerResourceEntity } from '@revolist/scheduler';
 import { bookingStatuses, bookingTimeZone, paymentStatuses } from './data';
@@ -26,12 +28,12 @@ export function openBookingEditor(options: {
     wrapper.append(text, input); form.append(wrapper); return input;
   };
   const input = (label: string, type: string, value: string) => {
-    const element = doc.createElement('input'); element.type = type; element.value = value;
+    const element = createControl(doc, 'input', { type: type }); element.type = type; element.value = value;
     return field(label, element) as HTMLInputElement;
   };
   const guest = input('Guest name', 'text', options.event.title);
   guest.maxLength = 100;
-  const property = doc.createElement('select');
+  const property = createControl(doc, 'select');
   options.resources.forEach(resource => { const option = doc.createElement('option'); option.value = String(resource.id); option.textContent = resource.name; property.append(option); });
   property.value = String(options.event.resourceId);
   field('Property', property);
@@ -41,10 +43,10 @@ export function openBookingEditor(options: {
   guests.min = '1'; guests.step = '1';
   const updateCapacity = () => { guests.max = String(options.resources.find(resource => String(resource.id) === property.value)?.metadata?.sleeps ?? 1); };
   property.onchange = updateCapacity; updateCapacity();
-  const status = doc.createElement('select');
+  const status = createControl(doc, 'select');
   bookingStatuses.forEach(value => { const option = doc.createElement('option'); option.value = value; option.textContent = value; status.append(option); });
   status.value = options.event.status ?? 'Confirmed'; field('Booking status', status);
-  const payment = doc.createElement('select');
+  const payment = createControl(doc, 'select');
   paymentStatuses.forEach(value => { const option = doc.createElement('option'); option.value = value; option.textContent = value; payment.append(option); });
   payment.value = String(options.event.metadata?.payment ?? 'Unpaid'); field('Payment', payment);
   const estimate = doc.createElement('p'); estimate.className = 'property-booking-form__estimate'; estimate.setAttribute('role', 'status');

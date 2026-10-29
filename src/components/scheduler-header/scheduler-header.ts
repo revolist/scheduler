@@ -1,3 +1,5 @@
+import { controlAttributes, createControl } from '@revolist/ui';
+import '@revolist/ui/styles.css';
 import type { ShiftWeekCalendarOption, ShiftWeekDemoCalendar, ShiftWeekDemoView, ShiftWeekWorkspaceView } from '../../data';
 
 export const SCHEDULER_HEADER_TAG = 'revogr-scheduler-header';
@@ -105,7 +107,7 @@ export class SchedulerHeaderElement extends HTMLElement {
     calendar.className = 'event-scheduler-shift-week-toolbar__calendar';
     const calendarLabel = document.createElement('span');
     calendarLabel.textContent = 'Calendar';
-    this.calendarSelect = document.createElement('select');
+    this.calendarSelect = createControl(document, 'select');
     this.calendarSelect.setAttribute('aria-label', 'Calendar preset');
     this.calendarSelect.dataset.schedulerCalendar = '';
     this.calendarDescription = document.createElement('small');
@@ -120,11 +122,11 @@ export class SchedulerHeaderElement extends HTMLElement {
   }
 
   private createNavigationButton(action: SchedulerHeaderNavigateDetail['action'], ariaLabel: string, label: string): HTMLButtonElement {
-    const button = document.createElement('button');
+    const button = createControl(document, 'button', { type: 'button' });
     button.type = 'button';
-    button.className = action === 'today'
+    button.className = controlAttributes('button', { class: action === 'today'
       ? 'event-scheduler-shift-week-toolbar__today'
-      : 'event-scheduler-shift-week-toolbar__icon';
+      : 'event-scheduler-shift-week-toolbar__icon' }).class;
     button.dataset.schedulerNavigate = action;
     if (ariaLabel) button.setAttribute('aria-label', ariaLabel);
     button.textContent = label;
@@ -139,15 +141,15 @@ export class SchedulerHeaderElement extends HTMLElement {
 
     const workspaceButtons = workspaceViews.map(({ view, label }) => {
       const active = model.workspaceView === view;
-      const button = document.createElement('button');
+      const button = createControl(document, 'button', { type: 'button' });
       button.type = 'button';
       button.setAttribute('role', 'tab');
-      button.className = [
+      button.className = controlAttributes('button', { class: [
         'rv-segmented-switch-item',
         active ? 'on' : '',
-      ].filter(Boolean).join(' ');
+      ].filter(Boolean).join(' ') }).class;
       button.dataset.schedulerWorkspace = view;
-      button.setAttribute('aria-selected', String(active));
+      button.classList.add('rv-segmented-switch-item'); button.setAttribute('aria-selected', String(active)); button.classList.toggle('on', button.getAttribute('aria-selected') === 'true');
       button.textContent = label;
       return button;
     });
@@ -161,16 +163,16 @@ export class SchedulerHeaderElement extends HTMLElement {
 
     const viewButtons = model.views.map((view) => {
       const active = model.activeView === view;
-      const button = document.createElement('button');
+      const button = createControl(document, 'button', { type: 'button' });
       button.type = 'button';
-      button.className = [
+      button.className = controlAttributes('button', { class: [
         'rv-segmented-switch-item',
         'event-scheduler-shift-week-toolbar__view',
         active ? 'on' : '',
         active ? 'event-scheduler-shift-week-toolbar__view--active' : '',
-      ].filter(Boolean).join(' ');
+      ].filter(Boolean).join(' ') }).class;
       button.dataset.schedulerView = view;
-      button.setAttribute('aria-pressed', String(active));
+      button.classList.add('rv-choice-chip'); button.setAttribute('aria-pressed', String(active));
       button.textContent = model.viewLabels[view];
       return button;
     });

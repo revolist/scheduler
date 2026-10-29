@@ -1,3 +1,5 @@
+import { applyControlPresentation } from '@revolist/ui';
+import '@revolist/ui/styles.css';
 import { defineCustomElements } from '@revolist/revogrid/loader';
 import { currentTheme } from '../../shared/theme';
 import { createPropertyBookingDemo, propertyBookingPlugins, type BookingDemoState } from './demo';
@@ -21,6 +23,7 @@ export function load(parentSelector: string, _rows: any[] = []) {
       <label><input type="checkbox" data-field="selectedOnly" /> Selected properties only</label>
       <label class="property-booking-demo__selection"><input type="checkbox" aria-label="Select all properties" data-field="all" /> <span data-selected></span> selected</label>
     </div>`;
+  applyControlPresentation(root);
   const field = <T extends HTMLElement>(name: string) => root.querySelector<T>(`[data-field="${name}"]`)!;
   const start = field<HTMLInputElement>('start'), end = field<HTMLInputElement>('end'), type = field<HTMLSelectElement>('type');
   propertyTypes.forEach(value => { const option = document.createElement('option'); option.textContent = value; type.append(option); });

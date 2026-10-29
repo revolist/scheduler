@@ -125,12 +125,7 @@
   &__workspace,
   &__views {
     height: var(--event-scheduler-demo-control-height);
-    min-height: var(--event-scheduler-demo-control-height);
-
-    .rv-segmented-switch-item {
-      height: 30px;
-      min-height: 30px;
-    }
+    min-height: var(--event-scheduler-demo-control-height)
   }
 
   &__icon,
@@ -199,30 +194,7 @@
     }
 
     select {
-      appearance: none;
-      min-width: 0;
-      height: 36px;
-      padding: 0 34px 0 12px;
-      border: 1px solid var(--event-scheduler-demo-border-strong);
-      border-radius: 8px;
-      background: var(--event-scheduler-demo-control-bg);
-      color: var(--event-scheduler-demo-text);
-      box-shadow: 0 1px 2px rgb(15 23 42 / 8%);
-      cursor: pointer;
-      font: inherit;
-      font-size: 13px;
-      font-weight: 500;
-      transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
-
-      &:hover {
-        background: var(--event-scheduler-demo-control-hover-bg);
-        border-color: color-mix(in srgb, var(--event-scheduler-demo-border-strong) 70%, var(--event-scheduler-demo-text));
-      }
-
-      &:focus-visible {
-        outline: 2px solid var(--event-scheduler-demo-surface);
-        box-shadow: 0 0 0 4px color-mix(in srgb, var(--event-scheduler-accent, #2563eb) 28%, transparent);
-      }
+      min-width: 0
     }
 
     small {
@@ -398,26 +370,12 @@ revo-grid.event-scheduler-shift-week-grid {
   font-size: 11px;
   font-weight: 500;
 
-  input,
-  select {
-    min-height: 30px;
-    border: 1px solid var(--event-scheduler-demo-border);
-    border-radius: 7px;
-    background: var(--event-scheduler-demo-control-bg);
-    color: var(--event-scheduler-demo-text);
-    font: inherit;
-    font-size: 11px;
-    font-weight: 500;
-    padding: 0 8px;
-  }
-
   select {
     min-width: 132px;
   }
 
   input {
     min-width: 16px;
-    min-height: 16px;
   }
 
   span:last-child,
@@ -496,16 +454,8 @@ revo-grid.event-scheduler-shift-week-grid {
 .event-scheduler-shift-week-dialog__close {
   display: inline-flex;
   width: 32px;
-  height: 32px;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--event-scheduler-demo-border);
-  border-radius: 8px;
-  background: var(--event-scheduler-demo-control-bg);
-  color: var(--event-scheduler-demo-muted-text);
-  cursor: pointer;
-  font-size: 18px;
-  line-height: 1;
 }
 
 .event-scheduler-shift-week-dialog__body {
@@ -531,22 +481,7 @@ revo-grid.event-scheduler-shift-week-grid {
   input,
   select {
     width: 100%;
-    height: 34px;
     box-sizing: border-box;
-    border: 1px solid var(--event-scheduler-demo-border);
-    border-radius: 8px;
-    background: var(--event-scheduler-demo-surface);
-    color: var(--event-scheduler-demo-text);
-    font: inherit;
-    font-size: 13px;
-    outline: none;
-    padding: 0 10px;
-  }
-
-  input:focus,
-  select:focus {
-    border-color: color-mix(in srgb, var(--event-scheduler-accent, #2563eb) 62%, var(--event-scheduler-demo-border));
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--event-scheduler-accent, #2563eb) 14%, transparent);
   }
 }
 
@@ -556,30 +491,7 @@ revo-grid.event-scheduler-shift-week-grid {
 
 .event-scheduler-shift-week-dialog__actions {
   border-top: 1px solid var(--event-scheduler-demo-border);
-  background: var(--event-scheduler-demo-surface-2);
-
-  button {
-    height: 34px;
-    border-radius: 8px;
-    cursor: pointer;
-    font: inherit;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 0 13px;
-  }
-}
-
-.event-scheduler-shift-week-dialog__cancel {
-  border: 1px solid var(--event-scheduler-demo-border);
-  background: var(--event-scheduler-demo-surface);
-  color: var(--event-scheduler-demo-muted-text);
-}
-
-.event-scheduler-shift-week-dialog__submit {
-  border: 0;
-  background: linear-gradient(100deg, oklch(46.976% 0.28708 278.686), oklch(0.63 0.23 330));
-  color: #ffffff;
-  box-shadow: 0 8px 18px rgba(124, 58, 237, 0.2);
+  background: var(--event-scheduler-demo-surface-2)
 }
 
 .shift-week-day-header {
@@ -965,7 +877,6 @@ revo-grid.event-scheduler-shift-week-grid {
     }
   }
 }
-
 
 .event-scheduler-event--short .shift-week-event-content__resource,
 .shift-week-event--compact-resource .shift-week-event-content__resource,

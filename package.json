@@ -57,7 +57,9 @@
     "rxjs": "7.8.2",
     "tslib": "2.8.1",
     "vue": "3.5.40",
-    "zone.js": "0.15.1"
+    "zone.js": "0.15.1",
+    "@revolist/ui": "file:vendor/revolist-ui-3.0.14.tgz",
+    "preact": "10.29.1"
   },
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "2.6.3",
