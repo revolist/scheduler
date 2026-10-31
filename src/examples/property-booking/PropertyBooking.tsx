@@ -1,5 +1,6 @@
 import '@revolist/ui/styles.css';
-import { ButtonControl as UiButton, Input as UiInput, Select as UiSelect } from '@revolist/ui/react-control';
+import { ButtonControl as UiButton, Input as UiInput } from '@revolist/ui/react-control';
+import { Dropdown as UiDropdown } from '@revolist/ui/react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { RevoGrid } from '@revolist/react-datagrid';
 import { currentTheme } from '../../shared/theme';
@@ -27,7 +28,15 @@ export default function PropertyBooking(_props: { rows?: any[] }) {
         <label>From <UiInput type="date" aria-label="View from" value={state.rangeStart} onChange={event => model.setRangeInput('start', event.currentTarget.value)} /></label>
         <label>To <UiInput type="date" aria-label="View to" value={state.rangeEnd} onChange={event => model.setRangeInput('end', event.currentTarget.value)} /></label>
       </div>
-      <div className="property-booking-demo__filters"><label>Show <UiSelect aria-label="Property type" value={state.type} onChange={event => model.setType(event.currentTarget.value)}>{propertyTypes.map(type => <option key={type}>{type}</option>)}</UiSelect></label><label>Sleeps <UiSelect aria-label="Minimum sleeps" value={state.minSleeps} onChange={event => model.setCapacity(Number(event.currentTarget.value))}>{capacityOptions.map(capacity => <option key={capacity} value={capacity}>{capacity ? `${capacity}+ guests` : 'Any'}</option>)}</UiSelect></label></div>
+      <div className="property-booking-demo__filters"><label>Show <UiDropdown value={state.type}
+          source={propertyTypes.map(value => ({ value, label: value }))}
+          config={{ nativeTabNavigation: true, topLayer: true, ariaLabel: 'Property type' }}
+          onChange={value => model.setType(String(value))}
+        /></label><label>Sleeps <UiDropdown value={state.minSleeps}
+          source={capacityOptions.map(value => ({ value, label: value ? `${value}+ guests` : 'Any' }))}
+          config={{ nativeTabNavigation: true, topLayer: true, ariaLabel: 'Minimum sleeps' }}
+          onChange={value => model.setCapacity(Number(value))}
+        /></label></div>
         <div className="property-booking-demo__actions"><UiButton className="rv-btn" aria-label="Reset demo" title="Reset demo" onClick={() => model.reset()}>{icon('reset')}</UiButton><UiButton className="rv-btn-primary" aria-label="New booking" title="New booking" disabled={!state.ready || !state.propertyCount} onClick={() => model.newBooking()}>{icon('add')}</UiButton></div>
     </div>
     <div className="property-booking-demo__summaries"><strong>Daily totals</strong>
