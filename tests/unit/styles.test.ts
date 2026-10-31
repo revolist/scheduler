@@ -63,7 +63,8 @@ describe('scheduler segmented view styles', () => {
 
   it('keeps the range navigation left-aligned after the workspace switch', () => {
     expect(schedulerHeaderSource).toContain("range.className = 'event-scheduler-shift-week-toolbar__range'");
-    expect(schedulerHeaderSource).toContain('this.append(this.workspace, range, end)');
+    expect(schedulerHeaderSource).toContain('this.append(this.workspace, range, end, notice)');
+    expect(schedulerHeaderSource).toContain('Changing dates, views or calendars resets sample edits.');
     const rangeRule = schedulerStyles.match(/&__range\s*\{([\s\S]*?)\n\s*\}/);
     expect(rangeRule?.[1]).toContain('justify-self: start;');
   });
