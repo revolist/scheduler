@@ -90,6 +90,13 @@
     justify-self: start;
   }
 
+  &__notice {
+    grid-column: 1 / -1;
+    margin: 0;
+    color: var(--event-scheduler-demo-muted-text);
+    font-size: 12px;
+  }
+
   &__range,
   &__end {
     display: flex;
@@ -230,7 +237,7 @@
 }
 
 .event-scheduler-shift-week-toolbar--workspace-only {
-  > :not(.event-scheduler-shift-week-toolbar__workspace) {
+  > :not(.event-scheduler-shift-week-toolbar__workspace):not(.event-scheduler-shift-week-toolbar__notice) {
     display: none;
   }
 }
