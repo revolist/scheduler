@@ -1,7 +1,5 @@
 import { type CellTemplate, type CellTemplateProp, type ColumnRegular } from '@revolist/revogrid';
 import {
-  type CalendarEntity,
-  type CalendarId,
   type EventSchedulerConfig,
   type EventSchedulerEntityId,
   type EventSchedulerEventEntity,
@@ -12,7 +10,10 @@ import {
   type EventSchedulerTemplateH,
 } from '@revolist/scheduler';
 import {
+  type CalendarEntity,
+  type CalendarId,
   DEFAULT_CALENDAR,
+  avatarTemplate,
   addDays,
   addMonths,
   createDateTime,
@@ -35,6 +36,16 @@ import {
   formatShiftWeekTimeLabel,
   renderShiftWeekTimeLabel,
 } from './time-label';
+
+const portrait = (name: string) => new URL(`./assets/avatars/${name}.webp`, import.meta.url).href;
+
+export function getShiftWeekResourceColumns(): ColumnRegular[] {
+  return [
+    { prop: 'resourceLabel', name: 'Resource', size: 190 },
+    { prop: 'role', name: 'Role', size: 110 },
+    { prop: 'group', name: 'Ward', size: 110 },
+  ];
+}
 
 export type ShiftWeekDemoView = 'day' | 'week' | 'month' | 'year' | 'resource';
 export type ShiftWeekDemoCalendar = 'weekday' | 'open' | 'training';
@@ -62,6 +73,7 @@ export interface ShiftWeekTableRow {
   readonly dateLabel: string;
   readonly time: string;
   readonly assignee: string;
+  readonly avatarUrl?: string;
   readonly initials: string;
   readonly color: string;
   readonly badge: string;
@@ -123,6 +135,7 @@ const shiftWeekBaseConfig: Omit<EventSchedulerConfig, 'view' | 'weekStartDate'> 
   snapMinutes: 10,
   timeRange: { start: '06:00', end: '18:00' },
   currentTimeMarker: { enabled: true, dateTime: currentDemoDateTime },
+  resourceMetaFormatter: () => '',
   timeLabelFormatter: (minutes) => formatShiftWeekTimeLabel(minutes),
   timeLabelTemplate: renderShiftWeekTimeLabel,
   hoverTimeFormatter: (minutes) => formatShiftWeekMinutes(minutes),
@@ -147,7 +160,7 @@ const shiftWeekBaseConfig: Omit<EventSchedulerConfig, 'view' | 'weekStartDate'> 
   eventLayout: 'stack',
   maxStackedEvents: 4,
   conflicts: {
-    enabled: true,
+    enabled: false,
     policy: 'mark',
     scope: 'same-resource',
     rules: { 'outside-availability': 'ignore' },
@@ -182,22 +195,38 @@ const shiftWeekBaseConfig: Omit<EventSchedulerConfig, 'view' | 'weekStartDate'> 
     ].filter(Boolean).join(' '),
     'data-shift-week-slot-state': segmentCount > 0 ? 'busy' : 'open',
   }),
+  availabilityRules: ({ resourceId, startMinutes, endMinutes }) => {
+    const reserved = resourceId === 'alex' && startMinutes < 12 * 60 && endMinutes > 10 * 60;
+    const safetyCheck = startMinutes < 18 * 60 && endMinutes > 17 * 60;
+    if (!reserved && !safetyCheck) return undefined;
+    return {
+      available: false,
+      title: reserved ? 'Reserved' : 'Safety check',
+      reason: reserved ? 'Reserved for emergency cover' : 'Daily safety inspection',
+      className: 'event-scheduler-slot--blocked',
+    };
+  },
+  closedSlotTemplate: (h, context) => context.reason === 'Reserved for emergency cover' || context.reason === 'Daily safety inspection'
+    ? h('span', { class: 'event-scheduler-slot__closed-label', title: context.reason, 'data-demo-blocked': 'true' }, context.title === 'Reserved' && context.startMinutes !== 10 * 60 ? '' : context.title)
+    : undefined,
   closedSlotProperties: ({ reason }) => ({
     class: [
       'shift-week-closed-slot',
       reason ? 'shift-week-closed-slot--reason' : '',
+      reason === 'Reserved for emergency cover' || reason === 'Daily safety inspection' ? 'event-scheduler-slot--blocked' : '',
     ].filter(Boolean).join(' '),
     'data-shift-week-closed': reason ?? 'closed',
   }),
   eventProperties: ({ event, isSelected, hasConflict, isLocked }) => ({
     class: [
-      'shift-week-event',
+      event.appearance === 'line' ? '' : 'shift-week-event',
       `shift-week-event--${event.status ?? 'scheduled'}`,
+      `shift-week-event--${event.type ?? 'scheduled'}`,
       isSelected ? 'shift-week-event--selected' : '',
       hasConflict ? 'shift-week-event--conflict' : '',
       isLocked ? 'shift-week-event--locked' : '',
     ].filter(Boolean).join(' '),
-    style: event.color
+    style: event.color && event.appearance !== 'line'
       ? {
         '--shift-week-event-accent': event.color,
         '--event-scheduler-event-color': event.color,
@@ -249,15 +278,14 @@ const shiftWeekBaseConfig: Omit<EventSchedulerConfig, 'view' | 'weekStartDate'> 
 };
 
 function renderShiftWeekEventContent(h: EventSchedulerTemplateH, context: EventSchedulerEventSectionContext) {
+  if (context.event.appearance === 'line') return undefined;
   const resourceName = context.resource?.name ?? 'Open shift';
-  const teamMember = getShiftWeekTeamMember(context.resource?.id);
-  const initials = teamMember?.initials ?? getShiftWeekInitials(resourceName);
-  const avatarColor = teamMember?.color ?? context.resource?.color ?? 'oklch(0.55 0.2 274)';
   const timeLabel = context.duration < shiftWeekBaseConfig.slotMinutes
     ? context.start.slice(11, 16)
     : formatShiftWeekEventTime(context);
 
   return h('span', {
+    'data-event-scheduler-compact-content': 'true',
     class: [
       'shift-week-event-content',
       context.mode === 'timeline' ? 'shift-week-event-content--timeline' : '',
@@ -265,30 +293,38 @@ function renderShiftWeekEventContent(h: EventSchedulerTemplateH, context: EventS
   }, [
     context.mode === 'timeline'
       ? h('span', { class: 'shift-week-event-content__title-block' }, [
-          h('span', { class: 'shift-week-event-content__title' }, context.event.title),
-          h('span', { class: 'shift-week-event-content__time-subtitle' }, timeLabel),
+          h('span', { class: 'shift-week-event-content__title', 'data-event-scheduler-primary': 'true' }, context.event.title),
+          h('span', { class: 'shift-week-event-content__kind', 'data-event-scheduler-secondary': 'true' }, getShiftWeekEventBadge(context.event)),
+          h('span', { class: 'shift-week-event-content__time-subtitle', 'data-event-scheduler-secondary': 'true' }, timeLabel),
         ])
-      : h('span', { class: 'shift-week-event-content__title' }, context.event.title),
+      : h('span', { class: 'shift-week-event-content__title', 'data-event-scheduler-primary': 'true' }, context.event.title),
     context.mode !== 'timeline'
-      ? h('span', { class: 'shift-week-event-content__details' }, [
+      ? h('span', { class: 'shift-week-event-content__details', 'data-event-scheduler-secondary': 'true' }, [
           h('span', { class: 'shift-week-event-content__time' }, timeLabel),
         ])
       : null,
     context.mode !== 'timeline'
-      ? h('span', { class: 'shift-week-event-content__resource' }, [
-          h('span', {
-            class: 'shift-week-event-content__avatar',
-            style: { '--shift-week-avatar-color': avatarColor },
-            title: resourceName,
-          }, initials),
-          h('span', { class: 'shift-week-event-content__resource-name' }, resourceName),
+      ? h('span', { class: 'shift-week-event-content__resource', 'data-event-scheduler-resource': 'true' }, [
+          h('span', { 'data-event-scheduler-icon': 'true' }, avatarTemplate(h, {
+            className: 'shift-week-event-content__avatar',
+            value: context.resource?.avatarUrl || resourceName,
+            label: resourceName,
+            size: 18,
+          })),
+          h('span', { class: 'shift-week-event-content__resource-name', 'data-event-scheduler-secondary': 'true' }, resourceName),
         ])
       : null,
   ]);
 }
 
 export function getShiftWeekEventBadge(event: EventSchedulerEventEntity) {
-  if (event.locked || event.status === 'locked') return 'Release';
+  if (event.locked || event.status === 'locked') return 'Locked';
+  if (event.type === 'briefing') return 'Team briefing';
+  if (event.type === 'wellbeing') return 'Wellbeing break';
+  if (event.type === 'appointment') return 'Appointment';
+  if (event.type === 'break') return 'Break';
+  if (event.type === 'training') return 'Training';
+  if (event.type === 'coverage') return 'Tentative';
   if (event.title.includes('Deploy')) return 'Deploy';
   if (event.title.includes('Research')) return 'Fieldwork';
   if (event.title.includes('Standby')) return 'On-call';
@@ -322,10 +358,10 @@ export const shiftWeekConfig: EventSchedulerConfig = createShiftWeekConfig(
 );
 
 export const shiftResources: EventSchedulerResourceEntity[] = [
-  { id: 'alex', name: 'Alex Kim', role: 'RN', group: 'Ward A', color: 'oklch(0.58 0.17 300)' },
-  { id: 'mina', name: 'Mina Patel', role: 'RN', group: 'Ward A', color: 'oklch(0.58 0.17 158)' },
-  { id: 'sam', name: 'Sam Rivera', role: 'Charge Nurse', group: 'Ward B', color: 'oklch(0.58 0.17 215)' },
-  { id: 'jamie', name: 'Jamie Chen', role: 'Float', group: 'Ward B', color: 'oklch(0.58 0.17 264)' },
+  { id: 'alex', avatarUrl: portrait('leo'), name: 'Alex Kim', role: 'RN', group: 'Ward A', color: 'oklch(0.58 0.17 300)' },
+  { id: 'mina', avatarUrl: portrait('maya'), name: 'Mina Patel', role: 'RN', group: 'Ward A', color: 'oklch(0.58 0.17 158)' },
+  { id: 'sam', avatarUrl: portrait('noah'), name: 'Sam Rivera', role: 'Charge Nurse', group: 'Ward B', color: 'oklch(0.58 0.17 215)' },
+  { id: 'jamie', avatarUrl: portrait('ava'), name: 'Jamie Chen', role: 'Float', group: 'Ward B', color: 'oklch(0.58 0.17 264)' },
 ];
 
 export const shiftWeekTeamMembers: readonly ShiftWeekTeamMember[] = [
@@ -416,6 +452,7 @@ export function getShiftWeekTableRows(
         dateLabel: toTableDateLabel(event.startDateTime),
         time: `${event.startDateTime.slice(11, 16)}-${event.endDateTime.slice(11, 16)}`,
         assignee,
+        avatarUrl: resource?.avatarUrl,
         initials: member?.initials ?? getShiftWeekInitials(assignee),
         color: member?.color ?? resource?.color ?? 'oklch(0.55 0.2 274)',
         badge: getShiftWeekEventBadge(event),
@@ -454,6 +491,7 @@ export function createShiftWeekConfig(
     ...shiftWeekBaseConfig,
     view: schedulerView,
     weekStartDate: normalizedAnchor,
+    timeAnnotations: createShiftWeekTimeAnnotations(view, normalizedAnchor),
     ...(resourceDateRange ? { dateRange: resourceDateRange } : {}),
     calendars: createShiftWeekCalendarsConfig(calendar, normalizedAnchor),
     selectionMode: 'multiple',
@@ -479,8 +517,21 @@ export function createShiftWeekConfig(
         ].filter(Boolean).join(' '),
       };
     },
-    ...(resourceWorkspace ? { resourceColumnSize: 212, timelineColumnSize: 92, rowSize: 58, columnGrouping: true } : {}),
+    ...(resourceWorkspace ? { resourceColumnSize: 190, timelineColumnSize: 76, rowSize: 84, columnGrouping: true } : {}),
   };
+}
+
+// Informational timeline annotations are independent of booking availability.
+function createShiftWeekTimeAnnotations(view: ShiftWeekDemoView, anchorDate: string) {
+  const start = getEventStartDate(view, anchorDate);
+  return Array.from({ length: view === 'day' ? 1 : 5 }, (_, day) => {
+    const date = addDays(start, day);
+    return [
+      { id: `shift-start-${day}`, startDateTime: createDateTime(date, 8 * 60), icon: '⚑', label: 'Shift start', color: '#d97706' },
+      { id: `lunch-${day}`, startDateTime: createDateTime(date, 12 * 60), endDateTime: createDateTime(date, 13 * 60), icon: '☕', label: 'Lunch', color: '#60a5fa' },
+      { id: `staff-training-${day}`, startDateTime: createDateTime(date, 15 * 60), endDateTime: createDateTime(date, 18 * 60), icon: '🎓', label: 'Staff training', color: '#38bdf8' },
+    ];
+  }).flat();
 }
 
 export function getShiftWeekSearchMatchIds(
@@ -515,7 +566,7 @@ export function createShiftWeekEvents(view: ShiftWeekDemoView, anchorDate: strin
       endDateTime: createDateTimeFromTimeOfDay(startDate, rotation.coverEnd, rotation.coverDay),
       status: 'pending',
       color: 'oklch(0.58 0.17 300)',
-      notes: 'Intentional overlap to show conflict styling.',
+      notes: 'Overlapping events demonstrate stacked scheduling.',
     },
     {
       id: 'shift-mina-tue',
@@ -546,9 +597,34 @@ export function createShiftWeekEvents(view: ShiftWeekDemoView, anchorDate: strin
       color: 'oklch(0.58 0.17 158)',
     },
   ];
+  const showcase = createDailyShowcaseEvents(view, startDate);
   return view === 'month' || view === 'year'
-    ? [...events, ...createCalendarScenarioEvents(view, startDate)]
-    : events;
+    ? [...events, ...showcase, ...createCalendarScenarioEvents(view, startDate)]
+    : [...events, ...showcase];
+}
+
+// Keep the first visible day populated, with short appointments, long training,
+// tentative cover and a protected handoff. Dates follow navigation in every view.
+function createDailyShowcaseEvents(view: ShiftWeekDemoView, startDate: string): EventSchedulerEventEntity[] {
+  const scenarios = [
+    { resourceId: 'alex', title: 'Patient rounds', progress: 65, start: 8 * 60, end: 10 * 60, type: 'appointment', status: 'confirmed', color: '#2563eb' },
+    { resourceId: 'mina', title: 'Clinical skills lab', progress: 40, start: 9 * 60, end: 11 * 60 + 30, type: 'training', status: 'training', color: '#047857' },
+    { resourceId: 'sam', title: 'Ward handoff', start: 8 * 60, end: 9 * 60, type: 'handoff', status: 'locked', color: '#475569', locked: true },
+    { resourceId: 'jamie', title: 'Float coverage', progress: 25, start: 13 * 60, end: 16 * 60, type: 'coverage', status: 'pending', color: '#a16207' },
+    { resourceId: 'alex', title: 'Consultation', start: 13 * 60, end: 14 * 60 + 30, type: 'appointment', status: 'confirmed', color: '#7c3aed' },
+    { resourceId: 'mina', title: 'Lunch', start: 12 * 60, end: 13 * 60, type: 'break', status: 'confirmed', color: '#64748b' },
+    { resourceId: 'sam', title: 'Team briefing', start: 10 * 60, end: 12 * 60, type: 'briefing', readonly: true, appearance: 'line' as const, icon: '👥', status: 'confirmed', color: '#ef4444' },
+    { resourceId: 'mina', title: 'Wellbeing break', start: 13 * 60, end: 15 * 60, type: 'wellbeing', readonly: true, appearance: 'line' as const, icon: '☕', status: 'confirmed', color: '#ef4444' },
+    { resourceId: 'sam', title: 'Coverage review', progress: 80, start: 14 * 60, end: 16 * 60, type: 'appointment', status: 'confirmed', color: '#0369a1' },
+  ];
+  return Array.from({ length: view === 'day' ? 1 : 5 }, (_, day) =>
+    scenarios.map(({ start, end, ...scenario }, index) => ({
+      ...scenario,
+      id: `showcase-${day}-${index}`,
+      startDateTime: createDateTime(addDays(startDate, day), start),
+      endDateTime: createDateTime(addDays(startDate, day), end),
+    })),
+  ).flat();
 }
 
 export function createShiftWeekAssignedOpenShift(
@@ -903,7 +979,7 @@ const renderShiftWeekTableDateCell: CellTemplate = (h, { model }: CellTemplatePr
 const renderShiftWeekTableAssigneeCell: CellTemplate = (h, { model }: CellTemplateProp) => {
   const row = model as ShiftWeekTableRow;
   return h('span', { class: 'event-scheduler-shift-week-table__person' }, [
-    h('span', { class: 'event-scheduler-shift-week-table__avatar', style: { '--shift-week-avatar-color': row.color } }, row.initials),
+    avatarTemplate(h, { className: 'event-scheduler-shift-week-table__avatar', value: row.avatarUrl || row.assignee, label: row.assignee, size: 24 }),
     h('span', { class: 'event-scheduler-shift-week-table__text' }, row.assignee),
   ]);
 };

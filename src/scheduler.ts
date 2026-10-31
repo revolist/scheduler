@@ -13,6 +13,7 @@ import {
   getShiftWeekSubtitle,
   getShiftWeekTableRows,
   getShiftWeekTableColumns,
+  getShiftWeekResourceColumns,
   getTodayAnchorDate,
   initialShiftWeekCalendar,
   initialShiftWeekAnchorDate,
@@ -77,7 +78,7 @@ export function load(parentSelector: string) {
   grid.theme = isDark() ? 'darkMaterial' : 'material';
   grid.hideAttribution = true;
   grid.plugins = [EventSchedulerPlugin];
-  grid.columns = [];
+  grid.columns = getShiftWeekResourceColumns();
   table.theme = isDark() ? 'darkMaterial' : 'material';
   const disconnectTheme = observeCurrentTheme((darkTheme) => {
     const theme = darkTheme ? 'darkMaterial' : 'material';
@@ -141,11 +142,6 @@ export function load(parentSelector: string) {
   };
   const setWorkspace = (view: ShiftWeekWorkspaceView) => {
     workspaceView = view;
-    if (view === 'resource') {
-      anchorDate = normalizeShiftWeekAnchorDate(activeView, anchorDate);
-      refreshRange();
-      return;
-    }
     if (view === 'calendar' && activeView === 'resource') {
       activeView = 'week';
       refreshRange();

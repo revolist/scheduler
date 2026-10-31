@@ -11,6 +11,7 @@ import {
   getShiftWeekRangeTitle,
   getShiftWeekSubtitle,
   getShiftWeekTableColumns,
+  getShiftWeekResourceColumns,
   getShiftWeekTableRows,
   getTodayAnchorDate,
   initialShiftWeekCalendar,
@@ -63,6 +64,7 @@ export default function EventSchedulerShiftWeek() {
   const [newEventForm, setNewEventForm] = useState<ShiftWeekNewEventForm | null>(null);
   const plugins = useMemo(() => [EventSchedulerPlugin], []);
   const tablePlugins = useMemo(() => [AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin], []);
+  const columns = useMemo(() => getShiftWeekResourceColumns(), []);
   const tableColumns = useMemo(() => getShiftWeekTableColumns(), []);
   const columnTypes = useMemo(() => ({}), []);
   const additionalData = useMemo(() => ({}), []);
@@ -111,17 +113,10 @@ export default function EventSchedulerShiftWeek() {
 
   const setWorkspace = useCallback((view: ShiftWeekWorkspaceView) => {
     setWorkspaceView(view);
-    if (view === 'resource') {
-      const normalizedAnchor = normalizeShiftWeekAnchorDate(activeView, anchorDate);
-      setAnchorDate(normalizedAnchor);
-      setSelectedEventIds([]);
-      resetEvents(activeView, normalizedAnchor);
-      return;
-    }
     if (view === 'calendar' && activeView === 'resource') {
       setActiveViewState('week');
     }
-  }, [activeView, anchorDate, resetEvents]);
+  }, [activeView]);
 
   const goPrevious = useCallback(() => {
     const nextAnchor = navigateShiftWeekAnchorDate(activeView, anchorDate, -1);
@@ -253,7 +248,7 @@ export default function EventSchedulerShiftWeek() {
       grid.removeEventListener('event-scheduler-resource-reassign-request', handleResourceReassignRequest);
       grid.removeEventListener('event-scheduler-view-request', handleViewRequest);
     };
-  }, [goNext, goPrevious, goToday, setView]);
+  }, [goNext, goPrevious, goToday, setView, workspaceView]);
 
   return (
     <section ref={shellRef} className="event-scheduler-shift-week-demo">
@@ -261,6 +256,7 @@ export default function EventSchedulerShiftWeek() {
         {React.createElement(SCHEDULER_HEADER_TAG, { ref: headerRef })}
         {workspaceView === 'table' ? (
           <RevoGrid
+            key="table"
             theme={isDark ? 'darkMaterial' : 'material'}
             hideAttribution
             readonly
@@ -272,13 +268,14 @@ export default function EventSchedulerShiftWeek() {
           />
         ) : (
           <RevoGrid
+              key="scheduler"
               ref={gridRef}
               className="event-scheduler-shift-week-grid"
               theme={isDark ? 'darkMaterial' : 'material'}
               hideAttribution
               plugins={plugins}
               source={events}
-              columns={[]}
+              columns={columns}
               columnTypes={columnTypes}
               additionalData={additionalData}
               eventScheduler={schedulerConfig}

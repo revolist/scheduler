@@ -64,6 +64,7 @@ import {
   getShiftWeekSubtitle,
   getShiftWeekTableRows,
   getShiftWeekTableColumns,
+  getShiftWeekResourceColumns,
   getTodayAnchorDate,
   initialShiftWeekCalendar,
   initialShiftWeekAnchorDate,
@@ -109,7 +110,7 @@ onBeforeUnmount(() => disconnectTheme?.());
 const plugins = [EventSchedulerPlugin];
 const tablePlugins = [AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin];
 const tableColumns = getShiftWeekTableColumns();
-const columns = ref([]);
+const columns = getShiftWeekResourceColumns();
 const activeView = ref<ShiftWeekDemoView>(initialShiftWeekDemoView);
 const workspaceView = ref<ShiftWeekWorkspaceView>(initialShiftWeekWorkspaceView);
 const anchorDate = ref(initialShiftWeekAnchorDate);
@@ -165,11 +166,7 @@ function setView(view: ShiftWeekDemoView, date = anchorDate.value) {
 
 function setWorkspace(view: ShiftWeekWorkspaceView) {
   workspaceView.value = view;
-  if (view === 'resource') {
-    anchorDate.value = normalizeShiftWeekAnchorDate(activeView.value, anchorDate.value);
-    selectedEventIds.value = [];
-    schedulerEvents.value = createShiftWeekEvents(activeView.value, anchorDate.value);
-  } else if (view === 'calendar' && activeView.value === 'resource') {
+  if (view === 'calendar' && activeView.value === 'resource') {
     activeView.value = 'week';
   }
 }

@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig, transformWithOxc } from 'vite';
 import { fileURLToPath } from 'node:url';
 import angular from '@analogjs/vite-plugin-angular';
 import react from '@vitejs/plugin-react';
@@ -19,7 +19,13 @@ export default defineConfig(({ mode }) => ({
     ...(mode === 'angular' ? { mainFields: ['module'] } : {}),
   },
   plugins: [
-    ...(mode === 'angular' ? [angular()] : []),
+    ...(mode === 'angular' ? [{
+      name: 'angular-build-tsx',
+      enforce: 'pre' as const,
+      transform: (code: string, id: string) => /\.tsx(?:\?|$)/.test(id)
+        ? transformWithOxc(code, id, { lang: 'tsx', jsx: { runtime: 'automatic' } })
+        : undefined,
+    }, angular()] : []),
     react(),
     vue({ template: { compilerOptions: { isCustomElement: (tag) => tag.startsWith('revo-') || tag.startsWith('revogr-') } } }),
   ],
