@@ -2,4 +2,11 @@ packages:
   - "."
 
 overrides:
-  '@revolist/revogrid': '4.29.1'
+  '@revolist/revogrid': '4.30.0'
+
+minimumReleaseAgeExclude:
+  - '@revolist/revogrid@4.30.0'
+  - '@revolist/angular-datagrid@4.30.0'
+  - '@revolist/react-datagrid@4.30.0'
+  - '@revolist/vue3-datagrid@4.30.0'
+  - '@revolist/svelte-datagrid@4.30.0'
