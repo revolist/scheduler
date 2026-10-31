@@ -113,7 +113,10 @@ export class SchedulerHeaderElement extends HTMLElement {
     const end = document.createElement('div');
     end.className = 'event-scheduler-shift-week-toolbar__end';
     end.append(this.views, calendar);
-    this.append(this.workspace, range, end);
+    const notice = document.createElement('p');
+    notice.className = 'event-scheduler-shift-week-toolbar__notice';
+    notice.textContent = 'Changing dates, views or calendars resets sample edits.';
+    this.append(this.workspace, range, end, notice);
   }
 
   private createNavigationButton(action: SchedulerHeaderNavigateDetail['action'], ariaLabel: string, label: string): HTMLButtonElement {
