@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@revolist/revogrid': 4.29.1
+  '@revolist/revogrid': 4.30.0
 
 importers:
 
@@ -27,14 +27,14 @@ importers:
         specifier: 20.3.26
         version: 20.3.26(@angular/common@20.3.26(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/compiler@20.3.26)(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.3.26(@angular/common@20.3.26(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1)))
       '@revolist/angular-datagrid':
-        specifier: 4.29.1
-        version: 4.29.1
+        specifier: 4.30.0
+        version: 4.30.0
       '@revolist/react-datagrid':
-        specifier: 4.29.1
-        version: 4.29.1
+        specifier: 4.30.0
+        version: 4.30.0
       '@revolist/revogrid':
-        specifier: 4.29.1
-        version: 4.29.1
+        specifier: 4.30.0
+        version: 4.30.0
       '@revolist/revogrid-pro':
         specifier: npm:@revolist/rv-pro-trial@3.0.18
         version: '@revolist/rv-pro-trial@3.0.18'
@@ -42,8 +42,8 @@ importers:
         specifier: npm:@revolist/scheduler-trial@3.0.18
         version: '@revolist/scheduler-trial@3.0.18'
       '@revolist/vue3-datagrid':
-        specifier: 4.29.1
-        version: 4.29.1
+        specifier: 4.30.0
+        version: 4.30.0
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -1278,14 +1278,14 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@revolist/angular-datagrid@4.29.1':
-    resolution: {integrity: sha512-rblhYQQdl4cPJrQIX9TdRV+q0NWvwjGMyZnzsOxPoZNPG0lQ88t/5X0ktkak7XyaRcvOC1CoTpr/l/9EyytbUg==}
+  '@revolist/angular-datagrid@4.30.0':
+    resolution: {integrity: sha512-Es0VqjvSTsy6NYkvYn69ekVAysGEKTaLDVo7bKYXAXakCZslwEQzjX/VX1LWK+DJiSTJA6JqeI3m0RTjnDvUew==}
 
-  '@revolist/react-datagrid@4.29.1':
-    resolution: {integrity: sha512-Y1Wso5MM2gFJgF4C+o3jpdEtdwpVZKocKnz0aloicezfFrz3OGcf46uUSP0VfSqyhp9TdEFeERokDSJ+MoleSQ==}
+  '@revolist/react-datagrid@4.30.0':
+    resolution: {integrity: sha512-ijmF2GifLy3rnkKCimZVWn0leEP2uk8RWP/TPmDhnqzzOzq/DuwW9vhlmFaqZQiuJjrCun3thBBb9JVjnUmRjw==}
 
-  '@revolist/revogrid@4.29.1':
-    resolution: {integrity: sha512-j/m52cS6ev4aOpskj2lxIc+vP1gxNFGJ1K3hrp6vM1lw/JJctQN4iEgr+8qhzkEVrmd5VoAa163SVB00mR4c2Q==}
+  '@revolist/revogrid@4.30.0':
+    resolution: {integrity: sha512-bTfkH8/30b4djsWS67I3yO4E9vguTh5EBiCLzJcS8uE+TABvMPQq+qY4y44877pcEiclTM9UnyPvmJZoY2kRZA==}
 
   '@revolist/rv-pro-trial@3.0.18':
     resolution: {integrity: sha512-cG2ucLzg6p6rjE/43JrndxIrrms3V/c2Hvg5FR3dOsPeNAV/LguTJTLc2wmLlKkSWV2b4/PifN4Iuf+4Iv4hAg==, tarball: https://trial.rv-grid.com/@revolist/rv-pro-trial/-/163baae10440b72fe5dcfe0ff359b856c34399aa}
@@ -1293,8 +1293,8 @@ packages:
   '@revolist/scheduler-trial@3.0.18':
     resolution: {integrity: sha512-k/zf0dVeSt0yhAJExfIkKxhSPFzKbyWeiu4WZk8buUCqFN0YL6iGuOLyA+qa4tGRLxWQYlb/lx1Pw7lQlQ7h/A==, tarball: https://trial.rv-grid.com/@revolist/scheduler-trial/-/7615abfab2cdda20dd61b1e78b0a6f729fd92274}
 
-  '@revolist/vue3-datagrid@4.29.1':
-    resolution: {integrity: sha512-X/5IjQnOW1NSwW34MPNQpzBa4DBtfjbMlVtdG2roA4n3VVrCgiYz8qJwGFsWMptvocml+ywauvkJVa/uMSetuw==}
+  '@revolist/vue3-datagrid@4.30.0':
+    resolution: {integrity: sha512-0LjUG5P4mWlETk35LovEfjkRRWrtQehDN92YpOspxFyo+4MUqDpY/sOrsTT1HytxmB1OmjX5PcjrRx5WDpW0Pw==}
 
   '@rolldown/binding-android-arm64@1.2.3':
     resolution: {integrity: sha512-zrJtHDcaZJ1Fp7xf4hNl+7seH9Cn/N5TwLYkhgXREtBwAd/jaqW3uqeHxpDugJLVICWg4eW44kOQEGJ1r6jCGw==}
@@ -4594,22 +4594,22 @@ snapshots:
     dependencies:
       playwright: 1.59.1
 
-  '@revolist/angular-datagrid@4.29.1':
+  '@revolist/angular-datagrid@4.30.0':
     dependencies:
-      '@revolist/revogrid': 4.29.1
+      '@revolist/revogrid': 4.30.0
       '@stencil/core': 4.43.5
       tslib: 2.8.1
 
-  '@revolist/react-datagrid@4.29.1':
+  '@revolist/react-datagrid@4.30.0':
     dependencies:
-      '@revolist/revogrid': 4.29.1
+      '@revolist/revogrid': 4.30.0
 
-  '@revolist/revogrid@4.29.1': {}
+  '@revolist/revogrid@4.30.0': {}
 
   '@revolist/rv-pro-trial@3.0.18':
     dependencies:
       '@formulajs/formulajs': 4.6.1
-      '@revolist/revogrid': 4.29.1
+      '@revolist/revogrid': 4.30.0
       preact: 10.29.8
       write-excel-file: 4.1.1
     transitivePeerDependencies:
@@ -4618,15 +4618,15 @@ snapshots:
   '@revolist/scheduler-trial@3.0.18':
     dependencies:
       '@fortawesome/fontawesome-free': 7.3.1
-      '@revolist/revogrid': 4.29.1
+      '@revolist/revogrid': 4.30.0
       '@revolist/rv-pro-trial': 3.0.18
       pdfmake: 0.3.9
     transitivePeerDependencies:
       - preact-render-to-string
 
-  '@revolist/vue3-datagrid@4.29.1':
+  '@revolist/vue3-datagrid@4.30.0':
     dependencies:
-      '@revolist/revogrid': 4.29.1
+      '@revolist/revogrid': 4.30.0
 
   '@rolldown/binding-android-arm64@1.2.3':
     optional: true
