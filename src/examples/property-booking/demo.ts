@@ -39,7 +39,9 @@ export function createPropertyBookingDemo() {
   let disconnect = () => {};
   let generation = 0, connecting: HTMLRevoGridElement | undefined;
   let config: EventSchedulerConfig;
-  const scopedResources = () => resources.filter(resource => (type === 'All properties' || resource.role === type) && Number(resource.metadata?.sleeps) >= minSleeps);
+  let nativeResourceIds: string[] | undefined;
+  const toolbarResources = () => resources.filter(resource => (type === 'All properties' || resource.role === type) && Number(resource.metadata?.sleeps) >= minSleeps);
+  const scopedResources = () => toolbarResources().filter(resource => nativeResourceIds === undefined || nativeResourceIds.includes(String(resource.id)));
   const update = (reconfigure = false) => {
     if (reconfigure) config = makeConfig();
     publish?.(snapshot());
@@ -68,8 +70,8 @@ export function createPropertyBookingDemo() {
       conflicts: { enabled: true, policy: 'prevent', scope: 'same-resource', rules: { overlap: 'error', 'blocked-time': 'error' } },
       nonWorkingTime: { enabled: false },
       emptyStateText: 'No properties match these filters.',
-      filters: { resourceIds: scopedResources().map(resource => resource.id) },
-      timelineSummary: { rows, resourceIds: selectedOnly ? selectedIds : undefined, rowSize: 34 },
+      filters: { resourceIds: toolbarResources().map(resource => resource.id) },
+      timelineSummary: { rows, resourceIds: scopedResources().filter(resource => !selectedOnly || selectedIds.includes(String(resource.id))).map(resource => resource.id), rowSize: 34 },
       slotTemplate: (h, { resource }) => h('span', { class: 'property-booking-rate' }, `€${resource?.metadata?.rate ?? ''}`),
       closedSlotTemplate: (h, { title }) => h('span', { class: 'property-booking-blocked' }, title ?? 'Unavailable'),
       labels: { resourceColumn: 'Property', newEvent: 'New booking', createEvent: 'New booking', editEvent: 'Edit booking', createEventHereAction: 'New booking here' },
@@ -81,6 +83,7 @@ export function createPropertyBookingDemo() {
         for (const event of detail.changedEvents ?? (detail.event ? [{ ...detail.event, ...detail.changes }] : [])) {
           const property = resources.find(resource => String(resource.id) === String(event.resourceId));
           const count = Number(event.metadata?.guests ?? 2);
+          if (!bookingStatuses.includes(event.status ?? '')) return 'Choose a supported booking status.';
           if (!property) return 'Choose a property.';
           if (!Number.isInteger(count) || count < 1 || count > Number(property.metadata?.sleeps)) return `${property.name} sleeps up to ${property.metadata?.sleeps} guests.`;
           const from = formatIsoDateInTimeZone(parseIsoDate(event.startDateTime), bookingTimeZone);
@@ -89,7 +92,7 @@ export function createPropertyBookingDemo() {
             return 'Bookings must start and end at calendar-day boundaries and include at least one night.';
         }
       },
-      statusColorResolver: event => bookingColors[event.status ?? 'Confirmed'],
+      statusColorResolver: event => event.color ?? bookingColors[event.status ?? 'Confirmed'],
       customization: {
         cells: {
           resourceTemplate: (h, { resource }) => resource ? h('span', { class: 'property-booking-resource' }, [
@@ -103,8 +106,8 @@ export function createPropertyBookingDemo() {
         },
         events: {
           properties: ({ event }) => ({ style: {
-            '--event-scheduler-event-color': bookingColors[event.status ?? 'Confirmed'],
-            '--event-scheduler-event-track-bg': bookingColors[event.status ?? 'Confirmed'],
+            '--event-scheduler-event-color': event.color ?? bookingColors[event.status ?? 'Confirmed'],
+            '--event-scheduler-event-track-bg': event.color ?? bookingColors[event.status ?? 'Confirmed'],
           } }),
           content: (h, { event }) => h('span', { class: 'property-booking-event' }, [
             h('strong', {}, event.title),
@@ -151,12 +154,12 @@ export function createPropertyBookingDemo() {
       update(true);
     },
     setRange(from: string, to: string) {
-      if (!isValidIsoDate(from) || !isValidIsoDate(to) || from > to || to > addDays(from, 61)) { message = 'Choose an ordered date range of up to 62 days.'; update(); return; }
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(from) || !/^\d{4}-\d{2}-\d{2}$/.test(to) || !isValidIsoDate(from) || !isValidIsoDate(to) || from < '0001-01-01' || to > '9999-12-31' || from > to || diffInCalendarDays(from, to) > 61) { message = 'Choose an ordered date range of up to 62 days.'; update(); return; }
       start = rangeStart = from; end = rangeEnd = to; message = 'View range updated. Bookings outside the range are retained.'; update(true);
     },
-    navigate(days: number) { rangeStart = start = addDays(start, days); rangeEnd = end = addDays(end, days); update(true); },
+    navigate(days: number) { this.setRange(addDays(start, days), addDays(end, days)); },
     today() { rangeStart = start = formatIsoDateInTimeZone(new Date(), bookingTimeZone); rangeEnd = end = addDays(start, 13); update(true); },
-    reset() { events = createBookings(); rangeStart = start = initialStart; rangeEnd = end = initialEnd; type = 'All properties'; minSleeps = 0; selectedIds = []; selectedOnly = false; properties = true; guests = true; message = 'Demo bookings reset.'; update(true); },
+    reset() { nativeResourceIds = undefined; scheduler?.resetResourceColumnState(); events = createBookings(); rangeStart = start = initialStart; rangeEnd = end = initialEnd; type = 'All properties'; minSleeps = 0; selectedIds = []; selectedOnly = false; properties = true; guests = true; message = 'Demo bookings reset.'; update(true); },
     newBooking() {
       const id = `new-booking-${++sequence}`;
       const drafts = scopedResources().map(resource => ({ id, resourceId: resource.id, title: '', status: 'New',
@@ -175,9 +178,28 @@ export function createPropertyBookingDemo() {
       dialog = plugins.find((plugin): plugin is DialogPlugin => plugin instanceof DialogPlugin);
       const changed = (event: Event) => { events = [...(event as CustomEvent<EventSchedulerEventChangedDetail>).detail.events]; message = 'Booking updated. Daily totals refreshed.'; update(); };
       const selected = (event: Event) => { const booking = (event as CustomEvent<EventSchedulerEventSelectedDetail>).detail.event; if (booking) { message = `${booking.title} · ${guestLabel(booking.metadata?.guests)} · ${booking.status} · ${booking.metadata?.payment ?? 'Unpaid'}. Double-click to edit; use the context menu or copy and paste to duplicate.`; update(); } };
+      const filtered = async () => {
+        const rows = await grid.getVisibleSource();
+        if (token !== generation) return;
+        const ids = rows.filter(row => row.__eventSchedulerResource).map(row => String(row.resourceId));
+        if (JSON.stringify(ids) !== JSON.stringify(nativeResourceIds)) { nativeResourceIds = ids; update(true); }
+      };
+      grid.addEventListener('afterfilterapply', filtered);
+      const labelFilter = () => {
+        const button = grid.querySelector<HTMLButtonElement>('button.rv-filter');
+        if (!button) return;
+        const popup = grid.querySelector<HTMLDialogElement>('.filter-panel-dialog');
+        button.setAttribute('aria-label', 'Filter properties');
+        button.setAttribute('aria-haspopup', 'dialog');
+        button.setAttribute('aria-expanded', String(!!popup?.open));
+        if (popup) { popup.id ||= 'property-booking-filter'; button.setAttribute('aria-controls', popup.id); }
+      };
+      const filterObserver = new MutationObserver(labelFilter);
+      filterObserver.observe(grid, { childList: true, subtree: true, attributes: true, attributeFilter: ['open'] });
+      labelFilter();
       const listeners = ['event-scheduler-event-created', 'event-scheduler-event-changed', 'event-scheduler-event-deleted'];
       listeners.forEach(name => grid.addEventListener(name, changed)); grid.addEventListener('event-scheduler-event-selected', selected);
-      disconnect = () => { listeners.forEach(name => grid.removeEventListener(name, changed)); grid.removeEventListener('event-scheduler-event-selected', selected); dialog?.close(); };
+      disconnect = () => { filterObserver.disconnect(); grid.removeEventListener('afterfilterapply', filtered); listeners.forEach(name => grid.removeEventListener(name, changed)); grid.removeEventListener('event-scheduler-event-selected', selected); dialog?.close(); };
       ready = !!scheduler && !!dialog; update();
     },
     disconnect() { generation++; disconnect(); disconnect = () => {}; scheduler = undefined; dialog = undefined; publish = undefined; connecting = undefined; ready = false; },
