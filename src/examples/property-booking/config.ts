@@ -12,6 +12,7 @@ interface BookingConfigOptions {
   end: string
   resources: readonly EventSchedulerResourceEntity[]
   resourceIds: string[]
+  summaryResourceIds: string[]
   selectedIds: readonly string[]
   selectedOnly: boolean
   properties: boolean
@@ -27,6 +28,7 @@ export function createBookingConfig({
   end,
   resources,
   resourceIds,
+  summaryResourceIds,
   selectedIds,
   selectedOnly,
   properties,
@@ -79,7 +81,7 @@ export function createBookingConfig({
     nonWorkingTime: { enabled: false },
     emptyStateText: 'No properties match these filters.',
     filters: { resourceIds },
-    timelineSummary: { rows, resourceIds: selectedOnly ? selectedIds : undefined, rowSize: 34 },
+    timelineSummary: { rows, resourceIds: summaryResourceIds, rowSize: 34 },
     slotTemplate: (h, { resource }) =>
       h('span', { class: 'property-booking-rate' }, `€${resource?.metadata?.rate ?? ''}`),
     closedSlotTemplate: (h, { title }) =>
@@ -110,6 +112,7 @@ export function createBookingConfig({
           resource => String(resource.id) === String(event.resourceId),
         )
         const count = Number(event.metadata?.guests ?? 2)
+        if (!bookingStatuses.includes(event.status ?? '')) return 'Choose a supported booking status.'
         if (!property) return 'Choose a property.'
         if (!Number.isInteger(count) || count < 1 || count > Number(property.metadata?.sleeps))
           return `${property.name} sleeps up to ${property.metadata?.sleeps} guests.`
@@ -123,7 +126,7 @@ export function createBookingConfig({
           return 'Bookings must start and end at calendar-day boundaries and include at least one night.'
       }
     },
-    statusColorResolver: event => bookingColors[event.status ?? 'Confirmed'],
+    statusColorResolver: event => event.color ?? bookingColors[event.status ?? 'Confirmed'],
     customization: createBookingTemplates(selectedIds, toggleProperty),
   }
 }

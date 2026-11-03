@@ -14,6 +14,7 @@ import {
   formatIsoDateInTimeZone,
   isValidIsoDate,
   diffInCalendarDays,
+  diffInCalendarDays,
 } from '@revolist/revogrid-pro'
 import {
   bookingTimeZone,
@@ -78,11 +79,16 @@ export function createPropertyBookingDemo() {
   let generation = 0,
     connecting: HTMLRevoGridElement | undefined
   let config: EventSchedulerConfig
-  const scopedResources = () =>
+  let nativeResourceIds: string[] | undefined
+  const toolbarResources = () =>
     resources.filter(
       resource =>
         (type === 'All properties' || resource.role === type) &&
         Number(resource.metadata?.sleeps) >= minSleeps,
+    )
+  const scopedResources = () =>
+    toolbarResources().filter(
+      resource => nativeResourceIds === undefined || nativeResourceIds.includes(String(resource.id)),
     )
   // Publish a fresh snapshot so Vue, React and Angular can observe each change.
   // Only replace Scheduler configuration when view or filter options change.
@@ -122,7 +128,10 @@ export function createPropertyBookingDemo() {
       start,
       end,
       resources,
-      resourceIds: scopedResources().map(resource => String(resource.id)),
+      resourceIds: toolbarResources().map(resource => String(resource.id)),
+      summaryResourceIds: scopedResources()
+        .filter(resource => !selectedOnly || selectedIds.includes(String(resource.id)))
+        .map(resource => String(resource.id)),
       selectedIds,
       selectedOnly,
       properties,
@@ -197,7 +206,16 @@ export function createPropertyBookingDemo() {
       update(true)
     },
     setRange(from: string, to: string) {
-      if (!isValidIsoDate(from) || !isValidIsoDate(to) || from > to || to > addDays(from, 61)) {
+      if (
+        !/^\d{4}-\d{2}-\d{2}$/.test(from) ||
+        !/^\d{4}-\d{2}-\d{2}$/.test(to) ||
+        !isValidIsoDate(from) ||
+        !isValidIsoDate(to) ||
+        from < '0001-01-01' ||
+        to > '9999-12-31' ||
+        from > to ||
+        diffInCalendarDays(from, to) > 61
+      ) {
         message = 'Choose an ordered date range of up to 62 days.'
         update()
         return
@@ -208,9 +226,7 @@ export function createPropertyBookingDemo() {
       update(true)
     },
     navigate(days: number) {
-      rangeStart = start = addDays(start, days)
-      rangeEnd = end = addDays(end, days)
-      update(true)
+      this.setRange(addDays(start, days), addDays(end, days))
     },
     today() {
       rangeStart = start = formatIsoDateInTimeZone(new Date(), bookingTimeZone)
@@ -218,6 +234,8 @@ export function createPropertyBookingDemo() {
       update(true)
     },
     reset() {
+      nativeResourceIds = undefined
+      scheduler?.resetResourceColumnState()
       events = createBookings()
       rangeStart = start = initialStart
       rangeEnd = end = initialEnd
@@ -284,6 +302,31 @@ export function createPropertyBookingDemo() {
           update()
         }
       }
+      const filtered = async () => {
+        const rows = await grid.getVisibleSource()
+        if (token !== generation) return
+        const ids = rows.filter(row => row.__eventSchedulerResource).map(row => String(row.resourceId))
+        if (JSON.stringify(ids) !== JSON.stringify(nativeResourceIds)) {
+          nativeResourceIds = ids
+          update(true)
+        }
+      }
+      grid.addEventListener('afterfilterapply', filtered)
+      const labelFilter = () => {
+        const button = grid.querySelector<HTMLButtonElement>('button.rv-filter')
+        if (!button) return
+        const popup = grid.querySelector<HTMLDialogElement>('.filter-panel-dialog')
+        button.setAttribute('aria-label', 'Filter properties')
+        button.setAttribute('aria-haspopup', 'dialog')
+        button.setAttribute('aria-expanded', String(!!popup?.open))
+        if (popup) {
+          popup.id ||= 'property-booking-filter'
+          button.setAttribute('aria-controls', popup.id)
+        }
+      }
+      const filterObserver = new MutationObserver(labelFilter)
+      filterObserver.observe(grid, { childList: true, subtree: true, attributes: true, attributeFilter: ['open'] })
+      labelFilter()
       const listeners = [
         'event-scheduler-event-created',
         'event-scheduler-event-changed',
@@ -292,6 +335,8 @@ export function createPropertyBookingDemo() {
       listeners.forEach(name => grid.addEventListener(name, changed))
       grid.addEventListener('event-scheduler-event-selected', selected)
       disconnect = () => {
+        filterObserver.disconnect()
+        grid.removeEventListener('afterfilterapply', filtered)
         listeners.forEach(name => grid.removeEventListener(name, changed))
         grid.removeEventListener('event-scheduler-event-selected', selected)
         dialog?.close()
@@ -302,7 +347,9 @@ export function createPropertyBookingDemo() {
     disconnect() {
       generation++
       disconnect()
-      disconnect = () => {}
+      disconnect = () => {
+        filterObserver.disconnect()
+        grid.removeEventListener('afterfilterapply', filtered)}
       scheduler = undefined
       dialog = undefined
       publish = undefined
