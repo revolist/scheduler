@@ -14,11 +14,11 @@
   h2, p { margin: 0; }
 }
 .property-booking-demo__actions, .property-booking-demo__range, .property-booking-demo__filters, .property-booking-demo__summaries, .property-booking-demo__totals { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-.property-booking-demo__toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 18px; padding: 12px 22px; background: var(--booking-surface); }
+.property-booking-demo__toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 12px 18px; padding: 12px 22px; background: var(--booking-surface); }
 .property-booking-demo__range label { font-size: 12px; color: var(--booking-muted); display: flex; align-items: center; gap: 6px; }
-.property-booking-demo__range .rv-date-time-field { width: 150px; }
-.property-booking-demo__filters .rv-select { min-width: 110px; }
-.property-booking-demo__filters label:first-child .rv-select { min-width: 145px; }
+.property-booking-demo__range .rv-date-time-field { width: 156px; }
+.property-booking-demo__filters .rv-select { width: 112px; }
+.property-booking-demo__filters label:first-child .rv-select { width: 136px; }
 .property-booking-demo__summaries { padding: 12px 22px; border-bottom: 1px solid var(--booking-border); font-size: 12px; color: var(--booking-muted);
   label { display: flex; align-items: center; gap: 5px; white-space: nowrap; }
   .property-booking-demo__totals { margin-inline-start: auto; justify-content: flex-end; }
@@ -118,7 +118,7 @@
 }
 
 .property-booking-demo__actions {
-  margin-left: auto;
+  margin-inline-start: auto;
   .rv-btn, .rv-btn-solid { width: 34px; flex: none; }
 }
 

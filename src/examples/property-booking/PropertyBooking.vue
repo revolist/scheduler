@@ -3,13 +3,13 @@
     <div class="property-booking-demo__toolbar">
       <div class="property-booking-demo__range">
         <button v-rv-control class="rv-btn" @click="model.today()"><span class="property-booking-control-icon" aria-hidden="true" v-html="bookingIcons.today"></span>Today</button><button v-rv-control class="rv-btn" aria-label="Previous week" @click="model.navigate(-7)"><span class="property-booking-control-icon" aria-hidden="true" v-html="bookingIcons.previous"></span></button><button v-rv-control class="rv-btn" aria-label="Next week" @click="model.navigate(7)"><span class="property-booking-control-icon" aria-hidden="true" v-html="bookingIcons.next"></span></button>
-        <label>From <DateTimeField aria-label="View from" :model-value="state.rangeStart" @update:model-value="value => model.setRangeInput('start', String(value))" /></label>
-        <label>To <DateTimeField aria-label="View to" :model-value="state.rangeEnd" @update:model-value="value => model.setRangeInput('end', String(value))" /></label>
+        <label>From <DateTimeField aria-label="View from" :value="state.rangeStart" @update:model-value="value => model.setRangeInput('start', String(value))" /></label>
+        <label>To <DateTimeField aria-label="View to" :value="state.rangeEnd" @update:model-value="value => model.setRangeInput('end', String(value))" /></label>
       </div>
       <div class="property-booking-demo__filters">
-        <label>Show <Dropdown class="rv-select" v-bind="bookingFilterDropdowns.property" :model-value="state.type"
+        <label>Show <Dropdown class="rv-select" v-bind="bookingFilterDropdowns.property" :value="state.type"
           @update:model-value="value => model.setType(String(value))" /></label>
-        <label>Sleeps <Dropdown class="rv-select" v-bind="bookingFilterDropdowns.capacity" :model-value="state.minSleeps"
+        <label>Sleeps <Dropdown class="rv-select" v-bind="bookingFilterDropdowns.capacity" :value="state.minSleeps"
           @update:model-value="value => model.setCapacity(Number(value))" /></label>
       </div>
       <div class="property-booking-demo__actions"><div ref="historyRef"></div><button v-rv-control class="rv-btn-solid" aria-label="New booking" title="New booking" :disabled="!state.ready || !state.propertyCount" @click="model.newBooking()"><span class="property-booking-control-icon" aria-hidden="true" v-html="bookingIcons.add"></span></button></div>
