@@ -1,5 +1,9 @@
-import { controlAttributes, createControl } from '@revolist/ui';
+import { createControl } from '@revolist/ui';
 import '@revolist/ui/styles.css';
+import { Dropdown } from '@revolist/ui/dropdown/index';
+import { renderPreactInto } from '@revolist/ui/preact-mount';
+import { SegmentedSwitch } from '@revolist/ui/segmented-switch/index';
+import { h as preactH } from 'preact';
 import type { ShiftWeekCalendarOption, ShiftWeekDemoCalendar, ShiftWeekDemoView, ShiftWeekWorkspaceView } from '../../data';
 
 export const SCHEDULER_HEADER_TAG = 'revogr-scheduler-header';
@@ -43,13 +47,11 @@ export class SchedulerHeaderElement extends HTMLElement {
   private workspace: HTMLElement | null = null;
   private heading: HTMLElement | null = null;
   private views: HTMLElement | null = null;
-  private calendarSelect: HTMLSelectElement | null = null;
-  private calendarDescription: HTMLElement | null = null;
+  private calendarDropdown: HTMLElement | null = null;
 
   constructor() {
     super();
     this.addEventListener('click', this.handleClick);
-    this.addEventListener('change', this.handleChange);
   }
 
   /** Controlled render model. Model updates never emit user-interaction events. */
@@ -77,12 +79,16 @@ export class SchedulerHeaderElement extends HTMLElement {
     this.render();
   }
 
+  disconnectedCallback(): void {
+    if (this.workspace) renderPreactInto(this.workspace, null);
+    if (this.views) renderPreactInto(this.views, null);
+    if (this.calendarDropdown) renderPreactInto(this.calendarDropdown, null);
+  }
+
   private ensureStructure(): void {
     if (this.heading) return;
-    this.workspace = document.createElement('nav');
-    this.workspace.className = 'event-scheduler-shift-week-toolbar__workspace rv-segmented-switch';
-    this.workspace.setAttribute('role', 'tablist');
-    this.workspace.setAttribute('aria-label', 'Scheduler workspace');
+    this.workspace = document.createElement('div');
+    this.workspace.className = 'event-scheduler-shift-week-toolbar__workspace';
 
     const nav = document.createElement('div');
     nav.className = 'event-scheduler-shift-week-toolbar__nav';
@@ -99,34 +105,25 @@ export class SchedulerHeaderElement extends HTMLElement {
     range.append(nav, this.heading);
 
     this.views = document.createElement('div');
-    this.views.className = 'event-scheduler-shift-week-toolbar__views rv-segmented-switch';
-    this.views.setAttribute('role', 'group');
-    this.views.setAttribute('aria-label', 'Scheduler view');
+    this.views.className = 'event-scheduler-shift-week-toolbar__views';
 
-    const calendar = document.createElement('label');
+    const calendar = document.createElement('div');
     calendar.className = 'event-scheduler-shift-week-toolbar__calendar';
     const calendarLabel = document.createElement('span');
     calendarLabel.textContent = 'Calendar';
-    this.calendarSelect = createControl(document, 'select');
-    this.calendarSelect.setAttribute('aria-label', 'Calendar preset');
-    this.calendarSelect.dataset.schedulerCalendar = '';
-    this.calendarDescription = document.createElement('small');
-    calendar.append(calendarLabel, this.calendarSelect, this.calendarDescription);
+    this.calendarDropdown = document.createElement('div');
+    calendar.append(calendarLabel, this.calendarDropdown);
     const end = document.createElement('div');
     end.className = 'event-scheduler-shift-week-toolbar__end';
     end.append(this.views, calendar);
-    const notice = document.createElement('p');
-    notice.className = 'event-scheduler-shift-week-toolbar__notice';
-    notice.textContent = 'Changing dates, views or calendars resets sample edits.';
-    this.append(this.workspace, range, end, notice);
+    this.append(this.workspace, range, end);
   }
 
   private createNavigationButton(action: SchedulerHeaderNavigateDetail['action'], ariaLabel: string, label: string): HTMLButtonElement {
-    const button = createControl(document, 'button', { type: 'button' });
-    button.type = 'button';
-    button.className = controlAttributes('button', { class: action === 'today'
-      ? 'event-scheduler-shift-week-toolbar__today'
-      : 'event-scheduler-shift-week-toolbar__icon' }).class;
+    const button = createControl(document, 'button', {
+      type: 'button',
+      class: action === 'today' ? undefined : 'rv-btn-icon',
+    });
     button.dataset.schedulerNavigate = action;
     if (ariaLabel) button.setAttribute('aria-label', ariaLabel);
     button.textContent = label;
@@ -139,21 +136,14 @@ export class SchedulerHeaderElement extends HTMLElement {
     const model = this.currentModel;
     this.classList.toggle('event-scheduler-shift-week-toolbar--workspace-only', model.workspaceView !== 'calendar');
 
-    const workspaceButtons = workspaceViews.map(({ view, label }) => {
-      const active = model.workspaceView === view;
-      const button = createControl(document, 'button', { type: 'button' });
-      button.type = 'button';
-      button.setAttribute('role', 'tab');
-      button.className = controlAttributes('button', { class: [
-        'rv-segmented-switch-item',
-        active ? 'on' : '',
-      ].filter(Boolean).join(' ') }).class;
-      button.dataset.schedulerWorkspace = view;
-      button.classList.add('rv-segmented-switch-item'); button.setAttribute('aria-selected', String(active)); button.classList.toggle('on', button.getAttribute('aria-selected') === 'true');
-      button.textContent = label;
-      return button;
-    });
-    this.workspace?.replaceChildren(...workspaceButtons);
+    if (this.workspace) {
+      renderPreactInto(this.workspace, preactH(SegmentedSwitch<ShiftWeekWorkspaceView>, {
+        value: model.workspaceView,
+        options: workspaceViews.map(({ view, label }) => ({ value: view, label })),
+        ariaLabel: 'Scheduler workspace',
+        onChange: view => this.emit<SchedulerHeaderWorkspaceChangeDetail>('scheduler-header-workspace-change', { view }),
+      }));
+    }
 
     const title = document.createElement('strong');
     title.textContent = model.title;
@@ -161,67 +151,36 @@ export class SchedulerHeaderElement extends HTMLElement {
     subtitle.textContent = model.subtitle;
     this.heading?.replaceChildren(title, subtitle);
 
-    const viewButtons = model.views.map((view) => {
-      const active = model.activeView === view;
-      const button = createControl(document, 'button', { type: 'button' });
-      button.type = 'button';
-      button.className = controlAttributes('button', { class: [
-        'rv-segmented-switch-item',
-        'event-scheduler-shift-week-toolbar__view',
-        active ? 'on' : '',
-        active ? 'event-scheduler-shift-week-toolbar__view--active' : '',
-      ].filter(Boolean).join(' ') }).class;
-      button.dataset.schedulerView = view;
-      button.classList.add('rv-choice-chip'); button.setAttribute('aria-pressed', String(active));
-      button.textContent = model.viewLabels[view];
-      return button;
-    });
-    this.views?.replaceChildren(...viewButtons);
-
-    if (this.calendarSelect) {
-      const options = model.calendarOptions.map((option) => {
-        const item = document.createElement('option');
-        item.value = option.id;
-        item.textContent = option.label;
-        return item;
-      });
-      this.calendarSelect.replaceChildren(...options);
-      this.calendarSelect.value = model.activeCalendar;
+    if (this.views) {
+      renderPreactInto(this.views, preactH(SegmentedSwitch<ShiftWeekDemoView>, {
+        value: model.activeView,
+        options: model.views.map(view => ({ value: view, label: model.viewLabels[view] })),
+        ariaLabel: 'Scheduler view',
+        role: 'group',
+        onChange: view => this.emit<SchedulerHeaderViewChangeDetail>('scheduler-header-view-change', { view }),
+      }));
     }
-    if (this.calendarDescription) {
-      this.calendarDescription.textContent = model.calendarOptions.find(({ id }) => id === model.activeCalendar)?.description ?? '';
+
+    if (this.calendarDropdown) {
+      renderPreactInto(this.calendarDropdown, preactH(Dropdown<ShiftWeekDemoCalendar>, {
+        value: model.activeCalendar,
+        source: model.calendarOptions.map(({ id, label }) => ({ value: id, label })),
+        config: { ariaLabel: 'Calendar preset', topLayer: true },
+        onChange: calendar => {
+          if (!Array.isArray(calendar)) {
+            this.emit<SchedulerHeaderCalendarChangeDetail>('scheduler-header-calendar-change', { calendar });
+          }
+        },
+      }));
     }
   }
 
   private readonly handleClick = (event: Event): void => {
     const target = event.target as HTMLElement;
-    const workspace = target.closest<HTMLButtonElement>('[data-scheduler-workspace]');
-    if (workspace?.dataset.schedulerWorkspace) {
-      this.emit<SchedulerHeaderWorkspaceChangeDetail>('scheduler-header-workspace-change', {
-        view: workspace.dataset.schedulerWorkspace as ShiftWeekWorkspaceView,
-      });
-      return;
-    }
     const navigation = target.closest<HTMLButtonElement>('[data-scheduler-navigate]');
     if (navigation?.dataset.schedulerNavigate) {
       this.emit<SchedulerHeaderNavigateDetail>('scheduler-header-navigate', {
         action: navigation.dataset.schedulerNavigate as SchedulerHeaderNavigateDetail['action'],
-      });
-      return;
-    }
-    const view = target.closest<HTMLButtonElement>('[data-scheduler-view]');
-    if (view?.dataset.schedulerView) {
-      this.emit<SchedulerHeaderViewChangeDetail>('scheduler-header-view-change', {
-        view: view.dataset.schedulerView as ShiftWeekDemoView,
-      });
-    }
-  };
-
-  private readonly handleChange = (event: Event): void => {
-    const select = event.target as HTMLSelectElement;
-    if (select.matches('[data-scheduler-calendar]')) {
-      this.emit<SchedulerHeaderCalendarChangeDetail>('scheduler-header-calendar-change', {
-        calendar: select.value as ShiftWeekDemoCalendar,
       });
     }
   };
