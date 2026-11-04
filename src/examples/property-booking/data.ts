@@ -1,3 +1,4 @@
+import { commonColors } from '@revolist/ui/color-palette/common-palettes';
 import type { EventSchedulerEventEntity, EventSchedulerResourceEntity } from '@revolist/scheduler';
 import { addDays, createDateTime } from '@revolist/revogrid-pro';
 
@@ -8,8 +9,24 @@ export const bookingStatuses = ['New', 'Confirmed', 'Arrived', 'Checked out'];
 export const paymentStatuses = ['Unpaid', 'Paid'];
 export const capacityOptions = [0, 2, 4, 6, 8];
 export const guestLabel = (count: unknown) => `${count} ${Number(count) === 1 ? 'guest' : 'guests'}`;
-export const bookingColors: Record<string, string> = { New: '#9c651d', Confirmed: '#6366b5', Arrived: '#237966', 'Checked out': '#657181' };
+export const bookingColors: Record<string, string> = {
+  New: commonColors.hexfc6d2d,
+  Confirmed: commonColors.hex6647f0,
+  Arrived: commonColors.hex00b8a6,
+  'Checked out': commonColors.hex666666,
+};
 export const propertyTypes = ['All properties', 'Cabin', 'Apartment', 'Villa'];
+
+export const bookingFilterDropdowns = {
+  property: {
+    config: { ariaLabel: 'Property type', nativeTabNavigation: true, topLayer: true },
+    source: propertyTypes.map(value => ({ value, label: value })),
+  },
+  capacity: {
+    config: { ariaLabel: 'Minimum sleeps', nativeTabNavigation: true, topLayer: true },
+    source: capacityOptions.map(value => ({ value, label: value ? `${value}+ guests` : 'Any' })),
+  },
+};
 export function createProperties(): EventSchedulerResourceEntity[] {
   return [
     ['cedar', 'Cedar Cabin', 'Cabin', 4, 145, 'Ready', 'Forest'],

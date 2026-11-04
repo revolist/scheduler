@@ -1,8 +1,9 @@
+import { commonColors } from '@revolist/ui/color-palette/common-palettes';
 import { renderControl } from '@revolist/ui';
 import '@revolist/ui/styles.css';
-import { EventSchedulerPlugin, getLoadedScheduleConflicts, type EventSchedulerConfig, type EventSchedulerEventEntity, type EventSchedulerEventChangedDetail,
+import { EventSchedulerPlugin, getLoadedScheduleConflicts, type EventSchedulerConfig, type EventSchedulerEventEntity, type EventSchedulerEventManagerEvent,
   type EventSchedulerEventSelectedDetail, type EventSchedulerResourceColumn, type EventSchedulerTimelineSummaryRow } from '@revolist/scheduler';
-import { DialogPlugin, addDays, createDateTime, formatIsoDateInTimeZone, isValidIsoDate, parseIsoDate, diffInCalendarDays } from '@revolist/revogrid-pro';
+import { defineHistoryControls, DialogPlugin, addDays, createDateTime, formatIsoDateInTimeZone, isValidIsoDate, parseIsoDate, diffInCalendarDays } from '@revolist/revogrid-pro';
 import { bookingColors, bookingStatuses, bookingTimeZone, createBookings, createProperties, initialEnd, initialStart, guestLabel } from './data';
 import { openBookingEditor } from './editor';
 import { propertyPhotos } from './photos';
@@ -26,6 +27,8 @@ export interface BookingDemoState {
   readonly propertyCount: number;
   readonly selectedCount: number;
 }
+
+const propertyColumnSize = 280;
 
 export function createPropertyBookingDemo() {
   const resources = createProperties();
@@ -64,7 +67,7 @@ export function createPropertyBookingDemo() {
     return {
       view: 'resourceTimeline', weekStartDate: start, dateRange: { start, end },
       timeZone: bookingTimeZone, durationMode: 'calendarDays', slotMinutes: 1440, snapMinutes: 1440,
-      timeRange: { start: '00:00', end: '24:00' }, timelineColumnSize: 96, resourceColumnSize: 250, rowSize: 62,
+      timeRange: { start: '00:00', end: '24:00' }, timelineColumnSize: 96, resourceColumnSize: propertyColumnSize, rowSize: 62,
       editable: true, allowCreate: true, allowMove: true, allowResize: true, allowDelete: true,
       allowMultiResourceAssignment: false, eventEditorOpenOnSlotClick: false,
       conflicts: { enabled: true, policy: 'prevent', scope: 'same-resource', rules: { overlap: 'error', 'blocked-time': 'error' } },
@@ -107,6 +110,8 @@ export function createPropertyBookingDemo() {
           properties: ({ event }) => ({ style: {
             '--event-scheduler-event-color': bookingColors[event.status ?? 'Confirmed'],
             '--event-scheduler-event-track-bg': bookingColors[event.status ?? 'Confirmed'],
+            '--event-scheduler-event-text': event.status === 'New' || event.status === 'Arrived'
+              ? commonColors.hex171717 : commonColors.white,
           } }),
           content: (h, { event }) => h('span', { class: 'property-booking-event' }, [
             h('strong', {}, event.title),
@@ -129,7 +134,7 @@ export function createPropertyBookingDemo() {
     propertyCount: scopedResources().length, selectedCount: scopedResources().filter(resource => selectedIds.includes(String(resource.id))).length });
   config = makeConfig();
   return {
-    resources, availability, columns: [{ prop: 'resourceLabel', name: 'Property', size: 250 }] as EventSchedulerResourceColumn[],
+    resources, availability, columns: [{ prop: 'resourceLabel', name: 'Property', size: propertyColumnSize }] as EventSchedulerResourceColumn[],
     get state() { return snapshot(); },
     toggleProperty,
     setType(value: string) { type = value; update(true); },
@@ -158,7 +163,6 @@ export function createPropertyBookingDemo() {
     },
     navigate(days: number) { rangeStart = start = addDays(start, days); rangeEnd = end = addDays(end, days); update(true); },
     today() { rangeStart = start = formatIsoDateInTimeZone(new Date(), bookingTimeZone); rangeEnd = end = addDays(start, 13); update(true); },
-    reset() { events = createBookings(); rangeStart = start = initialStart; rangeEnd = end = initialEnd; type = 'All properties'; minSleeps = 0; selectedIds = []; selectedOnly = false; properties = true; guests = true; message = 'Demo bookings reset.'; update(true); },
     newBooking() {
       const id = `new-booking-${++sequence}`;
       const drafts = scopedResources().map(resource => ({ id, resourceId: resource.id, title: '', status: 'New',
@@ -166,7 +170,7 @@ export function createPropertyBookingDemo() {
       const draft = drafts.find(candidate => getLoadedScheduleConflicts({ config, events: [...events, candidate], resources, availability }, [candidate]).length === 0) ?? drafts[0];
       if (draft) showEditor(draft, true);
     },
-    async connect(grid: HTMLRevoGridElement, onChange: (state: BookingDemoState) => void) {
+    async connect(grid: HTMLRevoGridElement, historyHost: HTMLElement, onChange: (state: BookingDemoState) => void) {
       publish = onChange;
       if (connecting === grid || scheduler) { update(); return; }
       const token = ++generation; connecting = grid;
@@ -175,11 +179,23 @@ export function createPropertyBookingDemo() {
       connecting = undefined;
       scheduler = plugins.find((plugin): plugin is EventSchedulerPlugin => typeof (plugin as EventSchedulerPlugin).getProjection === 'function');
       dialog = plugins.find((plugin): plugin is DialogPlugin => plugin instanceof DialogPlugin);
-      const changed = (event: Event) => { events = [...(event as CustomEvent<EventSchedulerEventChangedDetail>).detail.events]; message = 'Booking updated. Daily totals refreshed.'; update(); };
+      const changed = (event: Event) => {
+        const snapshot = (event as CustomEvent<EventSchedulerEventManagerEvent>).detail.events;
+        if (!snapshot) return;
+        events = [...snapshot];
+        message = 'Booking updated. Daily totals refreshed.';
+        update();
+      };
       const selected = (event: Event) => { const booking = (event as CustomEvent<EventSchedulerEventSelectedDetail>).detail.event; if (booking) { message = `${booking.title} · ${guestLabel(booking.metadata?.guests)} · ${booking.status} · ${booking.metadata?.payment ?? 'Unpaid'}. Double-click to edit; use the context menu or copy and paste to duplicate.`; update(); } };
-      const listeners = ['event-scheduler-event-created', 'event-scheduler-event-changed', 'event-scheduler-event-deleted'];
-      listeners.forEach(name => grid.addEventListener(name, changed)); grid.addEventListener('event-scheduler-event-selected', selected);
-      disconnect = () => { listeners.forEach(name => grid.removeEventListener(name, changed)); grid.removeEventListener('event-scheduler-event-selected', selected); dialog?.close(); };
+      const disposeHistory = defineHistoryControls(historyHost, grid);
+      grid.addEventListener('gridedit', changed);
+      grid.addEventListener('event-scheduler-event-selected', selected);
+      disconnect = () => {
+        grid.removeEventListener('gridedit', changed);
+        grid.removeEventListener('event-scheduler-event-selected', selected);
+        disposeHistory();
+        dialog?.close();
+      };
       ready = !!scheduler && !!dialog; update();
     },
     disconnect() { generation++; disconnect(); disconnect = () => {}; scheduler = undefined; dialog = undefined; publish = undefined; connecting = undefined; ready = false; },
