@@ -23,9 +23,9 @@ if (!/^packages:\s*\n\s*- ["']?\.["']?\s*$/m.test(workspace)) {
 }
 
 const npmrc = await readFile(join(root, '.npmrc'), 'utf8');
-for (const requiredRegistryLine of ['@revolist:registry=http://trial.rv-grid.com']) {
+for (const requiredRegistryLine of ['@revolist:registry=https://trial.rv-grid.com']) {
   if (!npmrc.split(/\r?\n/).includes(requiredRegistryLine)) {
-    failures.push(`.npmrc: missing required GitHub Packages configuration ${requiredRegistryLine}`);
+    failures.push(`.npmrc: missing required trial registry configuration ${requiredRegistryLine}`);
   }
 }
 

@@ -36,14 +36,14 @@ importers:
         specifier: 4.31.3
         version: 4.31.3
       '@revolist/revogrid-pro':
-        specifier: npm:@revolist/rv-pro-trial@3.0.18
-        version: '@revolist/rv-pro-trial@3.0.18'
+        specifier: npm:@revolist/rv-pro-trial@4.0.1
+        version: '@revolist/rv-pro-trial@4.0.1'
       '@revolist/scheduler':
-        specifier: npm:@revolist/scheduler-trial@3.0.18
-        version: '@revolist/scheduler-trial@3.0.18'
+        specifier: npm:@revolist/scheduler-trial@4.0.1
+        version: '@revolist/scheduler-trial@4.0.1'
       '@revolist/ui':
-        specifier: file:vendor/revolist-ui-3.0.14.tgz
-        version: file:vendor/revolist-ui-3.0.14.tgz(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(preact@10.29.1)(react@18.3.1)(typescript@5.9.3)(vue@3.5.40(typescript@5.9.3))
+        specifier: 4.0.1
+        version: 4.0.1(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue@3.5.40(typescript@5.9.3))
       '@revolist/vue3-datagrid':
         specifier: 4.31.3
         version: 4.31.3
@@ -826,134 +826,6 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@lexical/a11y@0.52.0':
-    resolution: {integrity: sha512-FxcKnksrgeoPDxQgwHqTz81Tbv7vZnP2i09m7uU+zusNRt4g1dgbwSEq4Uee9yfLJ9qxM5P9YOGQTe0A6lAuAg==}
-    peerDependencies:
-      typescript: '>=5.2'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@lexical/clipboard@0.52.0':
-    resolution: {integrity: sha512-SwUpKUEzTfl3dZlCXkYZN4CAU6AENzzuO3AtWCgbdtxG1HBnyUtMd6MP1XFUtYh0fhMGXw+QObzp+3+h0g3WTw==}
-    peerDependencies:
-      typescript: '>=5.2'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@lexical/code-core@0.52.0':
-    resolution: {integrity: sha512-4ofNvUXEal2tm6DLGHtjJUc7C1qQP2RHUO4v/RHSSdWEHLKM1kITgIUUvWkf6FHnQNrTvrL2U5vxACv2bo0HVQ==}
-    peerDependencies:
-      typescript: '>=5.2'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@lexical/code@0.52.0':
-    resolution: {integrity: sha512-pAARDF1XTvKn/FBxlFIMAiUYr0bE5EPCiSY5JZF6cOYG1xRN8GL2N9G+r0phhKdBc6LlMssA2AxuOABaP3tZqQ==}
-    peerDependencies:
-      typescript: '>=5.2'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@lexical/dragon@0.52.0':
-    resolution: {integrity: sha512-XiNrujvAoywb41GRaRYFhPc/T7jxkFMf/bR9uE8S2t4fMERUFF1xM7Mos6NQ+skdDrF3KfxnLFzLCZ+4Oc9VyA==}
-    peerDependencies:
-      typescript: '>=5.2'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@lexical/extension@0.52.0':
-    resolution: {integrity: sha512-do7uvUxg6mJK0702XlD0Z8UMCtr1Yij4/WpJ7+GY5CL2jKVercMeeYBBEE7cWc/OXQJgzVx3ClNXC7XAHI6Fvw==}
-    peerDependencies:
-      typescript: '>=5.2'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@lexical/history@0.52.0':
-    resolution: {integrity: sha512-UJWmTcru+4KWkk8YtBSQ4dNLYuOJVCyCMFGsaCp/jVJEobwdY//jCTj9idOfE4b3H39kAixe9yQG/FNNOj4ujg==}
-    peerDependencies:
-      typescript: '>=5.2'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@lexical/html@0.52.0':
-    resolution: {integrity: sha512-lRyntwgHnISsUKZHh3T+g9qU1CwTOH5hlnc1UzWE7/RXrvtnSmJTTcJu+sfFdRCiBAlkiIhKuJBCCYu99LeI7Q==}
-    peerDependencies:
-      typescript: '>=5.2'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@lexical/internal@0.52.0':
-    resolution: {integrity: sha512-Y7jKqeh4Irf/FwNmAqHIk3b05HpMsHv2RyWPQ8+M7FAdEbT9N2mksjc8ZUZ3tHqDMi7FNiLkjZN/DwbdekUb1g==}
-    peerDependencies:
-      typescript: '>=5.2'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@lexical/link@0.52.0':
-    resolution: {integrity: sha512-9hl/SxbkK5P0q1Rn4rTnaLHetTnf4zb+zgJjQwHAkqmeS561gLq34RcoO2i1zhibe8b6xk8gyhIe2cOpPeAC7w==}
-    peerDependencies:
-      typescript: '>=5.2'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@lexical/list@0.52.0':
-    resolution: {integrity: sha512-B3+CdxWsdj6jBKtXiY7v4OSkyXBwotWyiD+75Baw0lvmjvniV33mvuMDgnPEQgEpFcGpBRmiu8M8kQdclQzXmQ==}
-    peerDependencies:
-      typescript: '>=5.2'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@lexical/markdown@0.52.0':
-    resolution: {integrity: sha512-ntNi3SdjfcWoH7wi/D6rlO2Hw8MjDRkxuObAAQwJKLzJPvohNPKuzDoqM47uXNSs0XCS/HupI4mWShyrEZkDtA==}
-    peerDependencies:
-      typescript: '>=5.2'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@lexical/rich-text@0.52.0':
-    resolution: {integrity: sha512-P3Y4SM6JSCBG6uFwLpPVEZiShhfC/GCJA//lQU1ZljxPDnCb4ueVCfWSBBdw0nSejYg8KvDQsijc4Fczyjqqtw==}
-    peerDependencies:
-      typescript: '>=5.2'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@lexical/selection@0.52.0':
-    resolution: {integrity: sha512-O1hgwqUvoF/R2DxXIOJJvCqXxNM7kOWq1TBxqnbjT4TXNlDokEdpkO5EpetAWYWZj5UE2BUphfGUZAPQjvcUKQ==}
-    peerDependencies:
-      typescript: '>=5.2'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@lexical/text@0.52.0':
-    resolution: {integrity: sha512-TuXd6a4MO18rQwU0Bl8VHNzWGD4o5pHnf3NKXwTRynImpeMJ8BGumVC6r27cGbh0kgBkvmX8Sb4EEbBQC9BYnQ==}
-    peerDependencies:
-      typescript: '>=5.2'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@lexical/utils@0.52.0':
-    resolution: {integrity: sha512-3Azoh0EQckRcMd6CGOAuKue/UHDvkorrheXZFu9KpxhCBNQy+ic55jl0WQZFTOv2iO3NWReAMSuOAK0pWR2JPg==}
-    peerDependencies:
-      typescript: '>=5.2'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
   '@listr2/prompt-adapter-inquirer@3.0.1':
     resolution: {integrity: sha512-3XFmGwm3u6ioREG+ynAQB7FoxfajgQnMhIu8wC5eo/Lsih4aKDg0VuIMGaOsYn7hJSJagSeaD4K8yfpkEoDEmA==}
     engines: {node: '>=20.0.0'}
@@ -1412,9 +1284,6 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@preact/signals-core@1.14.4':
-    resolution: {integrity: sha512-HNB6HYeYKhQbJ1aKl+YRjrS4+QWHLKX6qKoUsfS/m0vqzsVaEBiZiaKbG/e+NKk2ch5ALQr/ihWaMHxiCuuWHA==}
-
   '@revolist/angular-datagrid@4.31.3':
     resolution: {integrity: sha512-hBCA6SSVB3LBv11YCbGwi8iQFlFss45QV+Ggdli5oKJ2n2UZSPdq8A1OxmfujR599ROyBJGD1VrzOqY1s15YQQ==}
 
@@ -1424,24 +1293,31 @@ packages:
   '@revolist/revogrid@4.31.3':
     resolution: {integrity: sha512-QDMBGY+aO1lj/RKXlLqk7fTzzlRXuPIUW+YTzpWB4rmLVoHMbrJloxc1An+BcGNfV7tgy2B74iihKb8GWktPfA==}
 
-  '@revolist/rv-pro-trial@3.0.18':
-    resolution: {integrity: sha512-cG2ucLzg6p6rjE/43JrndxIrrms3V/c2Hvg5FR3dOsPeNAV/LguTJTLc2wmLlKkSWV2b4/PifN4Iuf+4Iv4hAg==, tarball: https://trial.rv-grid.com/@revolist/rv-pro-trial/-/163baae10440b72fe5dcfe0ff359b856c34399aa}
+  '@revolist/rv-pro-trial@4.0.1':
+    resolution: {integrity: sha512-WFk8OMiXQZDuHgm0EHX4LlWjr7FjkBSrU2VW3YNe7Z1UpGP7KYLdWTt960A0Oruf/LV83BJ9xyt3p+NLZj+3Hg==, tarball: https://trial.rv-grid.com/@revolist/rv-pro-trial/-/16d6de3f7a47a343ab49e6b5d25b05ccc795f769}
 
-  '@revolist/scheduler-trial@3.0.18':
-    resolution: {integrity: sha512-k/zf0dVeSt0yhAJExfIkKxhSPFzKbyWeiu4WZk8buUCqFN0YL6iGuOLyA+qa4tGRLxWQYlb/lx1Pw7lQlQ7h/A==, tarball: https://trial.rv-grid.com/@revolist/scheduler-trial/-/7615abfab2cdda20dd61b1e78b0a6f729fd92274}
+  '@revolist/scheduler-trial@4.0.1':
+    resolution: {integrity: sha512-8WcMTU/SY3EOSuj0CEYrf3xA6kSWVbXJ20VFK0QzIbgfUkSmMweqZA1c1Y7UNgBAqMSmlVvJO8toN06YFi2aJQ==, tarball: https://trial.rv-grid.com/@revolist/scheduler-trial/-/e5e61d1fc3e1223d36f74e409cbbd82bc597d65e}
 
-  '@revolist/ui@file:vendor/revolist-ui-3.0.14.tgz':
-    resolution: {integrity: sha512-90Q3oINjtA3dpV0WskudhvyE4OWax2QxyXQ35+sKrJdeSUE++KEfglih+2qrnJ/NdSI/i7uKq5wlxxeyGJFnnQ==, tarball: file:vendor/revolist-ui-3.0.14.tgz}
-    version: 3.0.14
+  '@revolist/ui@4.0.1':
+    resolution: {integrity: sha512-dRgg28nL8+rQ52Ry909JqvHCGbARCQwxGwKkssOP53hUnr4IGY6giWq7Uai4woWzQOuDgDisunZzywnTNcyZuA==}
     peerDependencies:
       '@angular/core': '>=20'
-      preact: ^10.29.1
+      pdfjs-dist: ^6.4.299
       react: '>=18'
+      react-dom: '>=18'
+      svelte: ^5.55.0
       vue: ^3.5.0
     peerDependenciesMeta:
       '@angular/core':
         optional: true
+      pdfjs-dist:
+        optional: true
       react:
+        optional: true
+      react-dom:
+        optional: true
+      svelte:
         optional: true
       vue:
         optional: true
@@ -1743,6 +1619,9 @@ packages:
   '@swc/helpers@0.5.23':
     resolution: {integrity: sha512-5lSsMOTXURePglDfvuAQUqkGek9Hg2kksOYay2m0+XR++b2NWYL/4sWyuvVBIs8oKnJaxkdi9whaL/sqN13afw==}
 
+  '@tanstack/query-core@5.104.5':
+    resolution: {integrity: sha512-Q94gI8Opd+CbdVNOdj8ZCyV8WqLYitrDq1t96Xc8WZT6lY0r5iRnJLXYDxMex7EEf2v+mXvn4FcjaBKSxXZQ9A==}
+
   '@ts-morph/common@0.22.0':
     resolution: {integrity: sha512-HqNBuV/oIlMKdkLshXd1zKBqNQCsuPEsgQOkfFQ/eUKjRlwndXW1AjN9LVkBEIukm00gGXSRmfkl0Wv5VXLnlw==}
 
@@ -1791,9 +1670,6 @@ packages:
 
   '@types/react@18.3.31':
     resolution: {integrity: sha512-vfEqpXTvwT91yhmwdfouStN2hSKwTvyRs8qpLfADyrq/kxDw0hZM7Wk9Ug1FELj8hIby+S/+kQCSRFF32nv2Qw==}
-
-  '@types/trusted-types@2.0.7':
-    resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
 
   '@vitejs/plugin-basic-ssl@2.1.0':
     resolution: {integrity: sha512-dOxxrhgyDIEUADhb/8OlV9JIqYLgos03YorAueTIeOUskLJSEsfwCByjbu98ctXitUN3znXKp0bYD/WHSudCeA==}
@@ -2577,14 +2453,6 @@ packages:
 
   jstat@1.9.6:
     resolution: {integrity: sha512-rPBkJbK2TnA8pzs93QcDDPlKcrtZWuuCo2dVR0TFLOJSxhqfWOVCSp8aV3/oSbn+4uY4yw1URtLpHQedtmXfug==}
-
-  lexical@0.52.0:
-    resolution: {integrity: sha512-mePejqwCDaW0GR89IoofJTTlk/EiwwlGhbs1D8qOx/Iw6ieG5D3nh7PSPLv0Csia0UC58HpuV91DilJjqeAWSw==}
-    peerDependencies:
-      typescript: '>=5.2'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
 
   lightningcss-android-arm64@1.33.0:
     resolution: {integrity: sha512-gEpRTalKdosp4Bb8qWtc2iOgE5SeIHlpS1up9bFq2wAyYhl1UdTObYiHe98zEM9SQvSoqQZ1IQD0JNpg3Ml5pg==}
@@ -4403,153 +4271,6 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@lexical/a11y@0.52.0(typescript@5.9.3)':
-    dependencies:
-      '@lexical/extension': 0.52.0(typescript@5.9.3)
-      '@lexical/utils': 0.52.0(typescript@5.9.3)
-      lexical: 0.52.0(typescript@5.9.3)
-    optionalDependencies:
-      typescript: 5.9.3
-
-  '@lexical/clipboard@0.52.0(typescript@5.9.3)':
-    dependencies:
-      '@lexical/extension': 0.52.0(typescript@5.9.3)
-      '@lexical/html': 0.52.0(typescript@5.9.3)
-      '@lexical/internal': 0.52.0(typescript@5.9.3)
-      '@lexical/list': 0.52.0(typescript@5.9.3)
-      '@lexical/selection': 0.52.0(typescript@5.9.3)
-      '@lexical/utils': 0.52.0(typescript@5.9.3)
-      '@types/trusted-types': 2.0.7
-      lexical: 0.52.0(typescript@5.9.3)
-    optionalDependencies:
-      typescript: 5.9.3
-
-  '@lexical/code-core@0.52.0(typescript@5.9.3)':
-    dependencies:
-      '@lexical/extension': 0.52.0(typescript@5.9.3)
-      '@lexical/html': 0.52.0(typescript@5.9.3)
-      '@lexical/internal': 0.52.0(typescript@5.9.3)
-      '@lexical/utils': 0.52.0(typescript@5.9.3)
-      lexical: 0.52.0(typescript@5.9.3)
-    optionalDependencies:
-      typescript: 5.9.3
-
-  '@lexical/code@0.52.0(typescript@5.9.3)':
-    dependencies:
-      '@lexical/code-core': 0.52.0(typescript@5.9.3)
-      '@lexical/extension': 0.52.0(typescript@5.9.3)
-      lexical: 0.52.0(typescript@5.9.3)
-    optionalDependencies:
-      typescript: 5.9.3
-
-  '@lexical/dragon@0.52.0(typescript@5.9.3)':
-    dependencies:
-      '@lexical/extension': 0.52.0(typescript@5.9.3)
-      lexical: 0.52.0(typescript@5.9.3)
-    optionalDependencies:
-      typescript: 5.9.3
-
-  '@lexical/extension@0.52.0(typescript@5.9.3)':
-    dependencies:
-      '@lexical/internal': 0.52.0(typescript@5.9.3)
-      '@lexical/utils': 0.52.0(typescript@5.9.3)
-      '@preact/signals-core': 1.14.4
-      lexical: 0.52.0(typescript@5.9.3)
-    optionalDependencies:
-      typescript: 5.9.3
-
-  '@lexical/history@0.52.0(typescript@5.9.3)':
-    dependencies:
-      '@lexical/extension': 0.52.0(typescript@5.9.3)
-      '@lexical/utils': 0.52.0(typescript@5.9.3)
-      lexical: 0.52.0(typescript@5.9.3)
-    optionalDependencies:
-      typescript: 5.9.3
-
-  '@lexical/html@0.52.0(typescript@5.9.3)':
-    dependencies:
-      '@lexical/extension': 0.52.0(typescript@5.9.3)
-      '@lexical/internal': 0.52.0(typescript@5.9.3)
-      '@lexical/selection': 0.52.0(typescript@5.9.3)
-      '@lexical/utils': 0.52.0(typescript@5.9.3)
-      lexical: 0.52.0(typescript@5.9.3)
-    optionalDependencies:
-      typescript: 5.9.3
-
-  '@lexical/internal@0.52.0(typescript@5.9.3)':
-    optionalDependencies:
-      typescript: 5.9.3
-
-  '@lexical/link@0.52.0(typescript@5.9.3)':
-    dependencies:
-      '@lexical/a11y': 0.52.0(typescript@5.9.3)
-      '@lexical/extension': 0.52.0(typescript@5.9.3)
-      '@lexical/html': 0.52.0(typescript@5.9.3)
-      '@lexical/internal': 0.52.0(typescript@5.9.3)
-      '@lexical/utils': 0.52.0(typescript@5.9.3)
-      lexical: 0.52.0(typescript@5.9.3)
-    optionalDependencies:
-      typescript: 5.9.3
-
-  '@lexical/list@0.52.0(typescript@5.9.3)':
-    dependencies:
-      '@lexical/extension': 0.52.0(typescript@5.9.3)
-      '@lexical/html': 0.52.0(typescript@5.9.3)
-      '@lexical/internal': 0.52.0(typescript@5.9.3)
-      '@lexical/utils': 0.52.0(typescript@5.9.3)
-      lexical: 0.52.0(typescript@5.9.3)
-    optionalDependencies:
-      typescript: 5.9.3
-
-  '@lexical/markdown@0.52.0(typescript@5.9.3)':
-    dependencies:
-      '@lexical/code-core': 0.52.0(typescript@5.9.3)
-      '@lexical/internal': 0.52.0(typescript@5.9.3)
-      '@lexical/link': 0.52.0(typescript@5.9.3)
-      '@lexical/list': 0.52.0(typescript@5.9.3)
-      '@lexical/rich-text': 0.52.0(typescript@5.9.3)
-      '@lexical/selection': 0.52.0(typescript@5.9.3)
-      '@lexical/text': 0.52.0(typescript@5.9.3)
-      '@lexical/utils': 0.52.0(typescript@5.9.3)
-      lexical: 0.52.0(typescript@5.9.3)
-    optionalDependencies:
-      typescript: 5.9.3
-
-  '@lexical/rich-text@0.52.0(typescript@5.9.3)':
-    dependencies:
-      '@lexical/a11y': 0.52.0(typescript@5.9.3)
-      '@lexical/clipboard': 0.52.0(typescript@5.9.3)
-      '@lexical/dragon': 0.52.0(typescript@5.9.3)
-      '@lexical/extension': 0.52.0(typescript@5.9.3)
-      '@lexical/html': 0.52.0(typescript@5.9.3)
-      '@lexical/selection': 0.52.0(typescript@5.9.3)
-      '@lexical/utils': 0.52.0(typescript@5.9.3)
-      lexical: 0.52.0(typescript@5.9.3)
-    optionalDependencies:
-      typescript: 5.9.3
-
-  '@lexical/selection@0.52.0(typescript@5.9.3)':
-    dependencies:
-      '@lexical/internal': 0.52.0(typescript@5.9.3)
-      lexical: 0.52.0(typescript@5.9.3)
-    optionalDependencies:
-      typescript: 5.9.3
-
-  '@lexical/text@0.52.0(typescript@5.9.3)':
-    dependencies:
-      '@lexical/internal': 0.52.0(typescript@5.9.3)
-      lexical: 0.52.0(typescript@5.9.3)
-    optionalDependencies:
-      typescript: 5.9.3
-
-  '@lexical/utils@0.52.0(typescript@5.9.3)':
-    dependencies:
-      '@lexical/internal': 0.52.0(typescript@5.9.3)
-      '@lexical/selection': 0.52.0(typescript@5.9.3)
-      lexical: 0.52.0(typescript@5.9.3)
-    optionalDependencies:
-      typescript: 5.9.3
-
   '@listr2/prompt-adapter-inquirer@3.0.1(@inquirer/prompts@7.8.2)(listr2@9.0.1)':
     dependencies:
       '@inquirer/prompts': 7.8.2
@@ -4900,8 +4621,6 @@ snapshots:
     dependencies:
       playwright: 1.59.1
 
-  '@preact/signals-core@1.14.4': {}
-
   '@revolist/angular-datagrid@4.31.3':
     dependencies:
       '@revolist/revogrid': 4.31.3
@@ -4914,38 +4633,28 @@ snapshots:
 
   '@revolist/revogrid@4.31.3': {}
 
-  '@revolist/rv-pro-trial@3.0.18':
+  '@revolist/rv-pro-trial@4.0.1':
     dependencies:
       '@formulajs/formulajs': 4.6.1
       '@revolist/revogrid': 4.31.3
+      '@tanstack/query-core': 5.104.5
       preact: 10.29.1
       write-excel-file: 4.1.1
 
-  '@revolist/scheduler-trial@3.0.18':
+  '@revolist/scheduler-trial@4.0.1':
     dependencies:
       '@fortawesome/fontawesome-free': 7.3.1
       '@revolist/revogrid': 4.31.3
-      '@revolist/rv-pro-trial': 3.0.18
+      '@revolist/rv-pro-trial': 4.0.1
+      '@tanstack/query-core': 5.104.5
       pdfmake: 0.3.9
 
-  '@revolist/ui@file:vendor/revolist-ui-3.0.14.tgz(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(preact@10.29.1)(react@18.3.1)(typescript@5.9.3)(vue@3.5.40(typescript@5.9.3))':
-    dependencies:
-      '@lexical/code': 0.52.0(typescript@5.9.3)
-      '@lexical/history': 0.52.0(typescript@5.9.3)
-      '@lexical/link': 0.52.0(typescript@5.9.3)
-      '@lexical/list': 0.52.0(typescript@5.9.3)
-      '@lexical/markdown': 0.52.0(typescript@5.9.3)
-      '@lexical/rich-text': 0.52.0(typescript@5.9.3)
-      '@lexical/selection': 0.52.0(typescript@5.9.3)
-      '@lexical/utils': 0.52.0(typescript@5.9.3)
-      lexical: 0.52.0(typescript@5.9.3)
-      preact: 10.29.1
+  '@revolist/ui@4.0.1(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue@3.5.40(typescript@5.9.3))':
     optionalDependencies:
       '@angular/core': 20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1)
       react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
       vue: 3.5.40(typescript@5.9.3)
-    transitivePeerDependencies:
-      - typescript
 
   '@revolist/vue3-datagrid@4.31.3':
     dependencies:
@@ -5153,6 +4862,8 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  '@tanstack/query-core@5.104.5': {}
+
   '@ts-morph/common@0.22.0':
     dependencies:
       fast-glob: 3.3.3
@@ -5214,8 +4925,6 @@ snapshots:
     dependencies:
       '@types/prop-types': 15.7.15
       csstype: 3.2.3
-
-  '@types/trusted-types@2.0.7': {}
 
   '@vitejs/plugin-basic-ssl@2.1.0(vite@7.3.6(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.90.0))':
     dependencies:
@@ -6069,12 +5778,6 @@ snapshots:
   jsonparse@1.3.1: {}
 
   jstat@1.9.6: {}
-
-  lexical@0.52.0(typescript@5.9.3):
-    dependencies:
-      '@lexical/internal': 0.52.0(typescript@5.9.3)
-    optionalDependencies:
-      typescript: 5.9.3
 
   lightningcss-android-arm64@1.33.0:
     optional: true
