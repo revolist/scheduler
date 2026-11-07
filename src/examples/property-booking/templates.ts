@@ -1,3 +1,5 @@
+import { renderControl } from '@revolist/ui'
+import { commonColors } from '@revolist/ui/color-palette/common-palettes'
 import type { EventSchedulerConfig } from '@revolist/scheduler'
 import { diffInCalendarDays, formatIsoDateInTimeZone, parseIsoDate } from '@revolist/revogrid-pro'
 import { bookingColors, bookingTimeZone, guestLabel } from './data'
@@ -14,7 +16,7 @@ export function createBookingTemplates(
       resourceTemplate: (h, { resource }) =>
         resource
           ? h('span', { class: 'property-booking-resource' }, [
-              h('input', {
+              renderControl(h, 'input', {
                 type: 'checkbox',
                 checked: selectedIds.includes(String(resource.id)),
                 'aria-label': `Include ${resource.name} in totals`,
@@ -52,6 +54,8 @@ export function createBookingTemplates(
         style: {
           '--event-scheduler-event-color': bookingColors[event.status ?? 'Confirmed'],
           '--event-scheduler-event-track-bg': bookingColors[event.status ?? 'Confirmed'],
+          '--event-scheduler-event-text': event.status === 'New' || event.status === 'Arrived'
+            ? commonColors.hex171717 : commonColors.white,
         },
       }),
       content: (h, { event }) =>

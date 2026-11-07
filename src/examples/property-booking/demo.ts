@@ -3,11 +3,12 @@ import {
   getLoadedScheduleConflicts,
   type EventSchedulerConfig,
   type EventSchedulerEventEntity,
-  type EventSchedulerEventChangedDetail,
+  type EventSchedulerEventManagerEvent,
   type EventSchedulerEventSelectedDetail,
   type EventSchedulerResourceColumn,
 } from '@revolist/scheduler'
 import {
+  defineHistoryControls,
   DialogPlugin,
   addDays,
   createDateTime,
@@ -158,7 +159,7 @@ export function createPropertyBookingDemo() {
     resources,
     availability,
     columns: [
-      { prop: 'resourceLabel', name: 'Property', size: 250 },
+      { prop: 'resourceLabel', name: 'Property', size: 280 },
     ] as EventSchedulerResourceColumn[],
     get state() {
       return snapshot()
@@ -251,7 +252,7 @@ export function createPropertyBookingDemo() {
         ) ?? drafts[0]
       if (draft) showEditor(draft, true)
     },
-    async connect(grid: HTMLRevoGridElement, onChange: (state: BookingDemoState) => void) {
+    async connect(grid: HTMLRevoGridElement, historyHost: HTMLElement, onChange: (state: BookingDemoState) => void) {
       publish = onChange
       if (connecting === grid || scheduler) {
         update()
@@ -273,7 +274,9 @@ export function createPropertyBookingDemo() {
       dialog = plugins.find((plugin): plugin is DialogPlugin => plugin instanceof DialogPlugin)
       // Scheduler owns mutations/conflicts; retain its full event list across filters.
       const changed = (event: Event) => {
-        events = [...(event as CustomEvent<EventSchedulerEventChangedDetail>).detail.events]
+        const snapshot = (event as CustomEvent<EventSchedulerEventManagerEvent>).detail.events
+        if (!snapshot) return
+        events = [...snapshot]
         message = 'Booking updated. Daily totals refreshed.'
         update()
       }
@@ -284,15 +287,12 @@ export function createPropertyBookingDemo() {
           update()
         }
       }
-      const listeners = [
-        'event-scheduler-event-created',
-        'event-scheduler-event-changed',
-        'event-scheduler-event-deleted',
-      ]
-      listeners.forEach(name => grid.addEventListener(name, changed))
+      const disposeHistory = defineHistoryControls(historyHost, grid)
+      grid.addEventListener('gridedit', changed)
       grid.addEventListener('event-scheduler-event-selected', selected)
       disconnect = () => {
-        listeners.forEach(name => grid.removeEventListener(name, changed))
+        grid.removeEventListener('gridedit', changed)
+        disposeHistory()
         grid.removeEventListener('event-scheduler-event-selected', selected)
         dialog?.close()
       }

@@ -24,14 +24,17 @@ switch (framework) {
     break;
   }
   case 'angular': {
-    await import('zone.js');
+    // Keep native grid scroll promises outside Zone's rejection tracking.
+    const { provideZonelessChangeDetection } = await import('@angular/core');
     await import('@angular/compiler');
     document.querySelector('#app')!.innerHTML = '<event-scheduler-shift-week-grid></event-scheduler-shift-week-grid>';
     const [{ bootstrapApplication }, { EventSchedulerShiftWeekGridComponent }] = await Promise.all([
       import('@angular/platform-browser'),
       import('./scheduler.angular'),
     ]);
-    await bootstrapApplication(EventSchedulerShiftWeekGridComponent);
+    await bootstrapApplication(EventSchedulerShiftWeekGridComponent, {
+      providers: [provideZonelessChangeDetection()],
+    });
     break;
   }
   default: {

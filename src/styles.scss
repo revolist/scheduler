@@ -1,42 +1,12 @@
-@use '../styles/scheduler-button' as demo-controls;
-
 .event-scheduler-shift-week-demo {
   --event-scheduler-demo-bg: oklch(0.965 0.004 270);
   --event-scheduler-demo-text: oklch(0.26 0.014 270);
   --event-scheduler-demo-muted-text: oklch(0.52 0.014 270);
   --event-scheduler-demo-faint-text: oklch(0.66 0.012 270);
   --event-scheduler-demo-border: oklch(0.925 0.004 270);
-  --event-scheduler-demo-border-strong: oklch(0.88 0.006 270);
   --event-scheduler-demo-surface: oklch(1 0 0);
   --event-scheduler-demo-surface-2: oklch(0.985 0.004 270);
   --event-scheduler-demo-hover: oklch(0.96 0.006 270);
-  --event-scheduler-demo-control-bg: oklch(1 0 0);
-  --event-scheduler-demo-control-hover-bg: oklch(0.96 0.006 270);
-  --demo-toolbar-control-border: var(--event-scheduler-demo-border-strong);
-  --demo-toolbar-control-bg: var(--event-scheduler-demo-control-bg);
-  --demo-toolbar-control-text: var(--event-scheduler-demo-text);
-  --demo-toolbar-control-hover-bg: var(--event-scheduler-demo-control-hover-bg);
-  --demo-toolbar-control-hover-border: color-mix(
-    in srgb,
-    var(--event-scheduler-demo-border-strong) 70%,
-    var(--event-scheduler-demo-text)
-  );
-  --demo-toolbar-control-focus-surface: var(--event-scheduler-demo-surface);
-  --demo-toolbar-control-focus-ring: color-mix(
-    in srgb,
-    var(--event-scheduler-accent, #2563eb) 28%,
-    transparent
-  );
-  --rv-segmented-bg: var(--event-scheduler-demo-surface-2);
-  --rv-segmented-border: var(--event-scheduler-demo-border-strong);
-  --rv-segmented-item-color: var(--event-scheduler-demo-muted-text);
-  --rv-segmented-item-hover-bg: color-mix(in srgb, var(--event-scheduler-demo-control-hover-bg) 78%, transparent);
-  --rv-segmented-item-hover-color: var(--event-scheduler-demo-text);
-  --rv-segmented-active-bg: var(--event-scheduler-demo-surface);
-  --rv-segmented-active-color: var(--event-scheduler-demo-text);
-  --rv-segmented-focus-outline: var(--event-scheduler-demo-surface);
-  --rv-segmented-focus-ring: color-mix(in srgb, var(--event-scheduler-accent, #2563eb) 28%, transparent);
-
   display: flex;
   overflow: hidden;
   flex-grow: 1;
@@ -54,12 +24,9 @@
   --event-scheduler-demo-muted-text: oklch(0.7 0.013 270);
   --event-scheduler-demo-faint-text: oklch(0.55 0.012 270);
   --event-scheduler-demo-border: oklch(0.295 0.012 270);
-  --event-scheduler-demo-border-strong: oklch(0.37 0.014 270);
   --event-scheduler-demo-surface: oklch(0.205 0.012 270);
   --event-scheduler-demo-surface-2: oklch(0.185 0.011 270);
   --event-scheduler-demo-hover: oklch(0.26 0.012 270);
-  --event-scheduler-demo-control-bg: oklch(0.205 0.012 270);
-  --event-scheduler-demo-control-hover-bg: oklch(0.26 0.012 270);
 }
 
 .event-scheduler-shift-week-main {
@@ -71,7 +38,6 @@
 }
 
 .event-scheduler-shift-week-toolbar {
-  --event-scheduler-demo-control-height: 38px;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
@@ -122,34 +88,6 @@
     flex: 0 0 auto;
   }
 
-  &__workspace,
-  &__views {
-    height: var(--event-scheduler-demo-control-height);
-    min-height: var(--event-scheduler-demo-control-height);
-
-    .rv-segmented-switch-item {
-      height: 30px;
-      min-height: 30px;
-    }
-  }
-
-  &__icon,
-  &__today {
-    @include demo-controls.scheduler-button;
-  }
-
-  &__icon {
-    width: 36px;
-    padding: 0;
-    font-size: 21px;
-    font-weight: 500;
-    line-height: 1;
-  }
-
-  &__today {
-    min-width: 68px;
-  }
-
   &__heading {
     display: flex;
     min-width: 0;
@@ -170,12 +108,7 @@
     }
   }
 
-  &__view {
-    min-width: 60px;
-  }
-
   &__calendar {
-    position: relative;
     display: inline-flex;
     align-items: center;
     min-width: 0;
@@ -184,55 +117,6 @@
     font-size: 13px;
     font-weight: 500;
     line-height: 1.15;
-
-    &::after {
-      position: absolute;
-      top: 50%;
-      right: 13px;
-      width: 6px;
-      height: 6px;
-      border-right: 1.5px solid currentColor;
-      border-bottom: 1.5px solid currentColor;
-      content: '';
-      pointer-events: none;
-      transform: translateY(-2px) rotate(45deg);
-    }
-
-    select {
-      appearance: none;
-      min-width: 0;
-      height: 36px;
-      padding: 0 34px 0 12px;
-      border: 1px solid var(--event-scheduler-demo-border-strong);
-      border-radius: 8px;
-      background: var(--event-scheduler-demo-control-bg);
-      color: var(--event-scheduler-demo-text);
-      box-shadow: 0 1px 2px rgb(15 23 42 / 8%);
-      cursor: pointer;
-      font: inherit;
-      font-size: 13px;
-      font-weight: 500;
-      transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
-
-      &:hover {
-        background: var(--event-scheduler-demo-control-hover-bg);
-        border-color: color-mix(in srgb, var(--event-scheduler-demo-border-strong) 70%, var(--event-scheduler-demo-text));
-      }
-
-      &:focus-visible {
-        outline: 2px solid var(--event-scheduler-demo-surface);
-        box-shadow: 0 0 0 4px color-mix(in srgb, var(--event-scheduler-accent, #2563eb) 28%, transparent);
-      }
-    }
-
-    small {
-      display: none;
-      overflow: hidden;
-      color: var(--event-scheduler-demo-muted-text);
-      font-size: 12px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
   }
 }
 
@@ -398,26 +282,12 @@ revo-grid.event-scheduler-shift-week-grid {
   font-size: 11px;
   font-weight: 500;
 
-  input,
-  select {
-    min-height: 30px;
-    border: 1px solid var(--event-scheduler-demo-border);
-    border-radius: 7px;
-    background: var(--event-scheduler-demo-control-bg);
-    color: var(--event-scheduler-demo-text);
-    font: inherit;
-    font-size: 11px;
-    font-weight: 500;
-    padding: 0 8px;
-  }
-
   select {
     min-width: 132px;
   }
 
   input {
     min-width: 16px;
-    min-height: 16px;
   }
 
   span:last-child,
@@ -496,16 +366,8 @@ revo-grid.event-scheduler-shift-week-grid {
 .event-scheduler-shift-week-dialog__close {
   display: inline-flex;
   width: 32px;
-  height: 32px;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--event-scheduler-demo-border);
-  border-radius: 8px;
-  background: var(--event-scheduler-demo-control-bg);
-  color: var(--event-scheduler-demo-muted-text);
-  cursor: pointer;
-  font-size: 18px;
-  line-height: 1;
 }
 
 .event-scheduler-shift-week-dialog__body {
@@ -531,22 +393,7 @@ revo-grid.event-scheduler-shift-week-grid {
   input,
   select {
     width: 100%;
-    height: 34px;
     box-sizing: border-box;
-    border: 1px solid var(--event-scheduler-demo-border);
-    border-radius: 8px;
-    background: var(--event-scheduler-demo-surface);
-    color: var(--event-scheduler-demo-text);
-    font: inherit;
-    font-size: 13px;
-    outline: none;
-    padding: 0 10px;
-  }
-
-  input:focus,
-  select:focus {
-    border-color: color-mix(in srgb, var(--event-scheduler-accent, #2563eb) 62%, var(--event-scheduler-demo-border));
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--event-scheduler-accent, #2563eb) 14%, transparent);
   }
 }
 
@@ -556,30 +403,7 @@ revo-grid.event-scheduler-shift-week-grid {
 
 .event-scheduler-shift-week-dialog__actions {
   border-top: 1px solid var(--event-scheduler-demo-border);
-  background: var(--event-scheduler-demo-surface-2);
-
-  button {
-    height: 34px;
-    border-radius: 8px;
-    cursor: pointer;
-    font: inherit;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 0 13px;
-  }
-}
-
-.event-scheduler-shift-week-dialog__cancel {
-  border: 1px solid var(--event-scheduler-demo-border);
-  background: var(--event-scheduler-demo-surface);
-  color: var(--event-scheduler-demo-muted-text);
-}
-
-.event-scheduler-shift-week-dialog__submit {
-  border: 0;
-  background: linear-gradient(100deg, oklch(46.976% 0.28708 278.686), oklch(0.63 0.23 330));
-  color: #ffffff;
-  box-shadow: 0 8px 18px rgba(124, 58, 237, 0.2);
+  background: var(--event-scheduler-demo-surface-2)
 }
 
 .shift-week-day-header {
@@ -966,7 +790,6 @@ revo-grid.event-scheduler-shift-week-grid {
   }
 }
 
-
 .event-scheduler-event--short .shift-week-event-content__resource,
 .shift-week-event--compact-resource .shift-week-event-content__resource,
 .event-scheduler-event--short .shift-week-event-content__status,
@@ -1091,29 +914,13 @@ revo-grid.event-scheduler-shift-week-grid {
       justify-self: start;
     }
 
-    &__icon,
-    &__today {
-      height: 36px;
-      min-height: 36px;
-    }
-
     &__views {
-      width: 100%;
-      height: var(--event-scheduler-demo-control-height);
-      min-height: var(--event-scheduler-demo-control-height);
-      justify-self: stretch;
+      overflow-x: auto;
     }
 
     &__calendar {
       grid-column: 1 / -1;
       max-width: 240px;
-    }
-
-    &__view {
-      min-width: 0;
-      height: 30px;
-      min-height: 30px;
-      flex: 1 1 0;
     }
 
     &__heading {

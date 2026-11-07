@@ -1,20 +1,32 @@
-import type { EventSchedulerEventEntity, EventSchedulerResourceEntity } from '@revolist/scheduler'
-import { addDays, createDateTime } from '@revolist/revogrid-pro'
+import { commonColors } from '@revolist/ui/color-palette/common-palettes';
+import type { EventSchedulerEventEntity, EventSchedulerResourceEntity } from '@revolist/scheduler';
+import { addDays, createDateTime } from '@revolist/revogrid-pro';
 
-export const bookingTimeZone = 'Europe/Lisbon'
-export const initialStart = '2026-10-19'
-export const initialEnd = '2026-11-01'
-export const bookingStatuses = ['New', 'Confirmed', 'Arrived', 'Checked out']
-export const paymentStatuses = ['Unpaid', 'Paid']
-export const capacityOptions = [0, 2, 4, 6, 8]
-export const guestLabel = (count: unknown) => `${count} ${Number(count) === 1 ? 'guest' : 'guests'}`
+export const bookingTimeZone = 'Europe/Lisbon';
+export const initialStart = '2026-10-19';
+export const initialEnd = '2026-11-01';
+export const bookingStatuses = ['New', 'Confirmed', 'Arrived', 'Checked out'];
+export const paymentStatuses = ['Unpaid', 'Paid'];
+export const capacityOptions = [0, 2, 4, 6, 8];
+export const guestLabel = (count: unknown) => `${count} ${Number(count) === 1 ? 'guest' : 'guests'}`;
 export const bookingColors: Record<string, string> = {
-  New: '#9c651d',
-  Confirmed: '#6366b5',
-  Arrived: '#237966',
-  'Checked out': '#657181',
-}
-export const propertyTypes = ['All properties', 'Cabin', 'Apartment', 'Villa']
+  New: commonColors.hexfc6d2d,
+  Confirmed: commonColors.hex6647f0,
+  Arrived: commonColors.hex00b8a6,
+  'Checked out': commonColors.hex666666,
+};
+export const propertyTypes = ['All properties', 'Cabin', 'Apartment', 'Villa'];
+
+export const bookingFilterDropdowns = {
+  property: {
+    config: { ariaLabel: 'Property type', nativeTabNavigation: true, topLayer: true },
+    source: propertyTypes.map(value => ({ value, label: value })),
+  },
+  capacity: {
+    config: { ariaLabel: 'Minimum sleeps', nativeTabNavigation: true, topLayer: true },
+    source: capacityOptions.map(value => ({ value, label: value ? `${value}+ guests` : 'Any' })),
+  },
+};
 export function createProperties(): EventSchedulerResourceEntity[] {
   return [
     ['cedar', 'Cedar Cabin', 'Cabin', 4, 145, 'Ready', 'Forest'],
@@ -26,38 +38,22 @@ export function createProperties(): EventSchedulerResourceEntity[] {
     ['sunset', 'Sunset Villa', 'Villa', 8, 320, 'Cleaning', 'Coast'],
     ['garden', 'Garden Retreat', 'Villa', 4, 210, 'Ready', 'Countryside'],
   ].map(([id, name, type, sleeps, rate, housekeeping, location]) => ({
-    id: String(id),
-    name: String(name),
-    role: String(type),
-    capacity: 1,
+    id: String(id), name: String(name), role: String(type), capacity: 1,
     metadata: { sleeps, rate, housekeeping, location },
-  }))
+  }));
 }
 export function createBookings(start = initialStart): EventSchedulerEventEntity[] {
   const seeds: [string, string, number, number, number, string][] = [
-    ['cedar', 'Morgan family', 0, 3, 4, 'Paid'],
-    ['cedar', 'Alex Chen', 3, 3, 2, 'Confirmed'],
-    ['birch', 'Jamie Wilson', 1, 4, 2, 'Confirmed'],
-    ['pine', 'Rossi family', 2, 5, 5, 'Paid'],
-    ['harbour', 'Sam Taylor', 0, 2, 1, 'Checked out'],
-    ['harbour', 'Avery Park', 4, 3, 2, 'Confirmed'],
-    ['terrace', 'River Adams', 3, 4, 3, 'Paid'],
-    ['olive', 'Maya Patel', 0, 4, 4, 'Confirmed'],
-    ['olive', 'Noah Garcia', 6, 4, 5, 'Paid'],
-    ['sunset', 'Smith family', 2, 6, 7, 'Confirmed'],
-    ['garden', 'Robin Lee', 1, 3, 2, 'Paid'],
-    ['garden', 'Jordan Quinn', 7, 4, 3, 'Confirmed'],
-  ]
+    ['cedar', 'Morgan family', 0, 3, 4, 'Paid'], ['cedar', 'Alex Chen', 3, 3, 2, 'Confirmed'],
+    ['birch', 'Jamie Wilson', 1, 4, 2, 'Confirmed'], ['pine', 'Rossi family', 2, 5, 5, 'Paid'],
+    ['harbour', 'Sam Taylor', 0, 2, 1, 'Checked out'], ['harbour', 'Avery Park', 4, 3, 2, 'Confirmed'],
+    ['terrace', 'River Adams', 3, 4, 3, 'Paid'], ['olive', 'Maya Patel', 0, 4, 4, 'Confirmed'],
+    ['olive', 'Noah Garcia', 6, 4, 5, 'Paid'], ['sunset', 'Smith family', 2, 6, 7, 'Confirmed'],
+    ['garden', 'Robin Lee', 1, 3, 2, 'Paid'], ['garden', 'Jordan Quinn', 7, 4, 3, 'Confirmed'],
+  ];
   return seeds.map(([resourceId, title, offset, nights, guests, status], i) => ({
-    id: `booking-${i + 1}`,
-    resourceId,
-    title,
-    status: status === 'Paid' ? 'Arrived' : i === 2 ? 'New' : status,
-    metadata: {
-      guests,
-      payment: status === 'Paid' || status === 'Checked out' ? 'Paid' : 'Unpaid',
-    },
+    id: `booking-${i + 1}`, resourceId, title, status: status === 'Paid' ? 'Arrived' : i === 2 ? 'New' : status, metadata: { guests, payment: status === 'Paid' || status === 'Checked out' ? 'Paid' : 'Unpaid' },
     startDateTime: createDateTime(addDays(start, offset), 0, bookingTimeZone),
     endDateTime: createDateTime(addDays(start, offset + nights), 0, bookingTimeZone),
-  }))
+  }));
 }
