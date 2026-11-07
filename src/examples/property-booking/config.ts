@@ -62,7 +62,7 @@ export function createBookingConfig({
     snapMinutes: 1440,
     timeRange: { start: '00:00', end: '24:00' },
     timelineColumnSize: 96,
-    resourceColumnSize: 250,
+    resourceColumnSize: 280,
     rowSize: 62,
     editable: true,
     allowCreate: true,

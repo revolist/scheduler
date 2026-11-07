@@ -12,25 +12,18 @@ const schedulerSources = [
   './scheduler.angular.ts',
 ].map(readSource);
 const schedulerHeaderSource = readSource('./components/scheduler-header/scheduler-header.ts');
-const sharedButtonStyles = readSource('../styles/_scheduler-button.scss');
 
 describe('scheduler segmented view styles', () => {
-  it('uses consistent shadcn-style sizing and focus treatment for toolbar actions', () => {
-    const actionRule = schedulerStyles.match(/&__icon,\s*&__today\s*\{([\s\S]*?)(?=\n\n\s*&__icon\s*\{)/);
-
-    expect(actionRule?.[1]).toContain('@include demo-controls.scheduler-button;');
-    expect(sharedButtonStyles).toContain('appearance: none;');
-    expect(sharedButtonStyles).toContain('height: 36px;');
-    expect(sharedButtonStyles).toContain('border-radius: 8px;');
-    expect(sharedButtonStyles).toContain('&:focus-visible');
+  it('uses the shared toolbar button defaults', () => {
+    expect(schedulerHeaderSource).toContain("createControl(document, 'button'");
+    expect(schedulerStyles).not.toContain('demo-toolbar-control');
+    expect(schedulerStyles).not.toMatch(/&__(?:icon|today)\s*\{/);
   });
 
-  it('keeps compact Scheduler controls within the workspace-switch height', () => {
-    expect(schedulerStyles).toContain('--event-scheduler-demo-control-height: 38px;');
-    expect(schedulerStyles).toContain('height: var(--event-scheduler-demo-control-height);');
-    expect(schedulerStyles).toContain('min-height: var(--event-scheduler-demo-control-height);');
-    expect(schedulerStyles).toContain('height: 30px;');
-    expect(schedulerStyles).toContain('min-height: 30px;');
+  it('leaves segmented switch sizing to the UI library', () => {
+    expect(schedulerStyles).not.toContain('--event-scheduler-demo-control-height');
+    expect(schedulerStyles).not.toContain('--rv-segmented-');
+    expect(schedulerStyles).not.toMatch(/&__view\s*\{/);
   });
 
   it('keeps the removed top app bar out of every scheduler demo variant', () => {
@@ -49,12 +42,10 @@ describe('scheduler segmented view styles', () => {
   });
 
   it('keeps the workspace switch in the shared header and the sidebar out of every framework variant', () => {
-    expect(schedulerHeaderSource).toContain("setAttribute('aria-label', 'Scheduler workspace')");
-    expect(schedulerHeaderSource).toContain("setAttribute('aria-selected', String(active))");
-    expect(schedulerHeaderSource).toContain('event-scheduler-shift-week-toolbar__workspace rv-segmented-switch');
-    expect(schedulerHeaderSource).toContain('event-scheduler-shift-week-toolbar__views rv-segmented-switch');
-    expect(schedulerHeaderSource).toContain('rv-segmented-switch-item');
-    expect(schedulerStyles).not.toContain('.event-scheduler-shift-week-segmented__button');
+    expect(schedulerHeaderSource).toContain("from '@revolist/ui/segmented-switch/index'");
+    expect(schedulerHeaderSource).toContain("ariaLabel: 'Scheduler workspace'");
+    expect(schedulerHeaderSource).toContain("ariaLabel: 'Scheduler view'");
+    expect(schedulerHeaderSource).not.toContain('rv-segmented-switch-item');
     for (const source of schedulerSources) {
       expect(source).not.toContain('revogr-scheduler-sidebar');
       expect(source).not.toContain('SCHEDULER_SIDEBAR_TAG');
