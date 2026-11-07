@@ -1,5 +1,8 @@
+import type { FilterPlugin } from '@revolist/revogrid'
+import { createControlId } from '@revolist/ui'
 import {
   EventSchedulerPlugin,
+  createEventSchedulerProjection,
   getLoadedScheduleConflicts,
   type EventSchedulerConfig,
   type EventSchedulerEventEntity,
@@ -49,6 +52,11 @@ export interface BookingDemoState {
 /** In-memory application state and Scheduler lifecycle for every framework. */
 export function createPropertyBookingDemo() {
   const resources = createProperties()
+  const filterDialogId = createControlId('property-booking-filter')
+  const columns: EventSchedulerResourceColumn[] = [
+    { prop: 'resourceLabel', name: 'Property', size: 280 },
+  ]
+  let nativeFilter: FilterPlugin | undefined
   let events = createBookings()
   let start = initialStart,
     end = initialEnd,
@@ -79,11 +87,16 @@ export function createPropertyBookingDemo() {
   let generation = 0,
     connecting: HTMLRevoGridElement | undefined
   let config: EventSchedulerConfig
-  const scopedResources = () =>
+  let nativeResourceIds: string[] | undefined
+  const toolbarResources = () =>
     resources.filter(
       resource =>
         (type === 'All properties' || resource.role === type) &&
         Number(resource.metadata?.sleeps) >= minSleeps,
+    )
+  const scopedResources = () =>
+    toolbarResources().filter(
+      resource => nativeResourceIds === undefined || nativeResourceIds.includes(String(resource.id)),
     )
   // Publish a fresh snapshot so Vue, React and Angular can observe each change.
   // Only replace Scheduler configuration when view or filter options change.
@@ -123,7 +136,10 @@ export function createPropertyBookingDemo() {
       start,
       end,
       resources,
-      resourceIds: scopedResources().map(resource => String(resource.id)),
+      resourceIds: toolbarResources().map(resource => String(resource.id)),
+      summaryResourceIds: scopedResources()
+        .filter(resource => !selectedOnly || selectedIds.includes(String(resource.id)))
+        .map(resource => String(resource.id)),
       selectedIds,
       selectedOnly,
       properties,
@@ -158,9 +174,7 @@ export function createPropertyBookingDemo() {
   return {
     resources,
     availability,
-    columns: [
-      { prop: 'resourceLabel', name: 'Property', size: 280 },
-    ] as EventSchedulerResourceColumn[],
+    columns,
     get state() {
       return snapshot()
     },
@@ -198,7 +212,14 @@ export function createPropertyBookingDemo() {
       update(true)
     },
     setRange(from: string, to: string) {
-      if (!isValidIsoDate(from) || !isValidIsoDate(to) || from > to || to > addDays(from, 61)) {
+      if (
+        !isValidIsoDate(from) ||
+        !isValidIsoDate(to) ||
+        from < '0001-01-01' ||
+        to > '9999-12-31' ||
+        from > to ||
+        diffInCalendarDays(from, to) > 61
+      ) {
         message = 'Choose an ordered date range of up to 62 days.'
         update()
         return
@@ -209,9 +230,7 @@ export function createPropertyBookingDemo() {
       update(true)
     },
     navigate(days: number) {
-      rangeStart = start = addDays(start, days)
-      rangeEnd = end = addDays(end, days)
-      update(true)
+      this.setRange(addDays(start, days), addDays(end, days))
     },
     today() {
       rangeStart = start = formatIsoDateInTimeZone(new Date(), bookingTimeZone)
@@ -219,6 +238,8 @@ export function createPropertyBookingDemo() {
       update(true)
     },
     reset() {
+      nativeResourceIds = undefined
+      scheduler?.resetResourceColumnState()
       events = createBookings()
       rangeStart = start = initialStart
       rangeEnd = end = initialEnd
@@ -287,12 +308,60 @@ export function createPropertyBookingDemo() {
           update()
         }
       }
+      // Evaluate native rules over every resource, independently of toolbar scope.
+      // Reading the visible projection here would retain a narrowed toolbar snapshot.
+      nativeFilter = plugins.find(
+        (plugin): plugin is FilterPlugin => typeof (plugin as FilterPlugin).getRowFilter === 'function',
+      )
+      const filtered = () => {
+        let ids: string[] | undefined
+        if (nativeFilter && Object.keys(nativeFilter.multiFilterItems).length) {
+          const projection = createEventSchedulerProjection(
+            { ...config, filters: undefined, timelineSummary: undefined },
+            [], resources, [], [], [], { columns },
+          )
+          const rows = projection.rows.filter(row => row.__eventSchedulerResource)
+          const trimmed = nativeFilter.getRowFilter(
+            [...rows], nativeFilter.multiFilterItems,
+            Object.fromEntries(columns.map(column => [String(column.prop), column])),
+          )
+          ids = rows.filter((_, index) => !trimmed[index]).map(row => String(row.resourceId))
+        }
+        if (JSON.stringify(ids) !== JSON.stringify(nativeResourceIds)) {
+          nativeResourceIds = ids
+          update(true)
+        }
+      }
+      grid.addEventListener('afterfilterapply', filtered)
+      const labelFilter = () => {
+        const button = grid.querySelector<HTMLButtonElement>('button.rv-filter')
+        if (!button) return
+        const popup = grid.querySelector<HTMLDialogElement>('.filter-panel-dialog')
+        button.setAttribute('aria-label', 'Filter properties')
+        button.setAttribute('aria-haspopup', 'dialog')
+        button.setAttribute('aria-expanded', String(!!popup?.open))
+        if (popup) {
+          popup.id ||= filterDialogId
+          button.setAttribute('aria-controls', popup.id)
+        }
+      }
+      const filterObserver = new MutationObserver(labelFilter)
+      // Native Core filter controls have no public accessible-label override.
+      // Restrict observation to their header and popup, excluding virtualized rows.
+      grid.querySelectorAll('revogr-header, revogr-filter-panel').forEach(target => {
+        filterObserver.observe(target, { childList: true, subtree: true, attributes: true, attributeFilter: ['open'] })
+      })
+      labelFilter()
+      filtered()
       const disposeHistory = defineHistoryControls(historyHost, grid)
       grid.addEventListener('gridedit', changed)
       grid.addEventListener('event-scheduler-event-selected', selected)
       disconnect = () => {
+        filterObserver.disconnect()
+        grid.removeEventListener('afterfilterapply', filtered)
         grid.removeEventListener('gridedit', changed)
         disposeHistory()
+
         grid.removeEventListener('event-scheduler-event-selected', selected)
         dialog?.close()
       }
@@ -303,6 +372,9 @@ export function createPropertyBookingDemo() {
       generation++
       disconnect()
       disconnect = () => {}
+      nativeFilter = undefined
+      nativeResourceIds = undefined
+      config = makeConfig()
       scheduler = undefined
       dialog = undefined
       publish = undefined

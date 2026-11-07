@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Property Booking regression fixture</title></head>
+  <body>
+    <nav aria-label="Fixture lifecycle"><button id="mount">Mount booking demo</button><button id="unmount">Unmount booking demo</button></nav>
+    <main id="app"></main>
+    <script type="module">
+      import '/demo-host.css';
+      import '@revolist/revogrid-pro/styles.css';
+      import '@revolist/scheduler/styles.css';
+      import { load } from '/src/examples/property-booking/PropertyBooking.ts';
+      let dispose = load('#app');
+      document.querySelector('#unmount').onclick = () => { dispose?.(); dispose = undefined; };
+      document.querySelector('#mount').onclick = () => { dispose?.(); dispose = load('#app'); };
+    </script>
+  </body>
+</html>

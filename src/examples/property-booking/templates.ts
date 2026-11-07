@@ -52,10 +52,11 @@ export function createBookingTemplates(
     events: {
       properties: ({ event }) => ({
         style: {
-          '--event-scheduler-event-color': bookingColors[event.status ?? 'Confirmed'],
-          '--event-scheduler-event-track-bg': bookingColors[event.status ?? 'Confirmed'],
+          '--event-scheduler-event-color': event.color ?? bookingColors[event.status ?? 'Confirmed'],
+          '--event-scheduler-event-track-bg': event.color ?? bookingColors[event.status ?? 'Confirmed'],
           '--event-scheduler-event-text': event.status === 'New' || event.status === 'Arrived'
             ? commonColors.hex171717 : commonColors.white,
+
         },
       }),
       content: (h, { event }) =>
