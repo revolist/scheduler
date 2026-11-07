@@ -54,6 +54,9 @@ test('native filters and toolbar scope agree with selection, totals and Reset', 
   await expect(page.locator('.property-booking-resource')).toHaveCount(8);
   await page.getByRole('checkbox', { name: 'Select all properties', exact: true }).check();
   await expect(page.locator('[data-selected]')).toHaveText('8');
+  for (const checkbox of await page.getByRole('checkbox', { name: /^Include .* in totals$/ }).all()) {
+    await expect(checkbox).toBeChecked();
+  }
   await page.screenshot({ path: 'test-results/property-booking-filter-reset.png' });
   expect(errors).toEqual([]);
 });
