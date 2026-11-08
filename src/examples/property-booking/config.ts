@@ -1,13 +1,18 @@
 import type {
+  EventSchedulerAvailabilityEntity,
+  EventSchedulerEventEntity,
   EventSchedulerConfig,
   EventSchedulerResourceEntity,
   EventSchedulerTimelineSummaryRow,
 } from '@revolist/scheduler'
+import { getLoadedScheduleConflicts } from '@revolist/scheduler'
 import { createDateTime, formatIsoDateInTimeZone, parseIsoDate } from '@revolist/revogrid-pro'
-import { bookingColors, bookingStatuses, bookingTimeZone } from './data'
+import { bookingColors, bookingStatuses, bookingTimeZone, isSupportedBookingDate, supportedDateMessage } from './data'
 import { createBookingTemplates } from './templates'
 
 interface BookingConfigOptions {
+  getEvents: () => readonly EventSchedulerEventEntity[]
+  availability: readonly EventSchedulerAvailabilityEntity[]
   start: string
   end: string
   resources: readonly EventSchedulerResourceEntity[]
@@ -24,6 +29,8 @@ interface BookingConfigOptions {
 
 /** Translate application state into public Scheduler options. */
 export function createBookingConfig({
+  getEvents,
+  availability,
   start,
   end,
   resources,
@@ -51,7 +58,7 @@ export function createBookingConfig({
       aggregate: ({ events }) =>
         events.reduce((total, event) => total + Number(event.metadata?.guests ?? 0), 0),
     })
-  return {
+  const config: EventSchedulerConfig = {
     view: 'resourceTimeline',
     weekStartDate: start,
     dateRange: { start, end },
@@ -83,7 +90,8 @@ export function createBookingConfig({
     filters: { resourceIds },
     timelineSummary: { rows, resourceIds: summaryResourceIds, rowSize: 34 },
     slotTemplate: (h, { resource }) =>
-      h('span', { class: 'property-booking-rate' }, `€${resource?.metadata?.rate ?? ''}`),
+      resource?.metadata?.rate == null ? null :
+        h('span', { class: 'property-booking-rate' }, `€${resource.metadata.rate}`),
     closedSlotTemplate: (h, { title }) =>
       h('span', { class: 'property-booking-blocked' }, title ?? 'Unavailable'),
     labels: {
@@ -118,6 +126,7 @@ export function createBookingConfig({
           return `${property.name} sleeps up to ${property.metadata?.sleeps} guests.`
         const from = formatIsoDateInTimeZone(parseIsoDate(event.startDateTime), bookingTimeZone)
         const to = formatIsoDateInTimeZone(parseIsoDate(event.endDateTime), bookingTimeZone)
+        if (!isSupportedBookingDate(from) || !isSupportedBookingDate(to)) return supportedDateMessage
         if (
           from >= to ||
           createDateTime(from, 0, bookingTimeZone) !== event.startDateTime ||
@@ -125,8 +134,28 @@ export function createBookingConfig({
         )
           return 'Bookings must start and end at calendar-day boundaries and include at least one night.'
       }
+      const changed = detail.changedEvents ?? (detail.event ? [{ ...detail.event, ...detail.changes }] : [])
+      const proposed = detail.events ?? [
+        ...getEvents().filter(event => !changed.some(next => next.id === event.id)), ...changed,
+      ]
+      const conflict = getLoadedScheduleConflicts(
+        { config, events: [...proposed], resources, availability }, changed,
+      ).find(conflict => conflict.severity === 'error')
+      if (conflict) {
+        const property = resources.find(resource => resource.id === conflict.resourceId)
+        const blocked = availability.find(item => item.id === conflict.availabilityId)
+        const other = proposed.find(event => conflict.eventIds.includes(event.id) && !changed.some(next => next.id === event.id))
+        const reason = blocked ?? other
+        if (reason) {
+          const from = formatIsoDateInTimeZone(parseIsoDate(reason.startDateTime), bookingTimeZone)
+          const to = formatIsoDateInTimeZone(parseIsoDate(reason.endDateTime), bookingTimeZone)
+          return `${property?.name ?? 'This property'} is unavailable: ${reason.title ?? 'Maintenance'} (${from} → ${to}). Choose different dates or another property.`
+        }
+        return `This property is unavailable on ${conflict.date}. Choose different dates or another property.`
+      }
     },
     statusColorResolver: event => event.color ?? bookingColors[event.status ?? 'Confirmed'],
     customization: createBookingTemplates(selectedIds, toggleProperty),
   }
+  return config
 }
