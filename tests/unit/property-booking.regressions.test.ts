@@ -202,12 +202,12 @@ describe("Property Booking regression contracts", () => {
 
   it("keeps navigation inside supported years without corrupting the applied range", () => {
     const model = createPropertyBookingDemo();
-    model.setRange("0001-01-01", "0001-01-14");
-    expect(model.state.start).toBe("0001-01-01");
+    model.setRange("0100-01-01", "0100-01-14");
+    expect(model.state.start).toBe("0100-01-01");
     model.navigate(-7);
     expect([model.state.start, model.state.end]).toEqual([
-      "0001-01-01",
-      "0001-01-14",
+      "0100-01-01",
+      "0100-01-14",
     ]);
     model.setRange("9999-12-18", "9999-12-31");
     model.navigate(7);
@@ -215,6 +215,28 @@ describe("Property Booking regression contracts", () => {
       "9999-12-18",
       "9999-12-31",
     ]);
+  });
+
+  it("rejects early-year ranges and retains the accepted controls", () => {
+    const model = createPropertyBookingDemo();
+    for (const [from, to] of [["0099-12-25", "0100-01-07"], ["0001-01-01", "2026-10-20"]]) {
+      model.setRange(from, to);
+      expect(model.state.start).toBe("2026-10-19");
+      expect(model.state.rangeStart).toBe(model.state.start);
+      expect(model.state.message).toContain("0100");
+    }
+  });
+
+  it("preserves Gregorian leap-year validation", () => {
+    const model = createPropertyBookingDemo();
+    for (const year of ["2026", "2100"]) {
+      model.setRange(`${year}-02-29`, `${year}-03-01`);
+      expect(model.state.start).toBe("2026-10-19");
+    }
+    for (const year of ["2028", "2000"]) {
+      model.setRange(`${year}-02-29`, `${year}-03-01`);
+      expect(model.state.start).toBe(`${year}-02-29`);
+    }
   });
 
   it("allows 62 inclusive calendar days but rejects 63 and noncanonical dates", () => {

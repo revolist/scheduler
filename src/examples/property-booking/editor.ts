@@ -4,7 +4,7 @@ import { createAlertElement, createControl, releaseAlertElement } from '@revolis
 import '@revolist/ui/styles.css';
 import { createDialogButton, createDateTime, formatIsoDateInTimeZone, parseIsoDate, diffInCalendarDays, isValidIsoDate, type DialogPlugin } from '@revolist/revogrid-pro';
 import type { EventSchedulerEventEntity, EventSchedulerResourceEntity } from '@revolist/scheduler';
-import { bookingStatuses, bookingTimeZone, paymentStatuses } from './data';
+import { bookingStatuses, bookingTimeZone, paymentStatuses, isSupportedBookingDate, supportedDateMessage } from './data';
 
 /** An application booking form inside the shared Pro dialog (focus, Escape and theme). */
 export function openBookingEditor(options: {
@@ -81,6 +81,7 @@ export function openBookingEditor(options: {
   estimateAlert.className = 'property-booking-form__estimate';
   disposeControls.push(() => releaseAlertElement(estimateAlert));
   const updateEstimate = () => {
+    if (!isSupportedBookingDate(checkIn.value) || !isSupportedBookingDate(checkOut.value)) { estimate.textContent = supportedDateMessage; return; }
     if (!isValidIsoDate(checkIn.value) || !isValidIsoDate(checkOut.value) || checkOut.value <= checkIn.value) { estimate.textContent = 'Choose check-in and check-out dates to see the stay estimate.'; return; }
     const nights = diffInCalendarDays(checkIn.value, checkOut.value);
     const rate = Number(options.resources.find(resource => String(resource.id) === property.value)?.metadata?.rate ?? 0);
@@ -99,6 +100,7 @@ export function openBookingEditor(options: {
     event.preventDefault();
     if (options.readonly || !form.reportValidity()) return;
     if (!guest.value.trim()) { error.textContent = 'Enter a guest name.'; return; }
+    if (!isSupportedBookingDate(checkIn.value) || !isSupportedBookingDate(checkOut.value)) { error.textContent = supportedDateMessage; return; }
     if (!isValidIsoDate(checkIn.value) || !isValidIsoDate(checkOut.value)) { error.textContent = 'Enter valid check-in and check-out dates.'; return; }
     if (checkOut.value <= checkIn.value) { error.textContent = 'Check-out must be after check-in.'; return; }
     attempt(() => options.save({ ...options.event, title: guest.value.trim(), resourceId: property.value, status: status.value,

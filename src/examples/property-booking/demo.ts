@@ -26,6 +26,8 @@ import {
   initialEnd,
   initialStart,
   guestLabel,
+  isSupportedBookingDate,
+  supportedDateMessage,
 } from './data'
 import { openBookingEditor } from './editor'
 import { createBookingConfig } from './config'
@@ -119,6 +121,13 @@ export function createPropertyBookingDemo() {
       readonly,
       onClose,
       save: booking => {
+        // Built-in overlap prevention runs before validateMutation. Preflight the
+        // editor through the same application validator for actionable feedback.
+        const reason = config.validateMutation?.({
+          action: creating ? 'create' : 'edit', eventId: booking.id,
+          event: booking, changes: {}, previousValues: {}, changedEvents: [booking],
+        })
+        if (typeof reason === 'string') throw new Error(reason)
         if (creating) scheduler!.createEvent(booking)
         else scheduler!.editEvent(booking.id, booking)
       },
@@ -136,6 +145,8 @@ export function createPropertyBookingDemo() {
       start,
       end,
       resources,
+      getEvents: () => events,
+      availability,
       resourceIds: toolbarResources().map(resource => String(resource.id)),
       summaryResourceIds: scopedResources()
         .filter(resource => !selectedOnly || selectedIds.includes(String(resource.id)))
@@ -191,6 +202,13 @@ export function createPropertyBookingDemo() {
     setRangeInput(edge: 'start' | 'end', value: string) {
       if (edge === 'start') rangeStart = value
       else rangeEnd = value
+      if (/^\d{4,}-\d{2}-\d{2}$/.test(value) && !isSupportedBookingDate(value)) {
+        rangeStart = start
+        rangeEnd = end
+        message = supportedDateMessage
+        update()
+        return
+      }
       if (isValidIsoDate(rangeStart) && isValidIsoDate(rangeEnd) && rangeStart > rangeEnd) {
         const days = diffInCalendarDays(start, end)
         if (edge === 'start') rangeEnd = addDays(rangeStart, days)
@@ -212,10 +230,18 @@ export function createPropertyBookingDemo() {
       update(true)
     },
     setRange(from: string, to: string) {
+      if ((/^\d{4,}-\d{2}-\d{2}$/.test(from) && !isSupportedBookingDate(from)) ||
+          (/^\d{4,}-\d{2}-\d{2}$/.test(to) && !isSupportedBookingDate(to))) {
+        rangeStart = start
+        rangeEnd = end
+        message = supportedDateMessage
+        update()
+        return
+      }
       if (
         !isValidIsoDate(from) ||
         !isValidIsoDate(to) ||
-        from < '0001-01-01' ||
+        from < '0100-01-01' ||
         to > '9999-12-31' ||
         from > to ||
         diffInCalendarDays(from, to) > 61

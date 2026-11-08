@@ -57,3 +57,7 @@ export function createBookings(start = initialStart): EventSchedulerEventEntity[
     endDateTime: createDateTime(addDays(start, offset + nights), 0, bookingTimeZone),
   }));
 }
+
+// The shared Scheduler date helpers do not consistently support years 0001–0099.
+export const supportedDateMessage = 'Choose dates from 0100-01-01 through 9999-12-31.';
+export const isSupportedBookingDate = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value) && value >= '0100-01-01' && value <= '9999-12-31';
