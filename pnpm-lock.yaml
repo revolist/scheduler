@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@revolist/revogrid': 4.31.3
+  '@revolist/revogrid': 4.31.5
 
 importers:
 
@@ -27,14 +27,14 @@ importers:
         specifier: 20.3.26
         version: 20.3.26(@angular/common@20.3.26(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/compiler@20.3.26)(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.3.26(@angular/common@20.3.26(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1)))
       '@revolist/angular-datagrid':
-        specifier: 4.31.3
-        version: 4.31.3
+        specifier: 4.31.5
+        version: 4.31.5
       '@revolist/react-datagrid':
-        specifier: 4.31.3
-        version: 4.31.3
+        specifier: 4.31.5
+        version: 4.31.5
       '@revolist/revogrid':
-        specifier: 4.31.3
-        version: 4.31.3
+        specifier: 4.31.5
+        version: 4.31.5
       '@revolist/revogrid-pro':
         specifier: npm:@revolist/rv-pro-trial@4.0.9
         version: '@revolist/rv-pro-trial@4.0.9'
@@ -45,8 +45,8 @@ importers:
         specifier: 4.0.9
         version: 4.0.9(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue@3.5.40(typescript@5.9.3))
       '@revolist/vue3-datagrid':
-        specifier: 4.31.3
-        version: 4.31.3
+        specifier: 4.31.5
+        version: 4.31.5
       preact:
         specifier: 10.29.1
         version: 10.29.1
@@ -1284,14 +1284,14 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@revolist/angular-datagrid@4.31.3':
-    resolution: {integrity: sha512-hBCA6SSVB3LBv11YCbGwi8iQFlFss45QV+Ggdli5oKJ2n2UZSPdq8A1OxmfujR599ROyBJGD1VrzOqY1s15YQQ==}
+  '@revolist/angular-datagrid@4.31.5':
+    resolution: {integrity: sha512-QvB9Jh9p1taa/kXPyM6HQUV/Tlwq9uZzCrrdu73o5dglCBdnCuGTTDeIZXtLSY+wOxxTvdnwzdDZcEBNFZUeMQ==}
 
-  '@revolist/react-datagrid@4.31.3':
-    resolution: {integrity: sha512-YktZubY5kh1k4DizvXgdPYQ4SgJNbZO4JaU1f38d3i8lEx20ti5/RZUU5kqApzj5ACg6sXKRckIMYtyCjpT2iw==}
+  '@revolist/react-datagrid@4.31.5':
+    resolution: {integrity: sha512-52344noEjDvWEX0MXaGNjMYD0+Tbcxy0dDaWojonzcLfHTcfGDvu9ffkHRohF2PR3RVUkcMzbzD2WheNeQNeyQ==}
 
-  '@revolist/revogrid@4.31.3':
-    resolution: {integrity: sha512-QDMBGY+aO1lj/RKXlLqk7fTzzlRXuPIUW+YTzpWB4rmLVoHMbrJloxc1An+BcGNfV7tgy2B74iihKb8GWktPfA==}
+  '@revolist/revogrid@4.31.5':
+    resolution: {integrity: sha512-tWgNJpYPDrk/1tBYW4xZfgRNiab6ttZBqXwkeTdNX0fksNXnVsEXBEWegUvfkQs77QDRKcg2z1dUEop4G/Cttg==}
 
   '@revolist/rv-pro-trial@4.0.9':
     resolution: {integrity: sha512-NC16Jm8LslC0rzXW0t3SFfO5m0aNhCB3rmNz7fAbFE3F3vCYfGNIVhfm2mg3DNOvnzmZqH+U8R+smgqp9XsytA==, tarball: https://trial.rv-grid.com/@revolist/rv-pro-trial/-/c2588c8b9c7200d00012e580ebdf1da8ca7a5abb}
@@ -1322,8 +1322,8 @@ packages:
       vue:
         optional: true
 
-  '@revolist/vue3-datagrid@4.31.3':
-    resolution: {integrity: sha512-wQI3mURpX/dji3k6Rqti+IdNYG+7oEQ5fyFYZAL2Eh4D1+HzjmkEe0/tLWknKggqEnVb9xB5ulXJWKLa9oiysg==}
+  '@revolist/vue3-datagrid@4.31.5':
+    resolution: {integrity: sha512-GA6Mdhp3/rxhDtslt59eRfnNfFapuL3wox0qlBcUYZm5ZN2D03at+n3RZoSKlaXktsOkIdmaEWx2qBDnGg2klQ==}
 
   '@rolldown/binding-android-arm64@1.2.3':
     resolution: {integrity: sha512-zrJtHDcaZJ1Fp7xf4hNl+7seH9Cn/N5TwLYkhgXREtBwAd/jaqW3uqeHxpDugJLVICWg4eW44kOQEGJ1r6jCGw==}
@@ -4621,22 +4621,22 @@ snapshots:
     dependencies:
       playwright: 1.59.1
 
-  '@revolist/angular-datagrid@4.31.3':
+  '@revolist/angular-datagrid@4.31.5':
     dependencies:
-      '@revolist/revogrid': 4.31.3
+      '@revolist/revogrid': 4.31.5
       '@stencil/core': 4.43.5
       tslib: 2.8.1
 
-  '@revolist/react-datagrid@4.31.3':
+  '@revolist/react-datagrid@4.31.5':
     dependencies:
-      '@revolist/revogrid': 4.31.3
+      '@revolist/revogrid': 4.31.5
 
-  '@revolist/revogrid@4.31.3': {}
+  '@revolist/revogrid@4.31.5': {}
 
   '@revolist/rv-pro-trial@4.0.9':
     dependencies:
       '@formulajs/formulajs': 4.6.1
-      '@revolist/revogrid': 4.31.3
+      '@revolist/revogrid': 4.31.5
       '@tanstack/query-core': 5.104.5
       preact: 10.29.1
       write-excel-file: 4.1.1
@@ -4644,7 +4644,7 @@ snapshots:
   '@revolist/scheduler-trial@4.0.9':
     dependencies:
       '@fortawesome/fontawesome-free': 7.3.1
-      '@revolist/revogrid': 4.31.3
+      '@revolist/revogrid': 4.31.5
       '@revolist/rv-pro-trial': 4.0.9
       '@tanstack/query-core': 5.104.5
       pdfmake: 0.3.9
@@ -4656,9 +4656,9 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       vue: 3.5.40(typescript@5.9.3)
 
-  '@revolist/vue3-datagrid@4.31.3':
+  '@revolist/vue3-datagrid@4.31.5':
     dependencies:
-      '@revolist/revogrid': 4.31.3
+      '@revolist/revogrid': 4.31.5
 
   '@rolldown/binding-android-arm64@1.2.3':
     optional: true

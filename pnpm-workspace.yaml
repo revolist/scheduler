@@ -2,14 +2,14 @@ packages:
   - "."
 
 overrides:
-  '@revolist/revogrid': '4.31.3'
+  '@revolist/revogrid': '4.31.5'
 
 minimumReleaseAgeExclude:
   - '@revolist/rv-pro-trial@4.0.9'
   - '@revolist/scheduler-trial@4.0.9'
   - '@revolist/ui@4.0.9'
-  - '@revolist/revogrid@4.31.3'
-  - '@revolist/angular-datagrid@4.31.3'
-  - '@revolist/react-datagrid@4.31.3'
-  - '@revolist/vue3-datagrid@4.31.3'
-  - '@revolist/svelte-datagrid@4.31.3'
+  - '@revolist/revogrid@4.31.5'
+  - '@revolist/angular-datagrid@4.31.5'
+  - '@revolist/react-datagrid@4.31.5'
+  - '@revolist/vue3-datagrid@4.31.5'
+  - '@revolist/svelte-datagrid@4.31.5'
