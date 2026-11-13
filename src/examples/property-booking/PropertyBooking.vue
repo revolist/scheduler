@@ -25,7 +25,6 @@
     </div>
     <RevoGrid ref="gridRef" class="property-booking-demo__grid demo-preview-content-sized-grid" hide-attribution :theme="isDark ? 'darkMaterial' : 'material'" :plugins="plugins" :columns="model.columns" :source="state.events" :event-scheduler.prop="state.config" :event-scheduler-resources.prop="model.resources" :event-scheduler-availability.prop="model.availability" @aftergridinit="connect" />
     <div class="property-booking-demo__legend"><span v-for="status in bookingStatuses" :key="status"><i :style="{ background: bookingColors[status] }"></i>{{ status }}</span><small>Rates per night · Check-out day is available</small></div>
-    <p class="property-booking-demo__message" role="status">{{ state.message }}</p>
   </section>
 </template>
 <script setup lang="ts">

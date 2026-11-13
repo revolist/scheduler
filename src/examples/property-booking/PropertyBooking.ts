@@ -51,7 +51,7 @@ export function load(parentSelector: string, _rows: any[] = []) {
   const legend = document.createElement('div'); legend.className = 'property-booking-demo__legend';
   bookingStatuses.forEach(status => { const span = document.createElement('span'), dot = document.createElement('i'); dot.style.background = bookingColors[status]; span.append(dot, document.createTextNode(status)); legend.append(span); });
   const note = document.createElement('small'); note.textContent = 'Rates per night · Check-out day is available'; legend.append(note);
-  const message = document.createElement('p'); message.className = 'property-booking-demo__message'; message.setAttribute('role', 'status'); root.append(legend, message);
+  root.append(legend);
   parent.append(root); grid.source = model.state.events;
   let appliedConfig = model.state.config, appliedEvents = model.state.events;
   const render = (state: BookingDemoState) => {
@@ -61,7 +61,6 @@ export function load(parentSelector: string, _rows: any[] = []) {
     field<HTMLInputElement>('all').checked = state.propertyCount > 0 && state.selectedCount === state.propertyCount;
     field<HTMLInputElement>('all').indeterminate = state.selectedCount > 0 && state.selectedCount < state.propertyCount;
     root.querySelector<HTMLButtonElement>('[data-action="new"]')!.disabled = !state.ready || !state.propertyCount;
-    message.textContent = state.message;
     if (appliedConfig !== state.config) { appliedConfig = state.config; grid.eventScheduler = state.config; }
     if (appliedEvents !== state.events) { appliedEvents = state.events; grid.source = state.events; }
   };

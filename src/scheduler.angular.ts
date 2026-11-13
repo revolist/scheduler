@@ -7,7 +7,8 @@ import { currentTheme, observeCurrentTheme } from './shared/theme';
 import {
   createShiftWeekAssignedOpenShift,
   createShiftWeekConfig,
-  createShiftWeekEvents,
+  createShiftWeekSidebarFilters,
+  createShiftWeekDataset,
   createShiftWeekManualEvent,
   getShiftWeekRangeTitle,
   getShiftWeekSubtitle,
@@ -51,7 +52,8 @@ defineSchedulerShellElements();
   schemas: [NO_ERRORS_SCHEMA],
   imports: [RevoGrid, NgIf],
   template: `
-    <section class="event-scheduler-shift-week-demo">
+    <section class="event-scheduler-shift-week-demo" [class.event-scheduler-shift-week-demo--calendar]="workspaceView === 'calendar'">
+      <revogr-scheduler-sidebar *ngIf="workspaceView === 'calendar'" [model]="sidebarModel" (scheduler-sidebar-date-change)="handleSidebarDate($event)" (scheduler-sidebar-filter-change)="handleSidebarFilters($event)"></revogr-scheduler-sidebar>
       <div class="event-scheduler-shift-week-main">
         <revogr-scheduler-header
           [model]="headerModel"
@@ -122,10 +124,15 @@ export class EventSchedulerShiftWeekGridComponent implements OnDestroy {
   newEventStatusOptions = shiftWeekNewEventStatusOptions;
   newEventTypeOptions = shiftWeekNewEventTypeOptions;
   selectedEventIds: readonly EventSchedulerEntityId[] = [];
-  schedulerConfig = createShiftWeekConfig(this.activeView, this.anchorDate, this.activeCalendar, this.selectedEventIds, [], this.workspaceView);
-  events: readonly EventSchedulerEventEntity[] = createShiftWeekEvents(this.activeView, this.anchorDate);
+  sidebarFilters=createShiftWeekSidebarFilters();
+  schedulerConfig = createShiftWeekConfig(this.activeView, this.anchorDate, this.activeCalendar, this.selectedEventIds, [], this.workspaceView, this.sidebarFilters);
+  events: readonly EventSchedulerEventEntity[] = createShiftWeekDataset(this.anchorDate);
   resources = shiftResources.map((resource) => ({ ...resource }));
   newEventForm: ShiftWeekNewEventForm | null = null;
+
+  get sidebarModel() {return {date:this.anchorDate,events:this.events,resources:this.resources,config:this.schedulerConfig,search:this.sidebarFilters.search,selectedResourceIds:this.sidebarFilters.resourceIds};}
+  handleSidebarDate(event:CustomEvent<{date:string}>) {this.anchorDate=event.detail.date;this.refreshRange();}
+  handleSidebarFilters(event:CustomEvent<import('@revolist/scheduler').SchedulerSidebarFilters>) {this.sidebarFilters=event.detail;this.refreshSchedulerConfig();}
 
   get rangeTitle() {
     return getShiftWeekRangeTitle(this.activeView, this.anchorDate);
@@ -274,12 +281,11 @@ export class EventSchedulerShiftWeekGridComponent implements OnDestroy {
 
   private refreshRange() {
     this.selectedEventIds = [];
-    this.events = createShiftWeekEvents(this.activeView, this.anchorDate);
     this.refreshSchedulerConfig();
   }
 
   private refreshSchedulerConfig() {
-    this.schedulerConfig = createShiftWeekConfig(this.activeView, this.anchorDate, this.activeCalendar, this.selectedEventIds, [], this.workspaceView);
+    this.schedulerConfig = createShiftWeekConfig(this.activeView, this.anchorDate, this.activeCalendar, this.selectedEventIds, [], this.workspaceView, this.sidebarFilters);
   }
 
   ngOnDestroy(): void {

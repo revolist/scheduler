@@ -56,12 +56,7 @@
     justify-self: start;
   }
 
-  &__notice {
-    grid-column: 1 / -1;
-    margin: 0;
-    color: var(--event-scheduler-demo-muted-text);
-    font-size: 12px;
-  }
+
 
   &__range,
   &__end {
@@ -121,7 +116,7 @@
 }
 
 .event-scheduler-shift-week-toolbar--workspace-only {
-  > :not(.event-scheduler-shift-week-toolbar__workspace):not(.event-scheduler-shift-week-toolbar__notice) {
+  > :not(.event-scheduler-shift-week-toolbar__workspace) {
     display: none;
   }
 }
@@ -966,4 +961,31 @@ revo-grid.event-scheduler-shift-week-grid {
 
 @container shift-week-timeline-event (max-height: 48px) {
   .shift-week-event-content__kind { display: none; }
+}
+
+
+/* Calendar workspace reuses Scheduler's public sidebar; other workspaces keep their existing layout. */
+.event-scheduler-shift-week-demo--calendar {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  > .event-scheduler-shift-week-main {grid-column:2;grid-row:1;min-height:0;}
+  > revogr-scheduler-dialog {display:contents;}
+}
+.event-scheduler-shift-week-sidebar {
+  display:block;
+  grid-column:1;grid-row:1;
+  min-width:0;min-height:0;overflow:auto;
+  border-right:1px solid var(--event-scheduler-demo-border);
+  background:var(--event-scheduler-demo-surface);
+  &[hidden] {display:none;}
+  &__toggle {display:none;}
+}
+@media(max-width:700px) {
+  .event-scheduler-shift-week-demo--calendar {display:flex;flex-direction:column;}
+  .event-scheduler-shift-week-sidebar {
+    flex:0 0 auto;width:100%;max-height:45%;border-right:0;border-bottom:1px solid var(--event-scheduler-demo-border);
+    &__toggle {display:block;width:100%;min-height:36px;position:sticky;top:0;z-index:1;background:var(--event-scheduler-demo-surface);}
+    &:not([data-expanded]) .event-scheduler-sidebar {display:none;}
+  }
 }

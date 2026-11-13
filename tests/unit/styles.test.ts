@@ -41,21 +41,20 @@ describe('scheduler segmented view styles', () => {
     }
   });
 
-  it('keeps the workspace switch in the shared header and the sidebar out of every framework variant', () => {
+  it('keeps shared workspace controls and registers the reusable sidebar in every framework', () => {
     expect(schedulerHeaderSource).toContain("from '@revolist/ui/segmented-switch/index'");
     expect(schedulerHeaderSource).toContain("ariaLabel: 'Scheduler workspace'");
     expect(schedulerHeaderSource).toContain("ariaLabel: 'Scheduler view'");
     expect(schedulerHeaderSource).not.toContain('rv-segmented-switch-item');
     for (const source of schedulerSources) {
-      expect(source).not.toContain('revogr-scheduler-sidebar');
-      expect(source).not.toContain('SCHEDULER_SIDEBAR_TAG');
+      expect(source).toMatch(/SCHEDULER_SIDEBAR_TAG|revogr-scheduler-sidebar/);
     }
   });
 
   it('keeps the range navigation left-aligned after the workspace switch', () => {
     expect(schedulerHeaderSource).toContain("range.className = 'event-scheduler-shift-week-toolbar__range'");
-    expect(schedulerHeaderSource).toContain('this.append(this.workspace, range, end, notice)');
-    expect(schedulerHeaderSource).toContain('Changing dates, views or calendars resets sample edits.');
+    expect(schedulerHeaderSource).toContain('this.append(this.workspace, range, end)');
+    expect(schedulerHeaderSource).not.toContain('Changing dates, views or calendars resets sample edits.');
     const rangeRule = schedulerStyles.match(/&__range\s*\{([\s\S]*?)\n\s*\}/);
     expect(rangeRule?.[1]).toContain('justify-self: start;');
   });

@@ -1,6 +1,7 @@
 import { type CellTemplate, type CellTemplateProp, type ColumnRegular } from '@revolist/revogrid';
 import {
   type EventSchedulerConfig,
+  type SchedulerSidebarFilters,
   type EventSchedulerEntityId,
   type EventSchedulerEventEntity,
   type EventSchedulerEventSectionContext,
@@ -256,10 +257,9 @@ const shiftWeekBaseConfig: Omit<EventSchedulerConfig, 'view' | 'weekStartDate'> 
       continuationLabels: (_h, context) => context.mode === 'timeline' ? '' : undefined,
     },
   },
-  createRangeFormatter: (context) => `${context.title}\n${formatShiftWeekMinutes(context.startMinutes)}-${formatShiftWeekMinutes(context.endMinutes)} · ${context.durationLabel}`,
   createEventDraft: (context) => ({
     id: `created-event-${createdEventSequence++}`,
-    resourceId: context.resourceId ?? 'alex',
+    ...(context.resourceId !== undefined ? { resourceId: context.resourceId } : {}),
     title: 'New event',
     startDateTime: context.startDateTime,
     endDateTime: context.endDateTime,
@@ -466,6 +466,10 @@ export const shiftEvents: EventSchedulerEventEntity[] = createShiftWeekEvents(
   initialShiftWeekAnchorDate,
 );
 
+export function createShiftWeekSidebarFilters(): SchedulerSidebarFilters {
+  return {search:'',resourceIds:shiftResources.map(resource=>resource.id),searchScope:'eventsAndResources',includeUnassigned:true};
+}
+
 export function createShiftWeekConfig(
   view: ShiftWeekDemoView,
   anchorDate: string,
@@ -473,6 +477,7 @@ export function createShiftWeekConfig(
   selectedEventIds: readonly EventSchedulerEntityId[] = [],
   highlightedEventIds: readonly EventSchedulerEntityId[] = [],
   workspaceView: ShiftWeekWorkspaceView = view === 'resource' ? 'resource' : 'calendar',
+  sidebarFilters?: SchedulerSidebarFilters,
 ): EventSchedulerConfig {
   const normalizedAnchor = normalizeShiftWeekAnchorDate(view, anchorDate);
   const highlightedEventIdSet = new Set(highlightedEventIds.map((id) => String(id)));
@@ -484,13 +489,12 @@ export function createShiftWeekConfig(
     ? 'resourceTimeline'
     : view === 'resource'
       ? 'week'
-      : view === 'year'
-        ? 'month'
-        : view;
+      : view;
   return {
     ...shiftWeekBaseConfig,
     view: schedulerView,
     weekStartDate: normalizedAnchor,
+    ...(!resourceWorkspace && workspaceView === 'calendar' ? {selectedDate: anchorDate, ...(sidebarFilters ? {filters:sidebarFilters}: {})} : {}),
     timeAnnotations: createShiftWeekTimeAnnotations(view, normalizedAnchor),
     ...(resourceDateRange ? { dateRange: resourceDateRange } : {}),
     calendars: createShiftWeekCalendarsConfig(calendar, normalizedAnchor),
@@ -543,6 +547,55 @@ export function getShiftWeekSearchMatchIds(
   return events
     .filter((event) => normalizeShiftWeekSearchText(getShiftWeekEventSearchText(event)).includes(normalizedQuery))
     .map((event) => event.id);
+}
+
+/** Stable session data for every view; navigating never regenerates accepted events. */
+export function createShiftWeekDataset(
+  anchorDate: string,
+): EventSchedulerEventEntity[] {
+  const start = normalizeShiftWeekAnchorDate('year', anchorDate);
+  const end = addMonths(start, 12);
+  const result: EventSchedulerEventEntity[] = [];
+  for (
+    let week = getWeekStartIsoDate(parseIsoDate(start));
+    week < end;
+    week = addDays(week, 7)
+  ) {
+    result.push(
+      ...createShiftWeekEvents('week', week).map(event => ({
+        ...event,
+        id: `seed:${week}:${event.id}`,
+      })),
+    );
+    for (let day = 0; day < 5; day++) {
+      const date = addDays(week, day);
+      result.push({
+        id: `open:${date}`,
+        title: 'Open coverage',
+        startDateTime: createDateTime(date, 11 * 60),
+        endDateTime: createDateTime(date, 12 * 60),
+        status: 'pending',
+        type: 'coverage',
+        color: '#d97706',
+      });
+    }
+  }
+  for (let month = 0; month < 12; month++) {
+    const date = addMonths(start, month);
+    result.push(
+      ...createCalendarScenarioEvents('month', date).map(event => ({
+        ...event,
+        id: `seed:${date}:${event.id}`,
+      })),
+    );
+  }
+  result.push(
+    ...createCalendarScenarioEvents('year', start).map(event => ({
+      ...event,
+      id: `seed:${start}:${event.id}`,
+    })),
+  );
+  return result;
 }
 
 export function createShiftWeekEvents(view: ShiftWeekDemoView, anchorDate: string): EventSchedulerEventEntity[] {
@@ -697,12 +750,7 @@ export function getShiftWeekRangeTitle(view: ShiftWeekDemoView, anchorDate: stri
   if (view === 'month') {
     return formatMonthTitle(normalized);
   }
-  if (view === 'year') {
-    // The scheduler plugin currently renders the year mode with its month
-    // calendar layout, anchored to January. Keep the heading faithful to the
-    // visible calendar while the Year control keeps year-at-a-time navigation.
-    return formatMonthTitle(normalized);
-  }
+  if (view === 'year') return new Intl.DateTimeFormat('en-US',{year:'numeric',timeZone:'UTC'}).format(parseIsoDate(normalized));
   if (view === 'day') {
     return formatDateTitle(normalized);
   }
@@ -711,7 +759,7 @@ export function getShiftWeekRangeTitle(view: ShiftWeekDemoView, anchorDate: stri
 
 export function getShiftWeekSubtitle(anchorDate: string, view: ShiftWeekDemoView = 'week'): string {
   if (view === 'month') return 'Calendar month';
-  if (view === 'year') return 'Calendar month · year navigation';
+  if (view === 'year') return '';
   return `Week ${getIsoWeekNumber(parseIsoDate(anchorDate))}`;
 }
 

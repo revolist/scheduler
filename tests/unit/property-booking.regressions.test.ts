@@ -223,7 +223,6 @@ describe("Property Booking regression contracts", () => {
       model.setRange(from, to);
       expect(model.state.start).toBe("2026-10-19");
       expect(model.state.rangeStart).toBe(model.state.start);
-      expect(model.state.message).toContain("0100");
     }
   });
 

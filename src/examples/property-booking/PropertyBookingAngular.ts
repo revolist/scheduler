@@ -41,7 +41,6 @@ import { bookingColors, bookingStatuses, bookingFilterDropdowns } from './data';
       </div>
       <revo-grid #grid class="property-booking-demo__grid demo-preview-content-sized-grid" [hideAttribution]="true" [theme]="dark ? 'darkMaterial' : 'material'" [plugins]="plugins" [columns]="model.columns" [source]="state().events" [eventScheduler]="state().config" [eventSchedulerResources]="model.resources" [eventSchedulerAvailability]="model.availability" (aftergridinit)="connect()"></revo-grid>
       <div class="property-booking-demo__legend"><span *ngFor="let status of bookingStatuses"><i [style.background]="bookingColors[status]"></i>{{ status }}</span><small>Rates per night · Check-out day is available</small></div>
-      <p class="property-booking-demo__message" role="status">{{ state().message }}</p>
     </section>`,
 })
 export class PropertyBookingComponent implements AfterViewInit, OnDestroy {

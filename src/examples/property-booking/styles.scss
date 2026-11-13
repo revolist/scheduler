@@ -46,7 +46,6 @@
   i { width: 8px; height: 8px; border-radius: 50%; }
   > small { margin-left: auto; }
 }
-.property-booking-demo__message { min-height: 38px; padding: 10px 22px; background: var(--booking-surface); color: var(--booking-muted); font-size: 12px; }
 .property-booking-form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
   .property-booking-form__field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
   input { width: 100%; box-sizing: border-box; }
@@ -64,8 +63,7 @@
   height: 100%;
   box-sizing: border-box;
   .property-booking-demo__toolbar,
-  .property-booking-demo__summaries, .property-booking-demo__legend,
-  .property-booking-demo__message { flex-shrink: 0; }
+  .property-booking-demo__summaries, .property-booking-demo__legend { flex-shrink: 0; }
   .property-booking-demo__grid { height: auto; min-height: 240px; flex: 1 1 240px; }
 }
 
@@ -77,7 +75,6 @@
   .property-booking-demo__toolbar { padding: 8px 16px; gap: 8px 14px; }
   .property-booking-demo__summaries { padding: 8px 16px; }
   .property-booking-demo__legend { padding: 8px 16px; gap: 10px; }
-  .property-booking-demo__message { padding: 8px 16px; min-height: 32px; box-sizing: border-box; }
   .property-booking-demo__filters label { display: inline-flex; align-items: center; gap: 6px; }
   .property-booking-resource__body > span, .property-booking-resource__body small { font-size: 11px; }
   .property-booking-rate { font-size: 12px; opacity: 1; color: var(--booking-muted); }
@@ -122,7 +119,6 @@
   .rv-btn, .rv-btn-solid { width: 34px; flex: none; }
 }
 
-.property-booking-demo__message:empty { display: none; }
 
 /* Booking metadata belongs at the end of the complete bar, beyond the default 320px dock. */
 .property-booking-demo .event-scheduler-event--horizontal .event-scheduler-event__content-dock { width: 100%; }
