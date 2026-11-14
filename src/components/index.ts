@@ -1,3 +1,5 @@
+export * from './scheduler-sidebar/scheduler-sidebar';
+import { defineSchedulerSidebar } from './scheduler-sidebar/scheduler-sidebar';
 export * from './scheduler-dialog/scheduler-dialog';
 export * from './scheduler-header/scheduler-header';
 
@@ -8,4 +10,5 @@ import { defineSchedulerHeader } from './scheduler-header/scheduler-header';
 export function defineSchedulerShellElements(): void {
   defineSchedulerDialog();
   defineSchedulerHeader();
+  defineSchedulerSidebar();
 }

@@ -7,7 +7,6 @@ import {
   type EventSchedulerConfig,
   type EventSchedulerEventEntity,
   type EventSchedulerEventManagerEvent,
-  type EventSchedulerEventSelectedDetail,
   type EventSchedulerResourceColumn,
 } from '@revolist/scheduler'
 import {
@@ -25,9 +24,7 @@ import {
   createProperties,
   initialEnd,
   initialStart,
-  guestLabel,
   isSupportedBookingDate,
-  supportedDateMessage,
 } from './data'
 import { openBookingEditor } from './editor'
 import { createBookingConfig } from './config'
@@ -45,7 +42,6 @@ export interface BookingDemoState {
   readonly selectedOnly: boolean
   readonly properties: boolean
   readonly guests: boolean
-  readonly message: string
   readonly ready: boolean
   readonly propertyCount: number
   readonly selectedCount: number
@@ -80,7 +76,6 @@ export function createPropertyBookingDemo() {
     selectedOnly = false,
     properties = true,
     guests = true
-  let message = ''
   let ready = false,
     sequence = 0
   let scheduler: EventSchedulerPlugin | undefined, dialog: DialogPlugin | undefined
@@ -175,7 +170,6 @@ export function createPropertyBookingDemo() {
     selectedOnly,
     properties,
     guests,
-    message,
     ready,
     propertyCount: scopedResources().length,
     selectedCount: scopedResources().filter(resource => selectedIds.includes(String(resource.id)))
@@ -205,7 +199,6 @@ export function createPropertyBookingDemo() {
       if (/^\d{4,}-\d{2}-\d{2}$/.test(value) && !isSupportedBookingDate(value)) {
         rangeStart = start
         rangeEnd = end
-        message = supportedDateMessage
         update()
         return
       }
@@ -234,7 +227,6 @@ export function createPropertyBookingDemo() {
           (/^\d{4,}-\d{2}-\d{2}$/.test(to) && !isSupportedBookingDate(to))) {
         rangeStart = start
         rangeEnd = end
-        message = supportedDateMessage
         update()
         return
       }
@@ -246,13 +238,11 @@ export function createPropertyBookingDemo() {
         from > to ||
         diffInCalendarDays(from, to) > 61
       ) {
-        message = 'Choose an ordered date range of up to 62 days.'
         update()
         return
       }
       start = rangeStart = from
       end = rangeEnd = to
-      message = 'View range updated. Bookings outside the range are retained.'
       update(true)
     },
     navigate(days: number) {
@@ -275,7 +265,6 @@ export function createPropertyBookingDemo() {
       selectedOnly = false
       properties = true
       guests = true
-      message = 'Demo bookings reset.'
       update(true)
     },
     newBooking() {
@@ -324,15 +313,7 @@ export function createPropertyBookingDemo() {
         const snapshot = (event as CustomEvent<EventSchedulerEventManagerEvent>).detail.events
         if (!snapshot) return
         events = [...snapshot]
-        message = 'Booking updated. Daily totals refreshed.'
         update()
-      }
-      const selected = (event: Event) => {
-        const booking = (event as CustomEvent<EventSchedulerEventSelectedDetail>).detail.event
-        if (booking) {
-          message = `${booking.title} · ${guestLabel(booking.metadata?.guests)} · ${booking.status} · ${booking.metadata?.payment ?? 'Unpaid'}. Double-click to edit; use the context menu or copy and paste to duplicate.`
-          update()
-        }
       }
       // Evaluate native rules over every resource, independently of toolbar scope.
       // Reading the visible projection here would retain a narrowed toolbar snapshot.
@@ -381,14 +362,12 @@ export function createPropertyBookingDemo() {
       filtered()
       const disposeHistory = defineHistoryControls(historyHost, grid)
       grid.addEventListener('gridedit', changed)
-      grid.addEventListener('event-scheduler-event-selected', selected)
       disconnect = () => {
         filterObserver.disconnect()
         grid.removeEventListener('afterfilterapply', filtered)
         grid.removeEventListener('gridedit', changed)
         disposeHistory()
 
-        grid.removeEventListener('event-scheduler-event-selected', selected)
         dialog?.close()
       }
       ready = !!scheduler && !!dialog

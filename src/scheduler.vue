@@ -1,5 +1,6 @@
 <template>
-  <section class="event-scheduler-shift-week-demo">
+  <section class="event-scheduler-shift-week-demo" :class="{'event-scheduler-shift-week-demo--calendar':workspaceView === 'calendar'}">
+    <revogr-scheduler-sidebar v-if="workspaceView === 'calendar'" :model.prop="sidebarModel" @scheduler-sidebar-date-change="handleSidebarDate" @scheduler-sidebar-filter-change="handleSidebarFilters" />
     <div class="event-scheduler-shift-week-main">
       <revogr-scheduler-header
         :model.prop="headerModel"
@@ -58,7 +59,8 @@ import { currentTheme, observeCurrentTheme } from './shared/theme';
 import {
   createShiftWeekAssignedOpenShift,
   createShiftWeekConfig,
-  createShiftWeekEvents,
+  createShiftWeekSidebarFilters,
+  createShiftWeekDataset,
   createShiftWeekManualEvent,
   getShiftWeekRangeTitle,
   getShiftWeekSubtitle,
@@ -123,9 +125,10 @@ const teamMembers = shiftWeekTeamMembers;
 const newEventStatusOptions = shiftWeekNewEventStatusOptions;
 const newEventTypeOptions = shiftWeekNewEventTypeOptions;
 const newEventForm = ref<ShiftWeekNewEventForm | null>(null);
-const schedulerEvents = ref(createShiftWeekEvents(activeView.value, anchorDate.value));
+const schedulerEvents = ref(createShiftWeekDataset(anchorDate.value));
 const resources = ref(shiftResources.map((resource) => ({ ...resource })));
 const filteredTableRows = computed(() => getShiftWeekTableRows(schedulerEvents.value));
+const sidebarFilters = ref(createShiftWeekSidebarFilters());
 const schedulerConfig = computed(() => createShiftWeekConfig(
   activeView.value,
   anchorDate.value,
@@ -133,7 +136,14 @@ const schedulerConfig = computed(() => createShiftWeekConfig(
   selectedEventIds.value,
   [],
   workspaceView.value,
+  sidebarFilters.value,
 ));
+const sidebarModel = computed(()=>({date:anchorDate.value,events:schedulerEvents.value,resources:resources.value,config:schedulerConfig.value,search:sidebarFilters.value.search,selectedResourceIds:sidebarFilters.value.resourceIds}));
+function handleSidebarDate(event:CustomEvent<{date:string}>) {
+  anchorDate.value=event.detail.date;
+  selectedEventIds.value=[];
+}
+function handleSidebarFilters(event:CustomEvent<import('@revolist/scheduler').SchedulerSidebarFilters>) {sidebarFilters.value=event.detail;}
 const rangeTitle = computed(() => getShiftWeekRangeTitle(activeView.value, anchorDate.value));
 const rangeSubtitle = computed(() => getShiftWeekSubtitle(anchorDate.value, activeView.value));
 const headerModel = computed(() => ({
@@ -161,7 +171,6 @@ function setView(view: ShiftWeekDemoView, date = anchorDate.value) {
   }
   anchorDate.value = normalizeShiftWeekAnchorDate(view, date);
   selectedEventIds.value = [];
-  schedulerEvents.value = createShiftWeekEvents(activeView.value, anchorDate.value);
 }
 
 function setWorkspace(view: ShiftWeekWorkspaceView) {
@@ -174,19 +183,16 @@ function setWorkspace(view: ShiftWeekWorkspaceView) {
 function goPrevious() {
   anchorDate.value = navigateShiftWeekAnchorDate(activeView.value, anchorDate.value, -1);
   selectedEventIds.value = [];
-  schedulerEvents.value = createShiftWeekEvents(activeView.value, anchorDate.value);
 }
 
 function goNext() {
   anchorDate.value = navigateShiftWeekAnchorDate(activeView.value, anchorDate.value, 1);
   selectedEventIds.value = [];
-  schedulerEvents.value = createShiftWeekEvents(activeView.value, anchorDate.value);
 }
 
 function goToday() {
   anchorDate.value = getTodayAnchorDate(activeView.value);
   selectedEventIds.value = [];
-  schedulerEvents.value = createShiftWeekEvents(activeView.value, anchorDate.value);
 }
 
 function closeNewEvent() {
@@ -223,7 +229,6 @@ function handleDialogSubmit(event: CustomEvent<SchedulerDialogSubmitDetail>) {
 
 watch(activeCalendar, () => {
   selectedEventIds.value = [];
-  schedulerEvents.value = createShiftWeekEvents(activeView.value, anchorDate.value);
 });
 
 function handleBeforeEventSelect(event: CustomEvent<EventSchedulerEventSelectedDetail>) {

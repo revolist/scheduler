@@ -7,7 +7,8 @@ import { currentTheme, observeCurrentTheme } from './shared/theme';
 import {
   createShiftWeekAssignedOpenShift,
   createShiftWeekConfig,
-  createShiftWeekEvents,
+  createShiftWeekSidebarFilters,
+  createShiftWeekDataset,
   createShiftWeekManualEvent,
   getShiftWeekRangeTitle,
   getShiftWeekSubtitle,
@@ -35,6 +36,8 @@ import {
   type ShiftWeekWorkspaceView,
 } from './data';
 import {
+  SCHEDULER_SIDEBAR_TAG,
+  type SchedulerSidebarElement,
   SCHEDULER_DIALOG_TAG,
   SCHEDULER_HEADER_TAG,
   defineSchedulerShellElements,
@@ -60,6 +63,7 @@ export function load(parentSelector: string) {
 
   const root = document.createElement('section');
   const main = document.createElement('div');
+  const sidebar = document.createElement(SCHEDULER_SIDEBAR_TAG) as SchedulerSidebarElement;
   const header = document.createElement(SCHEDULER_HEADER_TAG) as SchedulerHeaderElement;
   const grid = document.createElement('revo-grid');
   const table = document.createElement('revo-grid');
@@ -69,8 +73,9 @@ export function load(parentSelector: string) {
   let activeCalendar: ShiftWeekDemoCalendar = initialShiftWeekCalendar;
   let anchorDate = initialShiftWeekAnchorDate;
   let selectedEventIds: readonly EventSchedulerEntityId[] = [];
+  let sidebarFilters=createShiftWeekSidebarFilters();
   let newEventForm: ShiftWeekNewEventForm | null = null;
-  let schedulerEvents = createShiftWeekEvents(activeView, anchorDate);
+  let schedulerEvents = createShiftWeekDataset(anchorDate);
 
   root.className = 'event-scheduler-shift-week-demo';
   main.className = 'event-scheduler-shift-week-main';
@@ -91,7 +96,7 @@ export function load(parentSelector: string) {
   table.columns = getShiftWeekTableColumns();
   table.filter = {};
   table.stretch = 'all';
-  grid.eventScheduler = createShiftWeekConfig(activeView, anchorDate, activeCalendar, selectedEventIds, [], workspaceView);
+  grid.eventScheduler = createShiftWeekConfig(activeView, anchorDate, activeCalendar, selectedEventIds, [], workspaceView, sidebarFilters);
   grid.source = schedulerEvents;
   grid.eventSchedulerResources = shiftResources.map((resource) => ({ ...resource }));
   table.className = 'event-scheduler-shift-week-table';
@@ -99,8 +104,14 @@ export function load(parentSelector: string) {
   table.setAttribute('aria-label', 'Scheduled events table');
   table.hidden = true;
 
+  function renderSidebar() {
+    sidebar.model=workspaceView === 'calendar' ? {date:anchorDate,events:schedulerEvents,resources:shiftResources,config:grid.eventScheduler,search:sidebarFilters.search,selectedResourceIds:sidebarFilters.resourceIds} : null;
+  }
+  sidebar.addEventListener('scheduler-sidebar-date-change',event=>{anchorDate=(event as CustomEvent<{date:string}>).detail.date;refreshRange();});
+  sidebar.addEventListener('scheduler-sidebar-filter-change',event=>{sidebarFilters=(event as CustomEvent<import('@revolist/scheduler').SchedulerSidebarFilters>).detail;applySchedulerConfig();});
   const applySchedulerConfig = () => {
-    grid.eventScheduler = createShiftWeekConfig(activeView, anchorDate, activeCalendar, selectedEventIds, [], workspaceView);
+    grid.eventScheduler = createShiftWeekConfig(activeView, anchorDate, activeCalendar, selectedEventIds, [], workspaceView, sidebarFilters);
+    renderSidebar();
   };
   const renderTable = () => {
     table.source = getShiftWeekTableRows(schedulerEvents);
@@ -118,6 +129,9 @@ export function load(parentSelector: string) {
     renderNewEventDialog();
   };
   const renderWorkspace = () => {
+    root.classList.toggle('event-scheduler-shift-week-demo--calendar', workspaceView === 'calendar');
+    sidebar.hidden=workspaceView !== 'calendar';
+    renderSidebar();
     const tableActive = workspaceView === 'table';
     grid.classList.toggle('event-scheduler-shift-week-grid--hidden', tableActive);
     grid.hidden = tableActive;
@@ -126,8 +140,6 @@ export function load(parentSelector: string) {
   };
   const refreshRange = () => {
     selectedEventIds = [];
-    schedulerEvents = createShiftWeekEvents(activeView, anchorDate);
-    grid.source = schedulerEvents;
     applySchedulerConfig();
     renderToolbar();
     renderWorkspace();
@@ -261,7 +273,7 @@ export function load(parentSelector: string) {
   renderWorkspace();
   renderNewEventDialog();
   main.append(header, grid, table);
-  root.append(main, dialog);
+  root.append(sidebar, main, dialog);
   parent.appendChild(root);
 
   return () => {

@@ -48,6 +48,5 @@ export default function PropertyBooking(_props: { rows?: any[] }) {
     </div>
     <RevoGrid ref={grid} className="property-booking-demo__grid demo-preview-content-sized-grid" hideAttribution theme={dark ? 'darkMaterial' : 'material'} plugins={plugins} columns={columns} source={state.events} eventScheduler={config} eventSchedulerResources={resources} eventSchedulerAvailability={model.availability} onAftergridinit={connect} />
     <div className="property-booking-demo__legend">{bookingStatuses.map(status => <span key={status}><i style={{ background: bookingColors[status] }} />{status}</span>)}<small>Rates per night · Check-out day is available</small></div>
-    <p className="property-booking-demo__message" role="status">{state.message}</p>
   </section>;
 }

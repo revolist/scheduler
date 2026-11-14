@@ -16,7 +16,7 @@ test('PB-01 rejects unsupported early years before estimate, save or range accep
   await expect(dialog.getByRole('alert').last()).toContainText('0100');
   await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
   await page.getByLabel('View from', { exact: true }).fill('0099-12-25');
-  await expect(page.locator('.property-booking-demo__message')).toContainText('0100');
+  await expect(page.getByLabel('View from', { exact: true })).toHaveValue('2026-10-19');
 });
 
 test('PB-02 ordinary overlap provides booking and dates', async ({ page }) => {

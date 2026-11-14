@@ -116,10 +116,7 @@ export class SchedulerHeaderElement extends HTMLElement {
     const end = document.createElement('div');
     end.className = 'event-scheduler-shift-week-toolbar__end';
     end.append(this.views, calendar);
-    const notice = document.createElement('p');
-    notice.className = 'event-scheduler-shift-week-toolbar__notice';
-    notice.textContent = 'Changing dates, views or calendars resets sample edits.';
-    this.append(this.workspace, range, end, notice);
+    this.append(this.workspace, range, end);
   }
 
   private createNavigationButton(action: SchedulerHeaderNavigateDetail['action'], ariaLabel: string, label: string): HTMLButtonElement {
@@ -167,6 +164,7 @@ export class SchedulerHeaderElement extends HTMLElement {
     if (this.calendarDropdown) {
       renderPreactInto(this.calendarDropdown, preactH(Dropdown<ShiftWeekDemoCalendar>, {
         value: model.activeCalendar,
+        className: 'rv-select',
         source: model.calendarOptions.map(({ id, label }) => ({ value: id, label })),
         config: { ariaLabel: 'Calendar preset', topLayer: true },
         onChange: calendar => {

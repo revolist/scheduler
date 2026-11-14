@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   createShiftWeekConfig,
   createShiftWeekEvents,
+  createShiftWeekDataset,
   getShiftWeekRangeTitle,
   getShiftWeekSubtitle,
   shiftResources,
@@ -86,8 +87,28 @@ describe('scheduler demo seed events', () => {
     expect(annotations.find(annotation => annotation.id === 'lunch-0')?.endDateTime).toContain('13:00');
   });
 
-  it('labels the Year selection as the month calendar that is actually rendered', () => {
-    expect(getShiftWeekRangeTitle('year', '2026-09-09')).toBe('January 2026');
-    expect(getShiftWeekSubtitle('2026-01-01', 'year')).toBe('Calendar month · year navigation');
+  it('labels the real Year selection with the year', () => {
+    expect(getShiftWeekRangeTitle('year', '2026-09-09')).toBe('2026');
+    expect(getShiftWeekSubtitle('2026-01-01', 'year')).toBe('');
   });
+});
+
+describe('calendar sidebar integration',()=>{
+ it('applies sidebar filters and selected date only to Calendar workspace',()=>{
+  const filters={search:'alex',resourceIds:['alex'],searchScope:'eventsAndResources' as const};
+  const calendar=createShiftWeekConfig('week','2026-11-12','weekday',[],[],'calendar',filters);
+  expect(calendar.filters).toEqual(filters);
+  expect(calendar.selectedDate).toBe('2026-11-12');
+  expect(calendar.weekStartDate).toBe('2026-11-09');
+  expect(createShiftWeekConfig('week','2026-11-12','weekday',[],[],'resource',filters).filters).toBeUndefined();
+ });
+});
+
+it('seeds stable unique events across the whole year including unassigned coverage',()=>{
+ const events=createShiftWeekDataset('2026-11-09');
+ expect(new Set(events.map(event=>event.id)).size).toBe(events.length);
+ for(const month of ['01','02','06','11','12']) expect(events.some(event=>event.startDateTime.startsWith(`2026-${month}`))).toBe(true);
+ expect(events.some(event=>event.resourceId===undefined&&!event.resourceIds?.length)).toBe(true);
+ expect(createShiftWeekDataset('2026-01-02')).toEqual(events);
+ expect(createShiftWeekConfig('year','2026-11-09').view).toBe('year');
 });
