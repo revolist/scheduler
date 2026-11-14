@@ -1,0 +1,304 @@
+.calendar-multiassign {
+  --cal-bg: #fff;
+  --cal-text: #222;
+  --cal-muted: #72777c;
+  --cal-line: #e6e7e9;
+  --cal-selected: #e5e5e5;
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  &[data-sidebar='false'] {
+    grid-template-columns: 0 minmax(0, 1fr);
+  }
+  > :first-child {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+  }
+  height: 780px;
+  min-height: 540px;
+  width: 100%;
+  overflow: hidden;
+  background: var(--cal-bg);
+  color: var(--cal-text);
+  font:
+    14px/1.4 -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  border: 0;
+  border-radius: 16px;
+  [hidden] {
+    display: none !important;
+  }
+  &[data-theme='dark'] {
+    --cal-bg: #1b1b1b;
+    --cal-text: #eee;
+    --cal-muted: #aaa;
+    --cal-line: #333;
+    --cal-selected: #424242;
+  }
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 14px 16px;
+    min-height: 70px;
+    border-bottom: 1px solid var(--cal-line);
+    .rv-btn-ghost {
+      color: var(--cal-text);
+      font-size: 15px;
+      min-width: 32px;
+    }
+    .rv-segmented-switch {
+      margin-left: auto;
+    }
+  }
+  &__heading {
+    font-size: 21px;
+    white-space: nowrap;
+    padding: 0 12px;
+  }
+  &__body {
+    display: contents;
+  }
+  &__sidebar {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    min-width: 0;
+    border-right: 1px solid var(--cal-line);
+    overflow-y: auto;
+  }
+  &__stage {
+    grid-column: 2;
+    grid-row: 2;
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+  }
+  &__grid {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  &__agenda-host {
+    height: 100%;
+    overflow: auto;
+  }
+  &__agenda {
+    min-height: 100%;
+    p {
+      padding: 30px;
+      color: var(--cal-muted);
+    }
+  }
+  &__agenda-row {
+    display: grid;
+    grid-template-columns: 128px minmax(0, 1fr);
+    gap: 20px;
+    align-items: center;
+    min-height: 56px;
+    padding: 0 20px;
+  }
+  &__agenda-row--group-start:not(:first-child) {
+    border-top: 1px solid var(--cal-line);
+  }
+  &__agenda-time {
+    color: var(--cal-text);
+    white-space: nowrap;
+  }
+  &__agenda-title {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    line-height: 1.4;
+  }
+  &__agenda-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--calendar-event-color);
+  }
+  &__event-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    width: 100%;
+    gap: 3px;
+    line-height: 1.3;
+    color: var(--cal-text);
+    font-weight: 400;
+  }
+  &__event-title {
+    flex-shrink: 0;
+    font-size: 12px;
+    white-space: normal;
+    overflow: hidden;
+  }
+  &__event-icon {
+    float: right;
+    margin-left: 4px;
+  }
+  &__avatars {
+    display: flex;
+    flex-shrink: 0;
+    gap: 3px;
+    margin-top: auto;
+    padding: 4px 0;
+    .avatar-cell {
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      border-radius: 50%;
+      font-size: 11px;
+    }
+  }
+  .event-scheduler-plugin--calendar-month .calendar-multiassign__event-content {
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+  }
+  .event-scheduler-plugin--calendar-month .calendar-multiassign__event-title {
+    white-space: nowrap;
+  }
+  @media (max-width: 1000px) {
+    grid-template-columns: 230px minmax(0, 1fr);
+    &__toolbar {
+      flex-wrap: wrap;
+      .rv-segmented-switch {
+        margin-left: auto;
+      }
+    }
+    &__heading {
+      font-size: 17px;
+    }
+    &__sidebar {
+      width: 230px;
+      flex-basis: 230px;
+    }
+  }
+  @media (max-width: 640px) {
+    display: flex;
+    flex-direction: column;
+    &__body {
+      display: flex;
+      position: relative;
+      flex: 1;
+      min-height: 0;
+    }
+
+    &__toolbar {
+      padding: 8px;
+      gap: 2px;
+      .rv-segmented-switch {
+        width: 100%;
+        margin: 4px 0 0;
+        .rv-segmented-switch-item {
+          flex: 1;
+          min-width: 0;
+          padding: 6px 4px;
+          font-size: 12px;
+        }
+      }
+    }
+    &__sidebar {
+      position: absolute;
+      z-index: 5;
+      width: 245px;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: var(--cal-bg);
+      box-shadow: 5px 0 12px #0002;
+    }
+    &__agenda-row {
+      grid-template-columns: 76px minmax(0, 1fr);
+      padding: 0 10px;
+      gap: 10px;
+    }
+  }
+}
+.calendar-multiassign .calendar-multiassign__agenda-date {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  min-width: 0;
+  min-height: 40px;
+  padding: 0;
+  text-align: left;
+  color: var(--cal-text);
+  strong {
+    display: grid;
+    place-items: center;
+    min-width: 28px;
+    height: 32px;
+    font-size: 20px;
+    font-weight: 500;
+  }
+  .calendar-multiassign__agenda-date-label {
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--cal-muted);
+    white-space: normal;
+  }
+  &.is-today strong {
+    border-radius: 50%;
+    background: var(--cal-selected);
+  }
+}
+.calendar-multiassign .calendar-multiassign__agenda-event {
+  display: grid;
+  grid-template-columns: 10px 156px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  justify-content: start;
+  width: 100%;
+  min-width: 0;
+  min-height: 54px;
+  margin: 0;
+  padding: 10px 0;
+  border: 0;
+  border-radius: 4px;
+  text-align: left;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--cal-text);
+  background: transparent;
+  white-space: normal;
+  &:hover {
+    background: color-mix(in srgb, var(--cal-muted) 7%, transparent);
+  }
+}
+@media (max-width: 640px) {
+  .calendar-multiassign .calendar-multiassign__agenda-date {
+    gap: 6px;
+    strong {
+      font-size: 18px;
+      min-width: 22px;
+    }
+    .calendar-multiassign__agenda-date-label {
+      font-size: 10px;
+    }
+  }
+  .calendar-multiassign .calendar-multiassign__agenda-event {
+    grid-template-columns: 8px minmax(0, 1fr);
+    gap: 3px 10px;
+    .calendar-multiassign__agenda-dot {
+      width: 8px;
+      height: 8px;
+      grid-column: 1;
+      grid-row: 1 / 3;
+    }
+    .calendar-multiassign__agenda-time {
+      grid-column: 2;
+      font-size: 12px;
+      color: var(--cal-muted);
+    }
+    .calendar-multiassign__agenda-title {
+      grid-column: 2;
+    }
+  }
+}
