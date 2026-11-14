@@ -1,3 +1,5 @@
+import { onScopeDispose, ref } from 'vue';
+
 const darkMedia = () => window.matchMedia('(prefers-color-scheme: dark)');
 
 function isDarkTheme(media = darkMedia()) {
@@ -47,9 +49,10 @@ export function currentTheme() {
 }
 
 export function currentThemeVue() {
-  return {
-    // Vue templates and scripts can consume this ref-shaped value without making
-    // the shared helper depend on a package-local Vue installation.
-    isDark: { value: isDarkTheme() },
-  };
+  const isDark = ref(isDarkTheme());
+  const disconnect = observeCurrentTheme(value => {
+    isDark.value = value;
+  });
+  onScopeDispose(disconnect);
+  return { isDark };
 }
