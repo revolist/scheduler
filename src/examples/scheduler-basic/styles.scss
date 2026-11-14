@@ -1,0 +1,16 @@
+.scheduler-basic {
+  display: block;
+  width: 100%;
+  height: 620px;
+  min-height: 620px;
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+// Keep the date inside the visible timeline on narrow previews.
+@media (max-width: 900px) {
+  revo-grid.scheduler-basic .event-scheduler-header-group .header-content {
+    justify-content: flex-start;
+    padding-inline: 8px;
+  }
+}
