@@ -79,22 +79,25 @@ test('empty native filter scope disables creation and reconnect cleans up listen
 });
 
 test('navigation rejects dates beyond the supported calendar bounds', async ({ page }) => {
+  const appliedRange = () => page.locator('revo-grid').evaluate(
+    (grid: HTMLRevoGridElement) => grid.eventScheduler?.dateRange,
+  );
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await mount(page);
   await page.getByRole('textbox', { name: 'View from', exact: true }).fill('9999-12-15');
   await page.getByRole('textbox', { name: 'View to', exact: true }).fill('9999-12-28');
-  await expect(page.getByRole('status')).toContainText('View range updated');
+  await expect.poll(appliedRange).toEqual({ start: '9999-12-15', end: '9999-12-28' });
   await page.getByRole('button', { name: 'Next week', exact: true }).click();
   await expect(page.getByRole('textbox', { name: 'View from', exact: true })).toHaveValue('9999-12-15');
   await expect(page.getByRole('textbox', { name: 'View to', exact: true })).toHaveValue('9999-12-28');
-  await expect(page.getByRole('status')).toHaveText(/Choose (dates from 0100-01-01|an ordered date range)/);
+  await expect.poll(appliedRange).toEqual({ start: '9999-12-15', end: '9999-12-28' });
   await page.getByRole('textbox', { name: 'View from', exact: true }).fill('0100-01-01');
   await page.getByRole('textbox', { name: 'View to', exact: true }).fill('0100-01-14');
-  await expect(page.getByRole('status')).toContainText('View range updated');
+  await expect.poll(appliedRange).toEqual({ start: '0100-01-01', end: '0100-01-14' });
   await page.getByRole('button', { name: 'Previous week', exact: true }).click();
   await expect(page.getByRole('textbox', { name: 'View from', exact: true })).toHaveValue('0100-01-01');
   await expect(page.getByRole('textbox', { name: 'View to', exact: true })).toHaveValue('0100-01-14');
-  await expect(page.getByRole('status')).toHaveText(/Choose (dates from 0100-01-01|an ordered date range)/);
+  await expect.poll(appliedRange).toEqual({ start: '0100-01-01', end: '0100-01-14' });
   expect(errors).toEqual([]);
 });

@@ -78,14 +78,71 @@ function connection(matchingIds: string[] = ["harbour", "sunset"]) {
   return { grid, filter, scheduler, dialog, apply };
 }
 
+const resizeObservers: ResizeObserverMock[] = [];
+class ResizeObserverMock implements ResizeObserver {
+  observe = vi.fn();
+  unobserve = vi.fn();
+  disconnect = vi.fn();
+
+  constructor(private callback: ResizeObserverCallback) {
+    resizeObservers.push(this);
+  }
+
+  resize(width: number) {
+    this.callback(
+      [{ contentRect: { width } } as ResizeObserverEntry],
+      this,
+    );
+  }
+}
+
 beforeEach(() => {
+  resizeObservers.length = 0;
+  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
   vi.spyOn(window.customElements, "whenDefined").mockResolvedValue(HTMLElement);
   history.dispose.mockClear();
   vi.mocked(openBookingEditor).mockClear();
 });
-afterEach(() => vi.restoreAllMocks());
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+});
 
 describe("Property Booking regression contracts", () => {
+  it("fits the property column at the compact boundary and disposes pending resize work", async () => {
+    let pending: FrameRequestCallback | undefined;
+    const request = vi.spyOn(window, "requestAnimationFrame").mockImplementation(callback => {
+      pending = callback;
+      return 42;
+    });
+    const cancel = vi.spyOn(window, "cancelAnimationFrame").mockImplementation(() => {});
+    const model = createPropertyBookingDemo();
+    const f = connection();
+    await model.connect(f.grid, document.createElement("div"), vi.fn());
+    const observer = resizeObservers[0];
+    expect(observer.observe).toHaveBeenCalledWith(f.grid);
+    const width = () => model.columns[0].size;
+    expect(width()).toBe(280);
+
+    observer.resize(0);
+    expect(request).not.toHaveBeenCalled();
+    observer.resize(600);
+    pending!(0);
+    expect(width()).toBe(176);
+    request.mockClear();
+    observer.resize(500);
+    expect(request).not.toHaveBeenCalled();
+    observer.resize(601);
+    pending!(0);
+    expect(width()).toBe(280);
+
+    observer.resize(600);
+    cancel.mockClear();
+    model.disconnect();
+    expect(observer.disconnect).toHaveBeenCalledOnce();
+    expect(cancel).toHaveBeenCalledWith(42);
+  });
+
   it("keeps native filtering independent from toolbar narrowing and broadening", async () => {
     const model = createPropertyBookingDemo();
     const f = connection();
