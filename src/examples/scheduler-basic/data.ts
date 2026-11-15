@@ -2,6 +2,7 @@ import type {
   EventSchedulerConfig,
   EventSchedulerEventEntity,
   EventSchedulerResourceEntity,
+  EventSchedulerResourceColumn,
 } from '@revolist/scheduler';
 import { portraits } from './avatars';
 
@@ -51,7 +52,7 @@ export const resources: EventSchedulerResourceEntity[] = [
   },
 ];
 
-export const columns = [
+export const columns: EventSchedulerResourceColumn[] = [
   { prop: 'name', name: 'Team member', size: 180 },
 ];
 
@@ -70,6 +71,7 @@ export const config: EventSchedulerConfig = {
   allowMove: true,
   allowResize: true,
   allowDelete: true,
+  createMode: 'editor',
 };
 
 export function createEvents(): EventSchedulerEventEntity[] {
