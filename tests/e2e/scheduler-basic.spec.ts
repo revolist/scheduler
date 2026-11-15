@@ -11,5 +11,11 @@ test('basic example starts with room to create events', async ({ page }) => {
   await page.mouse.down();
   await page.mouse.move(box.x + box.width + 124, box.y + box.height / 2, { steps: 10 });
   await page.mouse.up();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  await dialog.getByRole('textbox').first().fill('New booking');
+  await dialog.getByRole('button', { name: 'Save', exact: true }).click();
   await expect(grid.locator('.event-scheduler-event__button')).toHaveCount(4);
+  await grid.locator('.event-scheduler-event__button').filter({ hasText: 'New booking' }).hover();
+  await expect(page.locator('.rv-event-tooltip:visible')).toContainText('New booking');
 });
