@@ -9,17 +9,20 @@
         @scheduler-header-view-change="handleHeaderViewChange"
         @scheduler-header-workspace-change="handleHeaderWorkspaceChange"
       />
-      <RevoGrid
-        v-if="workspaceView === 'table'"
-        class="event-scheduler-shift-week-table"
-        hide-attribution
-        readonly
-        :theme="isDark ? 'darkMaterial' : 'material'"
-        :plugins="tablePlugins"
-        :filter="{}"
-        :source="filteredTableRows"
-        :columns="tableColumns"
-      />
+      <div v-if="workspaceView === 'table'" class="event-scheduler-table-workspace">
+        <RevoGrid
+          class="event-scheduler-shift-week-table"
+          hide-attribution
+          readonly
+          :theme="isDark ? 'darkMaterial' : 'material'"
+          :plugins="tablePlugins"
+          :stretch.prop="'all'"
+          :gridConfigurator.prop="tableConfigurator"
+          :filter="{}"
+          :source="filteredTableRows"
+          :columns="tableColumns"
+        />
+      </div>
       <template v-else>
         <RevoGrid
           class="event-scheduler-shift-week-grid"
@@ -54,7 +57,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import RevoGrid from '@revolist/vue3-datagrid';
 import { EventSchedulerPlugin, type EventSchedulerEntityId, type EventSchedulerEventEntity, type EventSchedulerEventSelectedDetail, type EventSchedulerOpenShiftAssignRequestDetail, type EventSchedulerResourceReassignRequestDetail } from '@revolist/scheduler';
-import { AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin } from '@revolist/revogrid-pro';
+import { AdvanceFilterPlugin, ColumnStretchPlugin, GridConfiguratorPlugin, RowOddPlugin } from '@revolist/revogrid-pro';
 import { currentTheme, observeCurrentTheme } from './shared/theme';
 import {
   createShiftWeekAssignedOpenShift,
@@ -110,7 +113,8 @@ onMounted(() => {
 onBeforeUnmount(() => disconnectTheme?.());
 
 const plugins = [EventSchedulerPlugin];
-const tablePlugins = [AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin];
+const tablePlugins = [AdvanceFilterPlugin, ColumnStretchPlugin, GridConfiguratorPlugin, RowOddPlugin];
+const tableConfigurator = { miniMode: true, resizable: true };
 const tableColumns = getShiftWeekTableColumns();
 const columns = getShiftWeekResourceColumns();
 const activeView = ref<ShiftWeekDemoView>(initialShiftWeekDemoView);

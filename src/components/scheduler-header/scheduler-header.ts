@@ -1,4 +1,3 @@
-import { createControl } from '@revolist/ui';
 import '@revolist/ui/styles.css';
 import { Dropdown } from '@revolist/ui/dropdown/index';
 import { renderPreactInto } from '@revolist/ui/preact-mount';
@@ -49,11 +48,6 @@ export class SchedulerHeaderElement extends HTMLElement {
   private views: HTMLElement | null = null;
   private calendarDropdown: HTMLElement | null = null;
 
-  constructor() {
-    super();
-    this.addEventListener('click', this.handleClick);
-  }
-
   /** Controlled render model. Model updates never emit user-interaction events. */
   set model(model: SchedulerHeaderModel) {
     if (this.currentModel
@@ -90,19 +84,11 @@ export class SchedulerHeaderElement extends HTMLElement {
     this.workspace = document.createElement('div');
     this.workspace.className = 'event-scheduler-shift-week-toolbar__workspace';
 
-    const nav = document.createElement('div');
-    nav.className = 'event-scheduler-shift-week-toolbar__nav';
-    nav.append(
-      this.createNavigationButton('previous', 'Previous range', '‹'),
-      this.createNavigationButton('next', 'Next range', '›'),
-      this.createNavigationButton('today', '', 'Today'),
-    );
-
     this.heading = document.createElement('div');
     this.heading.className = 'event-scheduler-shift-week-toolbar__heading';
     const range = document.createElement('div');
     range.className = 'event-scheduler-shift-week-toolbar__range';
-    range.append(nav, this.heading);
+    range.append(this.heading);
 
     this.views = document.createElement('div');
     this.views.className = 'event-scheduler-shift-week-toolbar__views';
@@ -117,17 +103,6 @@ export class SchedulerHeaderElement extends HTMLElement {
     end.className = 'event-scheduler-shift-week-toolbar__end';
     end.append(this.views, calendar);
     this.append(this.workspace, range, end);
-  }
-
-  private createNavigationButton(action: SchedulerHeaderNavigateDetail['action'], ariaLabel: string, label: string): HTMLButtonElement {
-    const button = createControl(document, 'button', {
-      type: 'button',
-      class: action === 'today' ? undefined : 'rv-btn-icon',
-    });
-    button.dataset.schedulerNavigate = action;
-    if (ariaLabel) button.setAttribute('aria-label', ariaLabel);
-    button.textContent = label;
-    return button;
   }
 
   private render(): void {
@@ -175,16 +150,6 @@ export class SchedulerHeaderElement extends HTMLElement {
       }));
     }
   }
-
-  private readonly handleClick = (event: Event): void => {
-    const target = event.target as HTMLElement;
-    const navigation = target.closest<HTMLButtonElement>('[data-scheduler-navigate]');
-    if (navigation?.dataset.schedulerNavigate) {
-      this.emit<SchedulerHeaderNavigateDetail>('scheduler-header-navigate', {
-        action: navigation.dataset.schedulerNavigate as SchedulerHeaderNavigateDetail['action'],
-      });
-    }
-  };
 
   private emit<Detail>(name: string, detail: Detail): void {
     this.dispatchEvent(new CustomEvent(name, { bubbles: true, composed: true, detail }));

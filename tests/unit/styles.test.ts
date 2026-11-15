@@ -14,8 +14,9 @@ const schedulerSources = [
 const schedulerHeaderSource = readSource('./components/scheduler-header/scheduler-header.ts');
 
 describe('scheduler segmented view styles', () => {
-  it('uses the shared toolbar button defaults', () => {
-    expect(schedulerHeaderSource).toContain("createControl(document, 'button'");
+  it('leaves date navigation to the calendar sidebar', () => {
+    expect(schedulerHeaderSource).not.toContain('data-scheduler-navigate');
+    expect(schedulerHeaderSource).not.toContain('createNavigationButton');
     expect(schedulerStyles).not.toContain('demo-toolbar-control');
     expect(schedulerStyles).not.toMatch(/&__(?:icon|today)\s*\{/);
   });

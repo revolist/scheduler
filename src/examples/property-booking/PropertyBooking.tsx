@@ -24,6 +24,7 @@ export default function PropertyBooking(_props: { rows?: any[] }) {
   useEffect(() => { connect(); return () => model.disconnect(); }, [model]);
   return <section className="property-booking-demo" data-theme={dark ? 'dark' : 'light'}>
     <div className="property-booking-demo__toolbar">
+      <UiButton className="rv-btn-solid" aria-label="New booking" title="New booking" disabled={!state.ready || !state.propertyCount} onClick={() => model.newBooking()}>{icon('add')}</UiButton>
       <div className="property-booking-demo__range">
         <UiButton className="rv-btn" onClick={() => model.today()}>{icon('today')}Today</UiButton><UiButton className="rv-btn" aria-label="Previous week" onClick={() => model.navigate(-7)}>{icon('previous')}</UiButton><UiButton className="rv-btn" aria-label="Next week" onClick={() => model.navigate(7)}>{icon('next')}</UiButton>
         <label>From <DateTimeField aria-label="View from" value={state.rangeStart} onValueChange={value => model.setRangeInput('start', value)} /></label>
@@ -35,7 +36,7 @@ export default function PropertyBooking(_props: { rows?: any[] }) {
         <label>Sleeps <UiDropdown className="rv-select" {...bookingFilterDropdowns.capacity} value={state.minSleeps}
           onChange={value => model.setCapacity(Number(value))} /></label>
       </div>
-        <div className="property-booking-demo__actions"><div ref={history} /><UiButton className="rv-btn-solid" aria-label="New booking" title="New booking" disabled={!state.ready || !state.propertyCount} onClick={() => model.newBooking()}>{icon('add')}</UiButton></div>
+        <div className="property-booking-demo__actions"><div ref={history} /></div>
     </div>
     <div className="property-booking-demo__summaries">
       <label className="property-booking-demo__selection"><UiInput type="checkbox" aria-label="Select all properties" checked={state.propertyCount > 0 && state.selectedCount === state.propertyCount} ref={node => { if (node) node.indeterminate = state.selectedCount > 0 && state.selectedCount < state.propertyCount; }} onChange={event => model.selectAll(event.currentTarget.checked)} /> {state.selectedCount} selected</label>

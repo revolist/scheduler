@@ -16,10 +16,11 @@ export function load(parentSelector: string, _rows: any[] = []) {
   const root = document.createElement('section'); root.className = 'property-booking-demo';
   root.dataset.theme = currentTheme().isDark() ? 'dark' : 'light';
   root.innerHTML = `
-    <div class="property-booking-demo__toolbar"><div class="property-booking-demo__range">
+    <div class="property-booking-demo__toolbar">
+      <button class="rv-btn-solid" aria-label="New booking" title="New booking" data-action="new"><span class="property-booking-control-icon" aria-hidden="true">${bookingIcons.add}</span></button><div class="property-booking-demo__range">
       <button class="rv-btn" data-action="today"><span class="property-booking-control-icon" aria-hidden="true">${bookingIcons.today}</span>Today</button><button class="rv-btn" aria-label="Previous week" data-action="previous"><span class="property-booking-control-icon" aria-hidden="true">${bookingIcons.previous}</span></button><button class="rv-btn" aria-label="Next week" data-action="next"><span class="property-booking-control-icon" aria-hidden="true">${bookingIcons.next}</span></button>
       <label>From <span class="rv-date-time-field"><input type="text" placeholder="YYYY-MM-DD" aria-label="View from" data-field="start" /></span></label><label>To <span class="rv-date-time-field"><input type="text" placeholder="YYYY-MM-DD" aria-label="View to" data-field="end" /></span></label>
-    </div><div class="property-booking-demo__filters"><label>Show <span data-field="type"></span></label><label>Sleeps <span data-field="capacity"></span></label></div><div class="property-booking-demo__actions"><div data-field="history"></div><button class="rv-btn-solid" aria-label="New booking" title="New booking" data-action="new"><span class="property-booking-control-icon" aria-hidden="true">${bookingIcons.add}</span></button></div></div>
+    </div><div class="property-booking-demo__filters"><label>Show <span data-field="type"></span></label><label>Sleeps <span data-field="capacity"></span></label></div><div class="property-booking-demo__actions"><div data-field="history"></div></div></div>
     <div class="property-booking-demo__summaries">
       <label class="property-booking-demo__selection"><input type="checkbox" aria-label="Select all properties" data-field="all" /> <span data-selected></span> selected</label>
       <div class="property-booking-demo__totals">

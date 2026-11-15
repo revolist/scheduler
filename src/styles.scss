@@ -979,13 +979,37 @@ revo-grid.event-scheduler-shift-week-grid {
   border-right:1px solid var(--event-scheduler-demo-border);
   background:var(--event-scheduler-demo-surface);
   &[hidden] {display:none;}
-  &__toggle {display:none;}
 }
 @media(max-width:700px) {
   .event-scheduler-shift-week-demo--calendar {display:flex;flex-direction:column;}
   .event-scheduler-shift-week-sidebar {
     flex:0 0 auto;width:100%;max-height:45%;border-right:0;border-bottom:1px solid var(--event-scheduler-demo-border);
-    &__toggle {display:block;width:100%;min-height:36px;position:sticky;top:0;z-index:1;background:var(--event-scheduler-demo-surface);}
-    &:not([data-expanded]) .event-scheduler-sidebar {display:none;}
+  }
+}
+
+// Bound the grid and its configurable column rail to the available workspace.
+.event-scheduler-table-workspace {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+
+  &[hidden] { display: none; }
+
+  > aside {
+    flex: 0 0 auto;
+    min-height: 0;
+    overflow: auto;
+  }
+
+  > revo-grid {
+    display: block;
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+    height: auto;
+    padding: 0;
+    background: transparent;
   }
 }

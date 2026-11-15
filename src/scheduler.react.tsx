@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { RevoGrid } from '@revolist/react-datagrid';
 import { EventSchedulerPlugin, type EventSchedulerEntityId, type EventSchedulerEventEntity, type EventSchedulerEventSelectedDetail, type EventSchedulerOpenShiftAssignRequestDetail, type EventSchedulerResourceReassignRequestDetail } from '@revolist/scheduler';
-import { AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin } from '@revolist/revogrid-pro';
+import { AdvanceFilterPlugin, ColumnStretchPlugin, GridConfiguratorPlugin, RowOddPlugin } from '@revolist/revogrid-pro';
 import { currentTheme, observeCurrentTheme } from './shared/theme';
 import {
   createShiftWeekAssignedOpenShift,
@@ -68,7 +68,8 @@ export default function EventSchedulerShiftWeek() {
   const [selectedEventIds, setSelectedEventIds] = useState<readonly EventSchedulerEntityId[]>([]);
   const [newEventForm, setNewEventForm] = useState<ShiftWeekNewEventForm | null>(null);
   const plugins = useMemo(() => [EventSchedulerPlugin], []);
-  const tablePlugins = useMemo(() => [AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin], []);
+  const tableConfigurator = useMemo(() => ({ miniMode: true, resizable: true }), []);
+  const tablePlugins = useMemo(() => [AdvanceFilterPlugin, ColumnStretchPlugin, GridConfiguratorPlugin, RowOddPlugin], []);
   const columns = useMemo(() => getShiftWeekResourceColumns(), []);
   const tableColumns = useMemo(() => getShiftWeekTableColumns(), []);
   const columnTypes = useMemo(() => ({}), []);
@@ -261,17 +262,21 @@ export default function EventSchedulerShiftWeek() {
       <div className="event-scheduler-shift-week-main">
         {React.createElement(SCHEDULER_HEADER_TAG, { ref: headerRef })}
         {workspaceView === 'table' ? (
-          <RevoGrid
-            key="table"
-            theme={isDark ? 'darkMaterial' : 'material'}
-            hideAttribution
-            readonly
-            plugins={tablePlugins}
-            filter={{}}
-            source={tableRows}
-            columns={tableColumns}
-            className="event-scheduler-shift-week-table"
-          />
+          <div className="event-scheduler-table-workspace">
+            <RevoGrid
+              key="table"
+              theme={isDark ? 'darkMaterial' : 'material'}
+              hideAttribution
+              readonly
+              plugins={tablePlugins}
+              stretch="all"
+              gridConfigurator={tableConfigurator}
+              filter={{}}
+              source={tableRows}
+              columns={tableColumns}
+              className="event-scheduler-shift-week-table"
+            />
+          </div>
         ) : (
           <RevoGrid
               key="scheduler"

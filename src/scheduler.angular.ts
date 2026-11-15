@@ -2,7 +2,7 @@ import { Component, NO_ERRORS_SCHEMA, ViewEncapsulation, type OnDestroy } from '
 import { NgIf } from '@angular/common';
 import { RevoGrid } from '@revolist/angular-datagrid';
 import { EventSchedulerPlugin, type EventSchedulerEntityId, type EventSchedulerEventEntity, type EventSchedulerEventSelectedDetail, type EventSchedulerOpenShiftAssignRequestDetail, type EventSchedulerResourceReassignRequestDetail } from '@revolist/scheduler';
-import { AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin } from '@revolist/revogrid-pro';
+import { AdvanceFilterPlugin, ColumnStretchPlugin, GridConfiguratorPlugin, RowOddPlugin } from '@revolist/revogrid-pro';
 import { currentTheme, observeCurrentTheme } from './shared/theme';
 import {
   createShiftWeekAssignedOpenShift,
@@ -62,13 +62,15 @@ defineSchedulerShellElements();
           (scheduler-header-view-change)="handleHeaderViewChange($event)"
           (scheduler-header-workspace-change)="handleHeaderWorkspaceChange($event)"
         ></revogr-scheduler-header>
-        <div *ngIf="workspaceView === 'table'; else schedulerGrid" class="event-scheduler-shift-week-table" role="region" aria-label="Scheduled events table">
+        <div *ngIf="workspaceView === 'table'; else schedulerGrid" class="event-scheduler-table-workspace" role="region" aria-label="Scheduled events table">
           <revo-grid
             class="event-scheduler-shift-week-table__grid"
             [theme]="theme"
             [hideAttribution]="true"
             [readonly]="true"
             [plugins]="tablePlugins"
+            [stretch]="'all'"
+            [gridConfigurator]="tableConfigurator"
             [filter]="tableFilter"
             [source]="tableRows"
             [columns]="tableColumns"
@@ -117,7 +119,8 @@ export class EventSchedulerShiftWeekGridComponent implements OnDestroy {
   workspaceView: ShiftWeekWorkspaceView = initialShiftWeekWorkspaceView;
   activeCalendar: ShiftWeekDemoCalendar = initialShiftWeekCalendar;
   anchorDate = initialShiftWeekAnchorDate;
-  tablePlugins = [AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin];
+  tableConfigurator = { miniMode: true, resizable: true };
+  tablePlugins = [AdvanceFilterPlugin, ColumnStretchPlugin, GridConfiguratorPlugin, RowOddPlugin];
   tableColumns = getShiftWeekTableColumns();
   tableFilter = {};
   teamMembers = shiftWeekTeamMembers;

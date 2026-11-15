@@ -4,7 +4,6 @@ import {
   type SchedulerSidebarOptions,
   type SchedulerSidebarFilters,
 } from '@revolist/scheduler';
-import { createControl, createControlId } from '@revolist/ui';
 import { parseIsoDate, toIsoDate } from '@revolist/revogrid-pro';
 
 export const SCHEDULER_SIDEBAR_TAG = 'revogr-scheduler-sidebar';
@@ -13,14 +12,12 @@ export interface SchedulerSidebarModel extends Omit<
   'date'
 > {
   readonly date: string;
-  readonly toggleLabel?: string;
 }
 /** Showcase lifecycle adapter; all date/filter UI is supplied by Scheduler. */
 export class SchedulerSidebarElement extends HTMLElement {
   private currentModel: SchedulerSidebarModel | null = null;
   private sidebar?: SchedulerSidebar;
   private panel?: HTMLDivElement;
-  private toggle?: HTMLButtonElement;
   get model() {
     return this.currentModel;
   }
@@ -31,20 +28,8 @@ export class SchedulerSidebarElement extends HTMLElement {
   connectedCallback() {
     if (!this.panel) {
       this.classList.add('event-scheduler-shift-week-sidebar');
-      this.toggle = createControl(this.ownerDocument, 'button', {
-        variant: 'ghost',
-      });
-      this.toggle.classList.add('event-scheduler-shift-week-sidebar__toggle');
-      this.toggle.setAttribute('aria-expanded', 'false');
       this.panel = this.ownerDocument.createElement('div');
-      this.panel.id = createControlId('shift-week-sidebar');
-      this.toggle.setAttribute('aria-controls', this.panel.id);
-      this.toggle.addEventListener('click', () => {
-        const expanded = this.toggle!.getAttribute('aria-expanded') !== 'true';
-        this.toggle!.setAttribute('aria-expanded', String(expanded));
-        this.toggleAttribute('data-expanded', expanded);
-      });
-      this.append(this.toggle, this.panel);
+      this.append(this.panel);
     }
     this.render();
   }
@@ -59,8 +44,6 @@ export class SchedulerSidebarElement extends HTMLElement {
       this.sidebar = undefined;
       return;
     }
-    this.toggle!.textContent =
-      this.currentModel.toggleLabel ?? 'Calendar filters';
     const options: SchedulerSidebarOptions = {
       ...this.currentModel,
       showUnassigned: true,

@@ -2,7 +2,7 @@ import { defineCustomElements } from '@revolist/revogrid/loader';
 defineCustomElements();
 
 import { EventSchedulerPlugin, type EventSchedulerEntityId, type EventSchedulerEventEntity, type EventSchedulerEventSelectedDetail } from '@revolist/scheduler';
-import { AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin } from '@revolist/revogrid-pro';
+import { AdvanceFilterPlugin, ColumnStretchPlugin, GridConfiguratorPlugin, RowOddPlugin } from '@revolist/revogrid-pro';
 import { currentTheme, observeCurrentTheme } from './shared/theme';
 import {
   createShiftWeekAssignedOpenShift,
@@ -66,7 +66,10 @@ export function load(parentSelector: string) {
   const sidebar = document.createElement(SCHEDULER_SIDEBAR_TAG) as SchedulerSidebarElement;
   const header = document.createElement(SCHEDULER_HEADER_TAG) as SchedulerHeaderElement;
   const grid = document.createElement('revo-grid');
+  const tableWorkspace = document.createElement('div');
+  tableWorkspace.className = 'event-scheduler-table-workspace';
   const table = document.createElement('revo-grid');
+  tableWorkspace.append(table);
   const dialog = document.createElement(SCHEDULER_DIALOG_TAG) as SchedulerDialogElement;
   let activeView: ShiftWeekDemoView = initialShiftWeekDemoView;
   let workspaceView: ShiftWeekWorkspaceView = initialShiftWeekWorkspaceView;
@@ -92,17 +95,18 @@ export function load(parentSelector: string) {
   });
   table.hideAttribution = true;
   table.readonly = true;
-  table.plugins = [AdvanceFilterPlugin, ColumnStretchPlugin, RowOddPlugin];
+  table.plugins = [AdvanceFilterPlugin, ColumnStretchPlugin, GridConfiguratorPlugin, RowOddPlugin];
   table.columns = getShiftWeekTableColumns();
   table.filter = {};
   table.stretch = 'all';
+  table.gridConfigurator = { miniMode: true, resizable: true };
   grid.eventScheduler = createShiftWeekConfig(activeView, anchorDate, activeCalendar, selectedEventIds, [], workspaceView, sidebarFilters);
   grid.source = schedulerEvents;
   grid.eventSchedulerResources = shiftResources.map((resource) => ({ ...resource }));
   table.className = 'event-scheduler-shift-week-table';
   table.setAttribute('role', 'region');
   table.setAttribute('aria-label', 'Scheduled events table');
-  table.hidden = true;
+  tableWorkspace.hidden = true;
 
   function renderSidebar() {
     sidebar.model=workspaceView === 'calendar' ? {date:anchorDate,events:schedulerEvents,resources:shiftResources,config:grid.eventScheduler,search:sidebarFilters.search,selectedResourceIds:sidebarFilters.resourceIds} : null;
@@ -135,7 +139,7 @@ export function load(parentSelector: string) {
     const tableActive = workspaceView === 'table';
     grid.classList.toggle('event-scheduler-shift-week-grid--hidden', tableActive);
     grid.hidden = tableActive;
-    table.hidden = !tableActive;
+    tableWorkspace.hidden = !tableActive;
     if (tableActive) renderTable();
   };
   const refreshRange = () => {
@@ -272,7 +276,7 @@ export function load(parentSelector: string) {
   renderToolbar();
   renderWorkspace();
   renderNewEventDialog();
-  main.append(header, grid, table);
+  main.append(header, grid, tableWorkspace);
   root.append(sidebar, main, dialog);
   parent.appendChild(root);
 
