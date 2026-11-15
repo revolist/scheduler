@@ -54,6 +54,7 @@ export function createPropertyBookingDemo() {
   const columns: EventSchedulerResourceColumn[] = [
     { prop: 'resourceLabel', name: 'Property', size: 280 },
   ]
+  let propertyColumnSize = 280
   let nativeFilter: FilterPlugin | undefined
   let events = createBookings()
   let start = initialStart,
@@ -137,6 +138,7 @@ export function createPropertyBookingDemo() {
   }
   const makeConfig = () =>
     createBookingConfig({
+      resourceColumnSize: propertyColumnSize,
       start,
       end,
       resources,
@@ -360,10 +362,30 @@ export function createPropertyBookingDemo() {
       })
       labelFilter()
       filtered()
+      // Measure the demo itself: previews may be narrow inside a desktop page.
+      let compact: boolean | undefined
+      const fitPropertyColumn = (width: number) => {
+        if (width <= 0 || compact === (width <= 600)) return
+        compact = width <= 600
+        propertyColumnSize = compact ? 176 : 280
+        columns[0] = { ...columns[0], size: propertyColumnSize }
+        update(true)
+      }
+      const view = grid.ownerDocument.defaultView!
+      let resizeFrame = 0
+      const resizeObserver = new ResizeObserver(entries => {
+        const width = entries[0].contentRect.width
+        if (width <= 0 || compact === (width <= 600)) return
+        view.cancelAnimationFrame(resizeFrame)
+        resizeFrame = view.requestAnimationFrame(() => fitPropertyColumn(width))
+      })
+      resizeObserver.observe(grid)
       const disposeHistory = defineHistoryControls(historyHost, grid)
       grid.addEventListener('gridedit', changed)
       disconnect = () => {
         filterObserver.disconnect()
+        resizeObserver.disconnect()
+        view.cancelAnimationFrame(resizeFrame)
         grid.removeEventListener('afterfilterapply', filtered)
         grid.removeEventListener('gridedit', changed)
         disposeHistory()

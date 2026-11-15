@@ -4,6 +4,7 @@
   --cal-muted: #72777c;
   --cal-line: #e6e7e9;
   --cal-selected: #e5e5e5;
+  container: calendar-multiassign / inline-size;
   display: grid;
   grid-template-columns: 260px minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr);
@@ -178,10 +179,13 @@
       flex-basis: 230px;
     }
   }
-  @media (max-width: 640px) {
-    display: flex;
-    flex-direction: column;
+  @container calendar-multiassign (max-width: 640px) {
+    > :first-child {
+      grid-column: 1 / -1;
+    }
     &__body {
+      grid-column: 1 / -1;
+      grid-row: 2;
       display: flex;
       position: relative;
       flex: 1;
@@ -205,7 +209,7 @@
     &__sidebar {
       position: absolute;
       z-index: 5;
-      width: 245px;
+      width: min(300px, 100%);
       top: 0;
       left: 0;
       height: 100%;
@@ -272,7 +276,7 @@
     background: color-mix(in srgb, var(--cal-muted) 7%, transparent);
   }
 }
-@media (max-width: 640px) {
+@container calendar-multiassign (max-width: 640px) {
   .calendar-multiassign .calendar-multiassign__agenda-date {
     gap: 6px;
     strong {

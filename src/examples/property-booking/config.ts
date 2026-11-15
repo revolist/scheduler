@@ -11,6 +11,7 @@ import { bookingColors, bookingStatuses, bookingTimeZone, isSupportedBookingDate
 import { createBookingTemplates } from './templates'
 
 interface BookingConfigOptions {
+  resourceColumnSize?: number
   getEvents: () => readonly EventSchedulerEventEntity[]
   availability: readonly EventSchedulerAvailabilityEntity[]
   start: string
@@ -29,6 +30,7 @@ interface BookingConfigOptions {
 
 /** Translate application state into public Scheduler options. */
 export function createBookingConfig({
+  resourceColumnSize = 280,
   getEvents,
   availability,
   start,
@@ -69,7 +71,8 @@ export function createBookingConfig({
     snapMinutes: 1440,
     timeRange: { start: '00:00', end: '24:00' },
     timelineColumnSize: 96,
-    resourceColumnSize: 280,
+    resourceColumnSize,
+    resourcePanel: { initialWidth: resourceColumnSize },
     rowSize: 62,
     editable: true,
     allowCreate: true,

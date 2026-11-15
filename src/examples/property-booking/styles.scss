@@ -1,4 +1,5 @@
 .property-booking-demo {
+  container: property-booking / inline-size;
   --booking-bg: transparent;
   --booking-surface: transparent;
   --booking-border: var(--rv-ui-border);
@@ -122,3 +123,60 @@
 
 /* Booking metadata belongs at the end of the complete bar, beyond the default 320px dock. */
 .property-booking-demo .event-scheduler-event--horizontal .event-scheduler-event__content-dock { width: 100%; }
+
+/* Keep the booking timeline useful in a phone or a narrow embedded preview. */
+@container property-booking (max-width: 600px) {
+  .property-booking-demo .property-booking-demo {
+    &__toolbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      padding: 10px;
+      gap: 10px 8px;
+    }
+    &__range {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+      width: 100%;
+      > button:first-child { grid-column: span 2; }
+      > label {
+        grid-column: span 3;
+        grid-row: 2;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 3px;
+      }
+      .rv-date-time-field { width: 100%; min-width: 0; }
+      input { min-width: 0; width: 100%; box-sizing: border-box; }
+    }
+    &__filters {
+      flex-wrap: nowrap;
+      min-width: 0;
+      gap: 8px;
+      label { flex-direction: column; align-items: stretch; min-width: 0; font-size: 12px; }
+      label:first-child { flex: 1; }
+      label .rv-select { width: 100%; min-width: 0; }
+    }
+    &__actions { gap: 4px; margin: 16px 0 0; }
+    &__summaries { padding: 8px 10px; gap: 8px; }
+    &__totals {
+      display: grid;
+      grid-template-columns: auto 1fr 1fr;
+      width: 100%;
+      margin-inline-start: 0;
+      gap: 6px 10px;
+      > label:last-child { grid-column: 2 / -1; }
+    }
+    &__grid { height: clamp(400px, 60svh, 600px); min-height: 400px; flex: none; }
+    &__legend { padding: 8px 10px; gap: 8px 12px; }
+    &__legend > small { width: 100%; margin: 0; }
+  }
+  .property-booking-resource { gap: 6px; }
+  .property-booking-resource__photo { width: 32px; height: 40px; }
+  .property-booking-resource__body strong { white-space: nowrap; }
+  .property-booking-resource__body > span,
+  .property-booking-resource__body small { font-size: 10px; }
+}

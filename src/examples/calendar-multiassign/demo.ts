@@ -496,6 +496,7 @@ export function createCalendarDemo(options: CalendarDemoOptions = {}) {
       disposed = false;
       grid = element;
       hosts = elements;
+      sidebar = hosts.root.getBoundingClientRect().width > 640;
       grid.addEventListener('event-scheduler-navigate-request', onNavigate);
       grid.addEventListener('event-scheduler-view-request', onView);
       render();
