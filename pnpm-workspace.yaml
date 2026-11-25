@@ -5,9 +5,9 @@ overrides:
   '@revolist/revogrid': '4.31.5'
 
 minimumReleaseAgeExclude:
-  - '@revolist/rv-pro-trial@4.2.1'
-  - '@revolist/scheduler-trial@4.2.1'
-  - '@revolist/ui@4.2.1'
+  - '@revolist/rv-pro-trial@4.2.2'
+  - '@revolist/scheduler-trial@4.2.2'
+  - '@revolist/ui@4.2.2'
   - '@revolist/revogrid@4.31.5'
   - '@revolist/angular-datagrid@4.31.5'
   - '@revolist/react-datagrid@4.31.5'
