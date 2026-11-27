@@ -107,7 +107,7 @@ export function openBookingEditor(options: {
       startDateTime: createDateTime(checkIn.value, 0, bookingTimeZone), endDateTime: createDateTime(checkOut.value, 0, bookingTimeZone),
       metadata: { ...options.event.metadata, guests: Number(guests.value), payment: payment.value } }));
   };
-  if (!options.creating && !options.readonly) handle.actions.append(createDialogButton(doc, 'Delete booking', () => attempt(options.delete), 'danger-outline'));
+  if (!options.creating && !options.readonly) handle.actions.append(createDialogButton(doc, 'Delete booking', () => attempt(options.delete), 'danger'));
   handle.actions.append(createDialogButton(doc, 'Cancel', () => handle.close(), 'secondary'));
   if (!options.readonly) handle.actions.append(createDialogButton(doc, 'Save booking', () => form.requestSubmit(), 'primary'));
   queueMicrotask(() => { if (guest.isConnected && !options.readonly) guest.focus(); });

@@ -36,14 +36,14 @@ importers:
         specifier: 4.31.5
         version: 4.31.5
       '@revolist/revogrid-pro':
-        specifier: npm:@revolist/rv-pro-trial@4.2.3
-        version: '@revolist/rv-pro-trial@4.2.3'
+        specifier: npm:@revolist/rv-pro-trial@4.3.2
+        version: '@revolist/rv-pro-trial@4.3.2'
       '@revolist/scheduler':
-        specifier: npm:@revolist/scheduler-trial@4.2.3
-        version: '@revolist/scheduler-trial@4.2.3'
+        specifier: npm:@revolist/scheduler-trial@4.3.2
+        version: '@revolist/scheduler-trial@4.3.2'
       '@revolist/ui':
-        specifier: 4.2.3
-        version: 4.2.3(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue@3.5.40(typescript@5.9.3))
+        specifier: 4.3.2
+        version: 4.3.2(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue@3.5.40(typescript@5.9.3))
       '@revolist/vue3-datagrid':
         specifier: 4.31.5
         version: 4.31.5
@@ -1293,14 +1293,14 @@ packages:
   '@revolist/revogrid@4.31.5':
     resolution: {integrity: sha512-tWgNJpYPDrk/1tBYW4xZfgRNiab6ttZBqXwkeTdNX0fksNXnVsEXBEWegUvfkQs77QDRKcg2z1dUEop4G/Cttg==}
 
-  '@revolist/rv-pro-trial@4.2.3':
-    resolution: {integrity: sha512-3fWjj0VIiCVveAkVHjzUr0Bzt5n6YzCv0LQLYs6ipARH1oViDWc7G4tqC4c2F3JjB56XLH5QD8igxn1JDmajlA==, tarball: https://trial.rv-grid.com/@revolist/rv-pro-trial/-/f8ce5b691a69e42a783b67150c40f1c6860635c3}
+  '@revolist/rv-pro-trial@4.3.2':
+    resolution: {integrity: sha512-nJyFjnTP2m6yE9InfHmuZELUnqoqX4hrAzckzxQTVF8rdLKH2UfBV2L7b8V01CMq6n/OccymwWT4GciNRO7dfg==, tarball: https://trial.rv-grid.com/@revolist/rv-pro-trial/-/35842dd46666eb2899f109a7303a36b020c91ba0}
 
-  '@revolist/scheduler-trial@4.2.3':
-    resolution: {integrity: sha512-Tqkw8qbEssEMNt0qEPZXQMvJFwSXa+3NMrmARSthtxm2w5jAcmSamiFcfUJvZdKu4Hbk1S6Un28SvqS5pRj8cQ==, tarball: https://trial.rv-grid.com/@revolist/scheduler-trial/-/f27035a6d8c64f0d15f7c76b1a17392ff31e1e6b}
+  '@revolist/scheduler-trial@4.3.2':
+    resolution: {integrity: sha512-EW+a9tegt3gGkX+uq9KgJz77HRedE9BYnfV8Fsx2l/c5bCrOySdBnkWGniW7AqPyhGpLqYHfhI+XDlj79f8U6g==, tarball: https://trial.rv-grid.com/@revolist/scheduler-trial/-/d8c0a773b6791fa790aae461b7d12463381f5eb9}
 
-  '@revolist/ui@4.2.3':
-    resolution: {integrity: sha512-vsZiE6rFLx17uBZToa98/1jrr2SoYJllpr94+KOU5rjyAA3gvRyEGPILzsaMcG7glGwSD2VTxbFuLIQs5gvbHg==}
+  '@revolist/ui@4.3.2':
+    resolution: {integrity: sha512-STxmBefuyT4tcNhqIJ3U4Liy4hEDnZswKrOvKSYWRSnQskxsCa5k9IC8ZsaEYc7Dk8TxgMRernL6ywHD/KgwCQ==}
     peerDependencies:
       '@angular/core': '>=20'
       pdfjs-dist: ^6.4.299
@@ -4675,7 +4675,7 @@ snapshots:
 
   '@revolist/revogrid@4.31.5': {}
 
-  '@revolist/rv-pro-trial@4.2.3':
+  '@revolist/rv-pro-trial@4.3.2':
     dependencies:
       '@formulajs/formulajs': 4.6.1
       '@revolist/revogrid': 4.31.5
@@ -4685,15 +4685,15 @@ snapshots:
       preact: 10.29.1
       write-excel-file: 4.1.1
 
-  '@revolist/scheduler-trial@4.2.3':
+  '@revolist/scheduler-trial@4.3.2':
     dependencies:
       '@fortawesome/fontawesome-free': 7.3.1
       '@revolist/revogrid': 4.31.5
-      '@revolist/rv-pro-trial': 4.2.3
+      '@revolist/rv-pro-trial': 4.3.2
       '@tanstack/query-core': 5.104.5
       pdfmake: 0.3.9
 
-  '@revolist/ui@4.2.3(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue@3.5.40(typescript@5.9.3))':
+  '@revolist/ui@4.3.2(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue@3.5.40(typescript@5.9.3))':
     optionalDependencies:
       '@angular/core': 20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1)
       react: 18.3.1
